@@ -45,26 +45,26 @@ import NPB3_0_JAV.BT;
 import NPB3_0_JAV.*;
 
 public class BTBase extends Thread{
- 
+
   public static final String BMName="BT";
   public char CLASS = 'S';
-  //npb class parameters  
+  //npb class parameters
 
   protected int IMAX=0, JMAX=0, KMAX=0,problem_size=0;
-  
+
   protected int grid_points[] = {0,0,0};
   protected int niter_default=0;
   protected double dt_default=0.0;
-    
+
   //array declarations from header.h
   protected double us[],vs[],ws[],
-            	   qs[],rho_i[],square[]; 
+            	   qs[],rho_i[],square[];
   protected int jsize1, ksize1;
-  
+
   protected double forcing[],u[],rhs[],
             	   cv[], cuf[],q[];
   protected int isize2,jsize2,ksize2;
-  
+
   protected double ue[], buf[];
   protected int jsize3;
 
@@ -72,7 +72,7 @@ public class BTBase extends Thread{
   //(density,x_impuls,y_impuls,z_impuls,energy)
   protected static final int isize4=5,jsize4=5*5, ksize4=5*5*3;
   protected static final int aa=0, bb=1, cc=2, BLOCK_SIZE=5;
- 
+
   // constants
   protected static double tx1,tx2,tx3,dt,
          ty1,ty2,ty3,
@@ -88,14 +88,14 @@ public class BTBase extends Thread{
          zzcon1,zzcon2,zzcon3,zzcon4,zzcon5,
          dz1tz1,dz2tz1,dz3tz1,dz4tz1,dz5tz1,
          dnxm1,dnym1,dnzm1,
-         c1c2, c1c5, c3c4, c1345, conz1, 
-         c1, c2, c3, c4, c5, c4dssp, c5dssp, dtdssp, 
-         dttx1, dttx2, dtty1, dtty2, dttz1, dttz2, 
-         c2dttx1, c2dtty1, c2dttz1, 
-         comz1, comz4, comz5, comz6,c3c4tx3, c3c4ty3, 
+         c1c2, c1c5, c3c4, c1345, conz1,
+         c1, c2, c3, c4, c5, c4dssp, c5dssp, dtdssp,
+         dttx1, dttx2, dtty1, dtty2, dttz1, dttz2,
+         c2dttx1, c2dtty1, c2dttz1,
+         comz1, comz4, comz5, comz6,c3c4tx3, c3c4ty3,
 	 c3c4tz3, c2iv, con43, con16;
 
-  protected static double ce[] = { 
+  protected static double ce[] = {
                   2.0, 1.0, 2.0, 2.0, 5.0,
 		  0.0, 0.0, 2.0, 2.0, 4.0,
 		  0.0, 0.0, 0.0, 0.0, 3.0,
@@ -109,53 +109,53 @@ public class BTBase extends Thread{
 		  0.5, 0.4, 0.3, 0.2, 0.1,
 		  0.4, 0.3, 0.5, 0.1, 0.3,
 		  0.3, 0.5, 0.4, 0.3, 0.2};
-  
-  //timer constants 
+
+  //timer constants
   public boolean timeron=false;
   public static final int t_rhsx=2, t_rhsy=3, t_rhsz=4,
                    t_xsolve=6,t_ysolve=7,t_zsolve=8,
                    t_rdis1=9,t_rdis2=10,t_add=11,
-		   t_rhs=5,t_last=11,t_total=1; 
+		   t_rhs=5,t_last=11,t_total=1;
   public Timer timer = new Timer();
-  
+
   public BTBase(){}
 
-  public BTBase(char clss,int np){            
+  public BTBase(char clss,int np){
     CLASS = clss;
     num_threads = np;
     switch (clss){
      case 'S':
-      problem_size = IMAX = JMAX = KMAX = 
+      problem_size = IMAX = JMAX = KMAX =
                      grid_points[0] = grid_points[1] = grid_points[2] = 12;
       dt_default=.01;
       niter_default=60;
       CLASS='S';
       break;
     case 'W':
-      problem_size = IMAX = JMAX = KMAX = 
+      problem_size = IMAX = JMAX = KMAX =
                      grid_points[0] = grid_points[1] = grid_points[2] = 24;
       dt_default=.0008;
       niter_default=200;
       CLASS='W';
       break;
     case 'A':
-      problem_size = IMAX = JMAX = KMAX = 
+      problem_size = IMAX = JMAX = KMAX =
                      grid_points[0] = grid_points[1] = grid_points[2] = 64;
-      dt_default=.0008;      
+      dt_default=.0008;
       niter_default=200;
       CLASS='A';
       break;
     case 'B':
-      problem_size = IMAX = JMAX = KMAX = 
+      problem_size = IMAX = JMAX = KMAX =
                      grid_points[0] = grid_points[1] = grid_points[2] = 102;
       dt_default=.0003;
-      niter_default=200; 
+      niter_default=200;
       CLASS='B';
       break;
     case 'C':
-      problem_size = IMAX = JMAX = KMAX = 
+      problem_size = IMAX = JMAX = KMAX =
                      grid_points[0] = grid_points[1] = grid_points[2] = 162;
-      dt_default=.0001;      
+      dt_default=.0001;
       niter_default=200;
       CLASS='C';
       break;
@@ -171,24 +171,24 @@ public class BTBase extends Thread{
     qs =  new double[(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
     rho_i =  new double[(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
     square =  new double[(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
-    
+
     isize2=5;
-    jsize2=5*(IMAX/2*2+1); 
+    jsize2=5*(IMAX/2*2+1);
     ksize2=5*(IMAX/2*2+1)*(JMAX/2*2+1);
-    
+
     forcing = new double[5*(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
     u =  new double[5*(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
     rhs =  new double[5*(IMAX/2*2+1)*(JMAX/2*2+1)*KMAX];
-    
+
     cv =  new double[problem_size+2];
     cuf =  new double[problem_size+2];
     q =  new double[problem_size+2];
-    
+
     jsize3=(problem_size+2);
     ue = new double[(problem_size+2)*5];
-    buf = new double[(problem_size+2)*5];   
+    buf = new double[(problem_size+2)*5];
   }
-  
+
   // thread variables
   protected Thread master = null;
   protected int num_threads;
@@ -197,28 +197,28 @@ public class BTBase extends Thread{
   protected YSolver ysolver[];
   protected ZSolver zsolver[];
   protected RHSAdder rhsadder[];
-    
+
   public void setupThreads(BT bt){
     master = bt;
     if(num_threads>problem_size-2)
       num_threads=problem_size-2;
 
     int interval1[]=new int[num_threads];
-    int interval2[]=new int[num_threads];    
+    int interval2[]=new int[num_threads];
     set_interval(problem_size, interval1);
     set_interval(problem_size-2, interval2);
     int partition1[][] = new int[interval1.length][2];
     int partition2[][] = new int[interval2.length][2];
     set_partition(0,interval1,partition1);
     set_partition(1,interval2,partition2);
-  
+
     rhscomputer = new RHSCompute[num_threads];
     xsolver = new XSolver[num_threads];
     ysolver = new YSolver[num_threads];
     zsolver = new ZSolver[num_threads];
     rhsadder = new RHSAdder[num_threads];
- 
-  // create and start threads   
+
+  // create and start threads
     for(int ii=0;ii<num_threads;ii++){
       rhscomputer[ii] =  new RHSCompute(bt,partition1[ii][0],partition1[ii][1],
                                         partition2[ii][0],partition2[ii][1]);
@@ -240,7 +240,7 @@ public class BTBase extends Thread{
       rhsadder[ii] = new RHSAdder(bt,partition2[ii][0],partition2[ii][1]);
       rhsadder[ii].id=ii;
       rhsadder[ii].start();
-    }    
+    }
   }
 
   public void set_interval(int problem_size, int interval[] ){
@@ -248,13 +248,13 @@ public class BTBase extends Thread{
     for(int i=1;i<num_threads;i++) interval[i]=interval[0];
     int remainder = problem_size%num_threads;
     for(int i=0;i<remainder;i++) interval[i]++;
-  }  
-  
+  }
+
   public void set_partition(int start, int interval[], int array[][]){
     array[0][0]=start;
     if(start==0) array[0][1]=interval[0]-1;
     else array[0][1]=interval[0];
-    
+
     for(int i=1;i<interval.length;i++){
       array[i][0]=array[i-1][1]+1;
       array[i][1]=array[i-1][1]+interval[i];
@@ -264,7 +264,7 @@ public class BTBase extends Thread{
   public double dmax1(double a, double b){
     if(a<b) return b; else return a;
   }
-  
+
   public void set_constants(){
     c1 = 1.4;
     c2 = 0.4;
@@ -383,30 +383,30 @@ public class BTBase extends Thread{
     zzcon4 = c3c4tz3*con16*tz3;
     zzcon5 = c3c4tz3*c1c5*tz3;
     dt=dt_default;
-  } 
+  }
 
-  public void exact_solution(double xi,double eta, double zeta, 
+  public void exact_solution(double xi,double eta, double zeta,
                              double dtemp[], int dtmpoffst){
     for(int m=0;m<5;m++){
-      dtemp[m + dtmpoffst] = ce[m+0*5] 
-                           + xi*(ce[m+1*5] + xi*(ce[m+4*5] 
-                           + xi*(ce[m+7*5] + xi*ce[m+10*5]))) 
-			   + eta*(ce[m+2*5] + eta*(ce[m+5*5] 
+      dtemp[m + dtmpoffst] = ce[m+0*5]
+                           + xi*(ce[m+1*5] + xi*(ce[m+4*5]
+                           + xi*(ce[m+7*5] + xi*ce[m+10*5])))
+			   + eta*(ce[m+2*5] + eta*(ce[m+5*5]
 			   + eta*(ce[m+8*5] + eta*ce[m+11*5])))
-			   + zeta*(ce[m+3*5] + zeta*(ce[m+6*5] 
+			   + zeta*(ce[m+3*5] + zeta*(ce[m+6*5]
 			   + zeta*(ce[m+9*5] + zeta*ce[m+12*5])));
     }
   }
   public void initialize(){
     int i, j, k, m, ix, iy, iz;
-    double  xi, eta, zeta, Pface[]=new double[5*3*2]; 
+    double  xi, eta, zeta, Pface[]=new double[5*3*2];
     double Pxi, Peta, Pzeta, temp[]=new double[5];
 
 //---------------------------------------------------------------------
-//  Later (in compute_rhs) we compute 1/u for every element. A few of 
-//  the corner elements are not used, but it convenient (and faster) 
-//  to compute the whole thing with a simple loop. Make sure those 
-//  values are nonzero by initializing the whole thing here. 
+//  Later (in compute_rhs) we compute 1/u for every element. A few of
+//  the corner elements are not used, but it convenient (and faster)
+//  to compute the whole thing with a simple loop. Make sure those
+//  values are nonzero by initializing the whole thing here.
 //---------------------------------------------------------------------
     for(k=0;k<=grid_points[2]-1;k++){
       for(j=0;j<=grid_points[1]-1;j++){
@@ -418,53 +418,53 @@ public class BTBase extends Thread{
       }
     }
 //---------------------------------------------------------------------
-//     first store the "interpolated" values everywhere on the grid    
+//     first store the "interpolated" values everywhere on the grid
 //---------------------------------------------------------------------
-  
+
     for(k=0;k<=grid_points[2]-1;k++){
       zeta = k * dnzm1;
       for(j=0;j<=grid_points[1]-1;j++){
 	eta = j * dnym1;
 	for(i=0;i<=grid_points[0]-1;i++){
 	  xi = i * dnxm1;
-	  
+	
 	  for(ix=0;ix<=1;ix++){
-	    exact_solution( ix, eta, zeta, 
+	    exact_solution( ix, eta, zeta,
 			   Pface, 0+0*5+ix*15);
-	    
+	
 	  }
 	  for(iy=0;iy<=1;iy++){
-	    exact_solution(xi, iy , zeta, 
+	    exact_solution(xi, iy , zeta,
 			   Pface, 0+1*5+iy*15);
 	  }
-	  
+	
 	  for(iz=0;iz<=1;iz++){
-	    exact_solution(xi, eta, iz,   
+	    exact_solution(xi, eta, iz,
 			   Pface, 0+2*5+iz*15);
 	  }
-	  
+	
 	  for(m=0;m<=4;m++){
-	    Pxi   = xi   * Pface[m+0*5+1*15] + 
+	    Pxi   = xi   * Pface[m+0*5+1*15] +
 	      (1.0-xi)   * Pface[m+0*5+0*15];
-	    Peta  = eta  * Pface[m+1*5+1*15] + 
+	    Peta  = eta  * Pface[m+1*5+1*15] +
 	      (1.0-eta)  * Pface[m+1*5+0*15];
-	    Pzeta = zeta * Pface[m+2*5+1*15] + 
+	    Pzeta = zeta * Pface[m+2*5+1*15] +
 	      (1.0-zeta) * Pface[m+2*5+0*15];
-	    
-	    u[m+i*isize2+j*jsize2+k*ksize2] = Pxi + Peta + Pzeta - 
-	      Pxi*Peta - Pxi*Pzeta - Peta*Pzeta + 
+	
+	    u[m+i*isize2+j*jsize2+k*ksize2] = Pxi + Peta + Pzeta -
+	      Pxi*Peta - Pxi*Pzeta - Peta*Pzeta +
 	      Pxi*Peta*Pzeta;
-	    
+	
 	  }
 	}
       }
     }
 //---------------------------------------------------------------------
-//     now store the exact values on the boundaries        
+//     now store the exact values on the boundaries
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-//     west face                                                  
+//     west face
 //---------------------------------------------------------------------
     i = 0;
     xi = 0.0;
@@ -478,9 +478,9 @@ public class BTBase extends Thread{
 	}
       }
     }
-  
+
 //---------------------------------------------------------------------
-//     east face                                                      
+//     east face
 //---------------------------------------------------------------------
 
     i = grid_points[0]-1;
@@ -497,7 +497,7 @@ public class BTBase extends Thread{
     }
 
 //---------------------------------------------------------------------
-//     south face                                                 
+//     south face
 //---------------------------------------------------------------------
     j = 0;
     eta = 0.0;
@@ -513,7 +513,7 @@ public class BTBase extends Thread{
     }
 
 //---------------------------------------------------------------------
-//     north face                                    
+//     north face
 //---------------------------------------------------------------------
     j = grid_points[1]-1;
     eta = 1.0;
@@ -527,9 +527,9 @@ public class BTBase extends Thread{
 	}
       }
     }
-    
+
 //---------------------------------------------------------------------
-//     bottom face                                       
+//     bottom face
 //---------------------------------------------------------------------
     k = 0;
     zeta = 0.0;
@@ -543,9 +543,9 @@ public class BTBase extends Thread{
 	}
       }
     }
-    
+
 //---------------------------------------------------------------------
-//     top face     
+//     top face
 //---------------------------------------------------------------------
     k = grid_points[2]-1;
     zeta = 1.0;
@@ -560,7 +560,7 @@ public class BTBase extends Thread{
       }
     }
   }
-    
+
   public void lhsinit(double lhs[], int size){
     int i, m, n;
 //---------------------------------------------------------------------
@@ -584,7 +584,7 @@ public class BTBase extends Thread{
          }
       }
   }
- 
+
   public void matvec_sub(double ablock[],int blkoffst,
                          double avect[],int avcoffst ,
 			 double bvect[],int bvcoffst){
@@ -638,7 +638,7 @@ public class BTBase extends Thread{
                        double c[],int coffst,double r[],int roffst ){
     double pivot;
     double coeff;
-    
+
     pivot = 1.0/lhss[0+0*5+lhsoffst];
     lhss[0+1*5+lhsoffst] = lhss[0+1*5+lhsoffst]*pivot;
     lhss[0+2*5+lhsoffst] = lhss[0+2*5+lhsoffst]*pivot;
@@ -1018,10 +1018,10 @@ public class BTBase extends Thread{
 
     coeff = lhss[3+4*5+lhsoffst];
     r[3+roffst]-=coeff*r[4+roffst];
-  } 
+  }
 }
- 
- 
+
+
 
 
 

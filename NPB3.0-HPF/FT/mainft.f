@@ -38,7 +38,7 @@ c---------------------------------------------------------------------
 c
 c Authors: D. Bailey
 c          W. Saphir
-c HPF version: 
+c HPF version:
 c          M.Frumkin
 c
 c---------------------------------------------------------------------
@@ -55,7 +55,7 @@ c---------------------------------------------------------------------
 	 character*8  class
          double precision tmax, mflops
 	 logical timers_enabled
-	 
+	
          open (unit=2,file='timer.flag',status='old',iostat=fstatus)
          if (fstatus .eq. 0) then
             timers_enabled = .true.
@@ -91,34 +91,34 @@ c---------------------------------------------------------------------
         else
            mflops = 0.0
         endif
-        call print_results('FT', class(1:1), nx, 
+        call print_results('FT', class(1:1), nx,
      >  ny, nz, niter, nprocs,
-     >  tmax, mflops, '          floating point', 
-     >  verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5, 
+     >  tmax, mflops, '          floating point',
+     >  verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5,
      >  cs6, '(none)')
 !
       end
-      
+
       subroutine getclass( class)
         include 'npbparams.h'
 	character*8  class
-        if ((nx .eq. 64) .and. (ny .eq. 64) .and.                 
+        if ((nx .eq. 64) .and. (ny .eq. 64) .and.
      &      (nz .eq. 64) .and. (niter_default .eq. 6)) then
           class(1:1)='S'
-        else if ((nx .eq. 128) .and. (ny .eq. 128) .and.                 
+        else if ((nx .eq. 128) .and. (ny .eq. 128) .and.
      &           (nz .eq. 32) .and. (niter_default .eq. 6)) then
           class(1:1)='W'
-        else if ((nx .eq. 256) .and. (ny .eq. 256) .and.                 
+        else if ((nx .eq. 256) .and. (ny .eq. 256) .and.
      &           (nz .eq. 128) .and. (niter_default .eq. 6)) then
           class(1:1)='A'
-        else if ((nx .eq. 512) .and. (ny .eq. 256) .and.                 
+        else if ((nx .eq. 512) .and. (ny .eq. 256) .and.
      &           (nz .eq. 256) .and. (niter_default .eq. 20)) then
           class(1:1)='B'
-        else if ((nx .eq. 512) .and. (ny .eq. 512) .and.                 
+        else if ((nx .eq. 512) .and. (ny .eq. 512) .and.
      &           (nz .eq. 512) .and. (niter_default .eq. 20)) then
           class(1:1)='C'
 	endif
 	
 	return
       end
-      
+

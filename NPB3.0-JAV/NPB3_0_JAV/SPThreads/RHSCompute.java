@@ -47,7 +47,7 @@ import NPB3_0_JAV.SP;
 public class RHSCompute extends SPBase{
   public int id;
   public boolean done = true;
- 
+
   //private arrays and data
   int lower_bound1;
   int upper_bound1;
@@ -69,9 +69,9 @@ public class RHSCompute extends SPBase{
   void Init(SP sp){
     //initialize shared data
     IMAX=sp.IMAX;
-    JMAX=sp.JMAX; 
-    KMAX=sp.KMAX; 
-    problem_size=sp.problem_size; 
+    JMAX=sp.JMAX;
+    KMAX=sp.KMAX;
+    problem_size=sp.problem_size;
     nx2=sp.nx2;
     ny2=sp.ny2;
     nz2=sp.nz2;
@@ -108,9 +108,9 @@ public class RHSCompute extends SPBase{
     q=sp.q;
     ce=sp.ce;
   }
-  public void run(){    
+  public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -122,15 +122,15 @@ public class RHSCompute extends SPBase{
       }
     }
   }
-  
+
   public void step(){
     int i, j, k, m;
     double aux, rho_inv, uijk, up1, um1, vijk, vp1, vm1,wijk, wp1, wm1;
     switch(state){
     case 1:
 //---------------------------------------------------------------------
-//      compute the reciprocal of density, and the kinetic energy, 
-//      and the speed of sound. 
+//      compute the reciprocal of density, and the kinetic energy,
+//      and the speed of sound.
 //---------------------------------------------------------------------
 
       for(k=lower_bound1;k<=upper_bound1;k++){
@@ -142,7 +142,7 @@ public class RHSCompute extends SPBase{
 	      vs[i+j*jsize2+k*ksize2] = u[2+i*isize1+j*jsize1+k*ksize1] * rho_inv;
 	      ws[i+j*jsize2+k*ksize2] = u[3+i*isize1+j*jsize1+k*ksize1] * rho_inv;
 	      square[i+j*jsize2+k*ksize2]     = 0.5* (
-                              u[1+i*isize1+j*jsize1+k*ksize1]*u[1+i*isize1+j*jsize1+k*ksize1] + 
+                              u[1+i*isize1+j*jsize1+k*ksize1]*u[1+i*isize1+j*jsize1+k*ksize1] +
                               u[2+i*isize1+j*jsize1+k*ksize1]*u[2+i*isize1+j*jsize1+k*ksize1] +
                               u[3+i*isize1+j*jsize1+k*ksize1]*u[3+i*isize1+j*jsize1+k*ksize1] ) * rho_inv;
 	      qs[i+j*jsize2+k*ksize2] = square[i+j*jsize2+k*ksize2] * rho_inv;
@@ -153,13 +153,13 @@ public class RHSCompute extends SPBase{
 	      speed[i+j*jsize2+k*ksize2] = Math.sqrt(aux);
 	    }
 	}
-      }      
+      }
       break;
     case 2:
 //---------------------------------------------------------------------
-// copy the exact forcing term to the right hand side;  because 
+// copy the exact forcing term to the right hand side;  because
 // this forcing term is known, we can store it on the whole grid
-// including the boundary                   
+// including the boundary
 //---------------------------------------------------------------------
 
        for(k=lower_bound1;k<=upper_bound1;k++){
@@ -175,7 +175,7 @@ public class RHSCompute extends SPBase{
       break;
     case 3:
 //---------------------------------------------------------------------
-//      compute xi-direction fluxes 
+//      compute xi-direction fluxes
 //---------------------------------------------------------------------
        for(k=lower_bound2;k<=upper_bound2;k++){
           for(j=1;j<=ny2;j++){
@@ -184,76 +184,76 @@ public class RHSCompute extends SPBase{
                 up1  = us[i+1+j*jsize2+k*ksize2];
                 um1  = us[i-1+j*jsize2+k*ksize2];
 
-                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dx1tx1 * 
-                          (u[0+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dx1tx1 *
+                          (u[0+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] +
                            u[0+(i-1)*isize1+j*jsize1+k*ksize1]) -
                           tx2 * (u[1+(i+1)*isize1+j*jsize1+k*ksize1] - u[1+(i-1)*isize1+j*jsize1+k*ksize1]);
 
-                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dx2tx1 * 
-                          (u[1+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dx2tx1 *
+                          (u[1+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] +
                            u[1+(i-1)*isize1+j*jsize1+k*ksize1]) +
                           xxcon2*con43 * (up1 - 2.0*uijk + um1) -
-                          tx2 * (u[1+(i+1)*isize1+j*jsize1+k*ksize1]*up1 - 
+                          tx2 * (u[1+(i+1)*isize1+j*jsize1+k*ksize1]*up1 -
                                  u[1+(i-1)*isize1+j*jsize1+k*ksize1]*um1 +
                                  (u[4+(i+1)*isize1+j*jsize1+k*ksize1]- square[(i+1)+j*jsize2+k*ksize2]-
                                   u[4+(i-1)*isize1+j*jsize1+k*ksize1]+ square[(i-1)+j*jsize2+k*ksize2])*
                                   c2);
 
-                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dx3tx1 * 
+                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dx3tx1 *
                           (u[2+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[2+i*isize1+j*jsize1+k*ksize1] +
                            u[2+(i-1)*isize1+j*jsize1+k*ksize1]) +
                           xxcon2 * (vs[i+1+j*jsize2+k*ksize2] - 2.0*vs[i+j*jsize2+k*ksize2] +
                                     vs[i-1+j*jsize2+k*ksize2]) -
-                          tx2 * (u[2+(i+1)*isize1+j*jsize1+k*ksize1]*up1 - 
+                          tx2 * (u[2+(i+1)*isize1+j*jsize1+k*ksize1]*up1 -
                                  u[2+(i-1)*isize1+j*jsize1+k*ksize1]*um1);
 
-                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dx4tx1 * 
+                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dx4tx1 *
                           (u[3+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[3+i*isize1+j*jsize1+k*ksize1] +
                            u[3+(i-1)*isize1+j*jsize1+k*ksize1]) +
                           xxcon2 * (ws[i+1+j*jsize2+k*ksize2] - 2.0*ws[i+j*jsize2+k*ksize2] +
                                     ws[i-1+j*jsize2+k*ksize2]) -
-                          tx2 * (u[3+(i+1)*isize1+j*jsize1+k*ksize1]*up1 - 
+                          tx2 * (u[3+(i+1)*isize1+j*jsize1+k*ksize1]*up1 -
                                  u[3+(i-1)*isize1+j*jsize1+k*ksize1]*um1);
 
-                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dx5tx1 * 
+                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dx5tx1 *
                           (u[4+(i+1)*isize1+j*jsize1+k*ksize1] - 2.0*u[4+i*isize1+j*jsize1+k*ksize1] +
                            u[4+(i-1)*isize1+j*jsize1+k*ksize1]) +
                           xxcon3 * (qs[i+1+j*jsize2+k*ksize2] - 2.0*qs[i+j*jsize2+k*ksize2] +
                                     qs[i-1+j*jsize2+k*ksize2]) +
-                          xxcon4 * (up1*up1 -       2.0*uijk*uijk + 
+                          xxcon4 * (up1*up1 -       2.0*uijk*uijk +
                                     um1*um1) +
-                          xxcon5 * (u[4+(i+1)*isize1+j*jsize1+k*ksize1]*rho_i[i+1+j*jsize2+k*ksize2] - 
+                          xxcon5 * (u[4+(i+1)*isize1+j*jsize1+k*ksize1]*rho_i[i+1+j*jsize2+k*ksize2] -
                                     2.0*u[4+i*isize1+j*jsize1+k*ksize1]*rho_i[i+j*jsize2+k*ksize2] +
                                     u[4+(i-1)*isize1+j*jsize1+k*ksize1]*rho_i[i-1+j*jsize2+k*ksize2]) -
-                          tx2 * ( (c1*u[4+(i+1)*isize1+j*jsize1+k*ksize1] - 
+                          tx2 * ( (c1*u[4+(i+1)*isize1+j*jsize1+k*ksize1] -
                                    c2*square[i+1+j*jsize2+k*ksize2])*up1 -
-                                  (c1*u[4+(i-1)*isize1+j*jsize1+k*ksize1] - 
+                                  (c1*u[4+(i-1)*isize1+j*jsize1+k*ksize1] -
                                    c2*square[i-1+j*jsize2+k*ksize2])*um1 );
              }
 
 //---------------------------------------------------------------------
-//      add fourth order xi-direction dissipation               
+//      add fourth order xi-direction dissipation
 //---------------------------------------------------------------------
 
              i = 1;
              for(m=0;m<=4;m++){
-                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp * 
+                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp *
                           ( 5.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i+1)*isize1+j*jsize1+k*ksize1] +
                                   u[m+(i+2)*isize1+j*jsize1+k*ksize1]);
              }
 
              i = 2;
              for(m=0;m<=4;m++){
-                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
+                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
                           (-4.0*u[m+(i-1)*isize1+j*jsize1+k*ksize1] + 6.0*u[m+i*isize1+j*jsize1+k*ksize1] -
                             4.0*u[m+(i+1)*isize1+j*jsize1+k*ksize1] + u[m+(i+2)*isize1+j*jsize1+k*ksize1]);
              }
 
              for(i=3;i<=nx2-2;i++){
                 for(m=0;m<=4;m++){
-                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
-                          (  u[m+(i-2)*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i-1)*isize1+j*jsize1+k*ksize1] + 
-                           6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i+1)*isize1+j*jsize1+k*ksize1] + 
+                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
+                          (  u[m+(i-2)*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i-1)*isize1+j*jsize1+k*ksize1] +
+                           6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i+1)*isize1+j*jsize1+k*ksize1] +
                                u[m+(i+2)*isize1+j*jsize1+k*ksize1] );
                 }
              }
@@ -261,7 +261,7 @@ public class RHSCompute extends SPBase{
              i = nx2-1;
              for(m=0;m<=4;m++){
                 rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
-                          ( u[m+(i-2)*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i-1)*isize1+j*jsize1+k*ksize1] + 
+                          ( u[m+(i-2)*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i-1)*isize1+j*jsize1+k*ksize1] +
                             6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+(i+1)*isize1+j*jsize1+k*ksize1] );
              }
 
@@ -277,7 +277,7 @@ public class RHSCompute extends SPBase{
       break;
     case 4:
 //---------------------------------------------------------------------
-//      compute eta-direction fluxes 
+//      compute eta-direction fluxes
 //---------------------------------------------------------------------
        for(k=lower_bound2;k<=upper_bound2;k++){
           for(j=1;j<=ny2;j++){
@@ -285,58 +285,58 @@ public class RHSCompute extends SPBase{
                 vijk = vs[i+j*jsize2+k*ksize2];
                 vp1  = vs[i+(j+1)*jsize2+k*ksize2];
                 vm1  = vs[i+(j-1)*jsize2+k*ksize2];
-                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dy1ty1 * 
-                         (u[0+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dy1ty1 *
+                         (u[0+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] +
                           u[0+i*isize1+(j-1)*jsize1+k*ksize1]) -
                          ty2 * (u[2+i*isize1+(j+1)*jsize1+k*ksize1] - u[2+i*isize1+(j-1)*jsize1+k*ksize1]);
-                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dy2ty1 * 
-                         (u[1+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dy2ty1 *
+                         (u[1+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] +
                           u[1+i*isize1+(j-1)*jsize1+k*ksize1]) +
-                         yycon2 * (us[i+(j+1)*jsize2+k*ksize2] - 2.0*us[i+j*jsize2+k*ksize2] + 
+                         yycon2 * (us[i+(j+1)*jsize2+k*ksize2] - 2.0*us[i+j*jsize2+k*ksize2] +
                                    us[i+(j-1)*jsize2+k*ksize2]) -
-                         ty2 * (u[1+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 - 
+                         ty2 * (u[1+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 -
                                 u[1+i*isize1+(j-1)*jsize1+k*ksize1]*vm1);
-                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dy3ty1 * 
-                         (u[2+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[2+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dy3ty1 *
+                         (u[2+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[2+i*isize1+j*jsize1+k*ksize1] +
                           u[2+i*isize1+(j-1)*jsize1+k*ksize1]) +
                          yycon2*con43 * (vp1 - 2.0*vijk + vm1) -
-                         ty2 * (u[2+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 - 
+                         ty2 * (u[2+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 -
                                 u[2+i*isize1+(j-1)*jsize1+k*ksize1]*vm1 +
-                                (u[4+i*isize1+(j+1)*jsize1+k*ksize1] - square[i+(j+1)*jsize2+k*ksize2] - 
+                                (u[4+i*isize1+(j+1)*jsize1+k*ksize1] - square[i+(j+1)*jsize2+k*ksize2] -
                                  u[4+i*isize1+(j-1)*jsize1+k*ksize1] + square[i+(j-1)*jsize2+k*ksize2])
                                 *c2);
-                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dy4ty1 * 
-                         (u[3+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[3+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dy4ty1 *
+                         (u[3+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[3+i*isize1+j*jsize1+k*ksize1] +
                           u[3+i*isize1+(j-1)*jsize1+k*ksize1]) +
-                         yycon2 * (ws[i+(j+1)*jsize2+k*ksize2] - 2.0*ws[i+j*jsize2+k*ksize2] + 
+                         yycon2 * (ws[i+(j+1)*jsize2+k*ksize2] - 2.0*ws[i+j*jsize2+k*ksize2] +
                                    ws[i+(j-1)*jsize2+k*ksize2]) -
-                         ty2 * (u[3+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 - 
+                         ty2 * (u[3+i*isize1+(j+1)*jsize1+k*ksize1]*vp1 -
                                 u[3+i*isize1+(j-1)*jsize1+k*ksize1]*vm1);
-                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dy5ty1 * 
-                         (u[4+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[4+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dy5ty1 *
+                         (u[4+i*isize1+(j+1)*jsize1+k*ksize1] - 2.0*u[4+i*isize1+j*jsize1+k*ksize1] +
                           u[4+i*isize1+(j-1)*jsize1+k*ksize1]) +
-                         yycon3 * (qs[i+(j+1)*jsize2+k*ksize2] - 2.0*qs[i+j*jsize2+k*ksize2] + 
+                         yycon3 * (qs[i+(j+1)*jsize2+k*ksize2] - 2.0*qs[i+j*jsize2+k*ksize2] +
                                    qs[i+(j-1)*jsize2+k*ksize2]) +
-                         yycon4 * (vp1*vp1       - 2.0*vijk*vijk + 
+                         yycon4 * (vp1*vp1       - 2.0*vijk*vijk +
                                    vm1*vm1) +
-                         yycon5 * (u[4+i*isize1+(j+1)*jsize1+k*ksize1]*rho_i[i+(j+1)*jsize2+k*ksize2] - 
+                         yycon5 * (u[4+i*isize1+(j+1)*jsize1+k*ksize1]*rho_i[i+(j+1)*jsize2+k*ksize2] -
                                    2.0*u[4+i*isize1+j*jsize1+k*ksize1]*rho_i[i+j*jsize2+k*ksize2] +
                                    u[4+i*isize1+(j-1)*jsize1+k*ksize1]*rho_i[i+(j-1)*jsize2+k*ksize2]) -
-                         ty2 * ((c1*u[4+i*isize1+(j+1)*jsize1+k*ksize1] - 
+                         ty2 * ((c1*u[4+i*isize1+(j+1)*jsize1+k*ksize1] -
                                  c2*square[i+(j+1)*jsize2+k*ksize2]) * vp1 -
-                                (c1*u[4+i*isize1+(j-1)*jsize1+k*ksize1] - 
+                                (c1*u[4+i*isize1+(j-1)*jsize1+k*ksize1] -
                                  c2*square[i+(j-1)*jsize2+k*ksize2]) * vm1);
              }
           }
 
 //---------------------------------------------------------------------
-//      add fourth order eta-direction dissipation         
+//      add fourth order eta-direction dissipation
 //---------------------------------------------------------------------
 
           j = 1;
           for(i=1;i<=nx2;i++){
              for(m=0;m<=4;m++){
-                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp * 
+                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp *
                           ( 5.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j+1)*jsize1+k*ksize1] +
                                   u[m+i*isize1+(j+2)*jsize1+k*ksize1]);
              }
@@ -345,7 +345,7 @@ public class RHSCompute extends SPBase{
           j = 2;
           for(i=1;i<=nx2;i++){
              for(m=0;m<=4;m++){
-                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
+                rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
                           (-4.0*u[m+i*isize1+(j-1)*jsize1+k*ksize1] + 6.0*u[m+i*isize1+j*jsize1+k*ksize1] -
                             4.0*u[m+i*isize1+(j+1)*jsize1+k*ksize1] + u[m+i*isize1+(j+2)*jsize1+k*ksize1]);
              }
@@ -354,19 +354,19 @@ public class RHSCompute extends SPBase{
           for(j=3;j<=ny2-2;j++){
              for(i=1;i<=nx2;i++){
                 for(m=0;m<=4;m++){
-                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
-                          (  u[m+i*isize1+(j-2)*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j-1)*jsize1+k*ksize1] + 
-                           6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j+1)*jsize1+k*ksize1] + 
+                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
+                          (  u[m+i*isize1+(j-2)*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j-1)*jsize1+k*ksize1] +
+                           6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j+1)*jsize1+k*ksize1] +
                                u[m+i*isize1+(j+2)*jsize1+k*ksize1] );
                 }
              }
           }
- 
+
           j = ny2-1;
           for(i=1;i<=nx2;i++){
              for(m=0;m<=4;m++){
                 rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
-                          ( u[m+i*isize1+(j-2)*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j-1)*jsize1+k*ksize1] + 
+                          ( u[m+i*isize1+(j-2)*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j-1)*jsize1+k*ksize1] +
                             6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+(j+1)*jsize1+k*ksize1] );
              }
           }
@@ -383,7 +383,7 @@ public class RHSCompute extends SPBase{
       break;
     case 5:
 //---------------------------------------------------------------------
-//      compute zeta-direction fluxes 
+//      compute zeta-direction fluxes
 //---------------------------------------------------------------------
        for(j=lower_bound2;j<=upper_bound2;j++){
           for(k=1;k<=ny2;k++){
@@ -392,57 +392,57 @@ public class RHSCompute extends SPBase{
                 wp1  = ws[i+j*jsize2+(k+1)*ksize2];
                 wm1  = ws[i+j*jsize2+(k-1)*ksize2];
 
-                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dz1tz1 * 
-                         (u[0+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[0+i*isize1+j*jsize1+k*ksize1] = rhs[0+i*isize1+j*jsize1+k*ksize1] + dz1tz1 *
+                         (u[0+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[0+i*isize1+j*jsize1+k*ksize1] +
                           u[0+i*isize1+j*jsize1+(k-1)*ksize1]) -
                          tz2 * (u[3+i*isize1+j*jsize1+(k+1)*ksize1] - u[3+i*isize1+j*jsize1+(k-1)*ksize1]);
-                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dz2tz1 * 
-                         (u[1+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[1+i*isize1+j*jsize1+k*ksize1] = rhs[1+i*isize1+j*jsize1+k*ksize1] + dz2tz1 *
+                         (u[1+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[1+i*isize1+j*jsize1+k*ksize1] +
                           u[1+i*isize1+j*jsize1+(k-1)*ksize1]) +
-                         zzcon2 * (us[i+j*jsize2+(k+1)*ksize2] - 2.0*us[i+j*jsize2+k*ksize2] + 
+                         zzcon2 * (us[i+j*jsize2+(k+1)*ksize2] - 2.0*us[i+j*jsize2+k*ksize2] +
                                    us[i+j*jsize2+(k-1)*ksize2]) -
-                         tz2 * (u[1+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 - 
+                         tz2 * (u[1+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 -
                                 u[1+i*isize1+j*jsize1+(k-1)*ksize1]*wm1);
-                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dz3tz1 * 
-                         (u[2+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[2+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[2+i*isize1+j*jsize1+k*ksize1] = rhs[2+i*isize1+j*jsize1+k*ksize1] + dz3tz1 *
+                         (u[2+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[2+i*isize1+j*jsize1+k*ksize1] +
                           u[2+i*isize1+j*jsize1+(k-1)*ksize1]) +
-                         zzcon2 * (vs[i+j*jsize2+(k+1)*ksize2] - 2.0*vs[i+j*jsize2+k*ksize2] + 
+                         zzcon2 * (vs[i+j*jsize2+(k+1)*ksize2] - 2.0*vs[i+j*jsize2+k*ksize2] +
                                    vs[i+j*jsize2+(k-1)*ksize2]) -
-                         tz2 * (u[2+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 - 
+                         tz2 * (u[2+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 -
                                 u[2+i*isize1+j*jsize1+(k-1)*ksize1]*wm1);
-                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dz4tz1 * 
-                         (u[3+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[3+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] + dz4tz1 *
+                         (u[3+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[3+i*isize1+j*jsize1+k*ksize1] +
                           u[3+i*isize1+j*jsize1+(k-1)*ksize1]) +
                          zzcon2*con43 * (wp1 - 2.0*wijk + wm1) -
-                         tz2 * (u[3+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 - 
+                         tz2 * (u[3+i*isize1+j*jsize1+(k+1)*ksize1]*wp1 -
                                 u[3+i*isize1+j*jsize1+(k-1)*ksize1]*wm1 +
-                                (u[4+i*isize1+j*jsize1+(k+1)*ksize1] - square[i+j*jsize2+(k+1)*ksize2] - 
+                                (u[4+i*isize1+j*jsize1+(k+1)*ksize1] - square[i+j*jsize2+(k+1)*ksize2] -
                                  u[4+i*isize1+j*jsize1+(k-1)*ksize1] + square[i+j*jsize2+(k-1)*ksize2])
                                 *c2);
-                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dz5tz1 * 
-                         (u[4+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[4+i*isize1+j*jsize1+k*ksize1] + 
+                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] + dz5tz1 *
+                         (u[4+i*isize1+j*jsize1+(k+1)*ksize1] - 2.0*u[4+i*isize1+j*jsize1+k*ksize1] +
                           u[4+i*isize1+j*jsize1+(k-1)*ksize1]) +
-                         zzcon3 * (qs[i+j*jsize2+(k+1)*ksize2] - 2.0*qs[i+j*jsize2+k*ksize2] + 
+                         zzcon3 * (qs[i+j*jsize2+(k+1)*ksize2] - 2.0*qs[i+j*jsize2+k*ksize2] +
                                    qs[i+j*jsize2+(k-1)*ksize2]) +
-                         zzcon4 * (wp1*wp1 - 2.0*wijk*wijk + 
+                         zzcon4 * (wp1*wp1 - 2.0*wijk*wijk +
                                    wm1*wm1) +
-                         zzcon5 * (u[4+i*isize1+j*jsize1+(k+1)*ksize1]*rho_i[i+j*jsize2+(k+1)*ksize2] - 
+                         zzcon5 * (u[4+i*isize1+j*jsize1+(k+1)*ksize1]*rho_i[i+j*jsize2+(k+1)*ksize2] -
                                    2.0*u[4+i*isize1+j*jsize1+k*ksize1]*rho_i[i+j*jsize2+k*ksize2] +
                                    u[4+i*isize1+j*jsize1+(k-1)*ksize1]*rho_i[i+j*jsize2+(k-1)*ksize2]) -
-                         tz2 * ( (c1*u[4+i*isize1+j*jsize1+(k+1)*ksize1] - 
+                         tz2 * ( (c1*u[4+i*isize1+j*jsize1+(k+1)*ksize1] -
                                   c2*square[i+j*jsize2+(k+1)*ksize2])*wp1 -
-                                 (c1*u[4+i*isize1+j*jsize1+(k-1)*ksize1] - 
+                                 (c1*u[4+i*isize1+j*jsize1+(k-1)*ksize1] -
                                   c2*square[i+j*jsize2+(k-1)*ksize2])*wm1);
              }
           }
 
 //---------------------------------------------------------------------
-//      add fourth order zeta-direction dissipation                
+//      add fourth order zeta-direction dissipation
 //---------------------------------------------------------------------
 	   k = 1;
 	       for(i=1;i<=nx2;i++){
 		   for(m=0;m<=4;m++){
-		       rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp * 
+		       rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1]- dssp *
 			   ( 5.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k+1)*ksize1] +
                                   u[m+i*isize1+j*jsize1+(k+2)*ksize1]);
 		   }
@@ -451,7 +451,7 @@ public class RHSCompute extends SPBase{
 	   k = 2;
 	       for(i=1;i<=nx2;i++){
 		   for(m=0;m<=4;m++){
-		       rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
+		       rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
 			   (-4.0*u[m+i*isize1+j*jsize1+(k-1)*ksize1] + 6.0*u[m+i*isize1+j*jsize1+k*ksize1] -
                             4.0*u[m+i*isize1+j*jsize1+(k+1)*ksize1] + u[m+i*isize1+j*jsize1+(k+2)*ksize1]);
 		   }
@@ -460,19 +460,19 @@ public class RHSCompute extends SPBase{
 	   for(k=3;k<=nz2-2;k++){
 		   for(i=1;i<=nx2;i++){
 		       for(m=0;m<=4;m++){
-			   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp * 
-			       (  u[m+i*isize1+j*jsize1+(k-2)*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k-1)*ksize1] + 
-				  6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k+1)*ksize1] + 
+			   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
+			       (  u[m+i*isize1+j*jsize1+(k-2)*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k-1)*ksize1] +
+				  6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k+1)*ksize1] +
 				  u[m+i*isize1+j*jsize1+(k+2)*ksize1] );
 		       }
 		   }
 	   }
- 
+
 	   k = nz2-1;
 	       for(i=1;i<=nx2;i++){
 		   for(m=0;m<=4;m++){
 		       rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - dssp *
-                          ( u[m+i*isize1+j*jsize1+(k-2)*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k-1)*ksize1] + 
+                          ( u[m+i*isize1+j*jsize1+(k-2)*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k-1)*ksize1] +
                             6.0*u[m+i*isize1+j*jsize1+k*ksize1] - 4.0*u[m+i*isize1+j*jsize1+(k+1)*ksize1] );
 		   }
 	       }
@@ -486,7 +486,7 @@ public class RHSCompute extends SPBase{
 		   }
 	       }
        }
-     break;    
+     break;
     case 6:
        for(k=lower_bound2;k<=upper_bound2;k++){
           for(j=1;j<=ny2;j++){

@@ -15,7 +15,7 @@ c---------------------------------------------------------------------
       implicit none
 
       include 'applu.incl'
-      
+
 c---------------------------------------------------------------------
 c  input parameters
 c---------------------------------------------------------------------
@@ -24,7 +24,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  local variables
 c---------------------------------------------------------------------
-      integer i, j, idx, k 
+      integer i, j, idx, k
       double precision  r43
       double precision  c1345
       double precision  c34
@@ -36,46 +36,46 @@ c---------------------------------------------------------------------
      >                  uzl(5,isiz1/2*2+1,isiz2),
      >                  uylt(5,isiz1/2*2+1,isiz2)
       common/workarr/ u0l, uxl, uyl, uzl, uylt
-!hpf$    align(*,:,:) with ProjArea :: u0l, uxl, uyl, uzl, uylt  
+!hpf$    align(*,:,:) with ProjArea :: u0l, uxl, uyl, uzl, uylt
 
       r43 = ( 4.0d+00 / 3.0d+00 )
       c1345 = c1 * c3 * c4 * c5
       c34 = c3 * c4
- 
+
 !HPF$ independent, new(k)
-         do j= jlow(l), jhigh(l) 
+         do j= jlow(l), jhigh(l)
            do i=ilow(l,j), ihigh(l,j)
-             k = l-i-j	 
+             k = l-i-j	
              do idx = 1, 5
                u0l(idx,i,j) = u(idx,i,j,k)
                uxl(idx,i,j) = u(idx,i-1,j,k)
-               uzl(idx,i,j) = u(idx,i,j,k-1)               
-             end do           
+               uzl(idx,i,j) = u(idx,i,j,k-1)
+             end do
            end do
 	 end do
 
 !HPF$ independent, new(k)
-         do j= jlow(l), jhigh(l) 
+         do j= jlow(l), jhigh(l)
            do i=ilow(l,j), ihigh(l,j)
-             k = l-i-j	 
+             k = l-i-j	
              do idx = 1, 5
                uyl(idx,i,j-1) = u(idx,i,j-1,k)
-             end do           
+             end do
            end do
 	 end do
         uylt(:,jlow(l):jhigh(l),jlow(l):jhigh(l)) =
      >                uyl(:,jlow(l):jhigh(l),jlow(l)-1:jhigh(l)-1)
-     
+
 !HPF$ independent, new( u0, ux, uy, uz,tmp1,tmp2,tmp3,k)
-         do j= jlow(l), jhigh(l) 
+         do j= jlow(l), jhigh(l)
            do i=ilow(l,j), ihigh(l,j)
-	 
+	
                do idx = 1, 5
                  u0(idx) = u0l(idx,i,j)
                  ux(idx) = uxl(idx,i,j)
                  uy(idx) = uylt(idx,i,j)
-                 uz(idx) = uzl(idx,i,j)               
-               end do           
+                 uz(idx) = uzl(idx,i,j)
+               end do
 c---------------------------------------------------------------------
 c   form the block daigonal
 c---------------------------------------------------------------------
@@ -97,7 +97,7 @@ c               tmp1 = rho_i(i,j,k)
      >          * (  tx1 * r43 + ty1 + tz1  )
      >          * c34 * tmp2 * u0(2)
                d(2,2,i,j) =  1.0d+00
-     >          + dt * 2.0d+00 * c34 * tmp1 
+     >          + dt * 2.0d+00 * c34 * tmp1
      >          * (  tx1 * r43 + ty1 + tz1 )
      >          + dt * 2.0d+00 * (   tx1 * dx2
      >                             + ty1 * dy2
@@ -182,7 +182,7 @@ c               tmp1 = rho_i(i,j,k-1)
      >           - dt * tz1 * ( - c34 * tmp2 * uz(2) )
                a(2,2,i,j) = - dt * tz2 * ( uz(4) * tmp1 )
      >           - dt * tz1 * c34 * tmp1
-     >           - dt * tz1 * dz2 
+     >           - dt * tz1 * dz2
                a(2,3,i,j) = 0.0d+00
                a(2,4,i,j) = - dt * tz2 * ( uz(2) * tmp1 )
                a(2,5,i,j) = 0.0d+00
@@ -311,7 +311,7 @@ c               tmp1 = rho_i(i,j-1,k)
      >          * ( c34 - c1345 ) * tmp2 * uy(2)
                b(5,3,i,j) = - dt * ty2
      >          * ( c1 * ( uy(5) * tmp1 )
-     >          - 0.50d+00 * c2 
+     >          - 0.50d+00 * c2
      >          * ( (  uy(2)*uy(2)
      >               + 3.0d+00 * uy(3)*uy(3)
      >               + uy(4)*uy(4) ) * tmp2 ) )
@@ -353,7 +353,7 @@ c               tmp1 = rho_i(i-1,j,k)
      >              * ( - c2 * ( ux(3) * tmp1 ) )
                c(2,4,i,j) = - dt * tx2
      >              * ( - c2 * ( ux(4) * tmp1 ) )
-               c(2,5,i,j) = - dt * tx2 * c2 
+               c(2,5,i,j) = - dt * tx2 * c2
 
                c(3,1,i,j) = - dt * tx2
      >              * ( - ( ux(2) * ux(3) ) * tmp2 )

@@ -76,7 +76,7 @@ public class MG extends MGBase{
     int np=BMArgs.num_threads;
     boolean serial=BMArgs.serial;
 
-    try{ 
+    try{
       mg = new MG(CLSS,np,serial);
     }catch(OutOfMemoryError e){
       BMArgs.outOfMemoryMessage();
@@ -84,20 +84,20 @@ public class MG extends MGBase{
     }
     mg.runBenchMark();
   }
-   
+
   public void run(){runBenchMark();}
-    
+
   public void runBenchMark(){
     BMArgs.Banner(BMName,CLASS,serial,num_threads);
 
     int niter=getInputPars();
-    
+
     nsizes=new int[3];
     setup(nsizes);
     n1=nsizes[0];
     n2=nsizes[1];
     n3=nsizes[2];
-     
+
     setTimers();
     timer.resetAllTimers();
     timer.start(T_init);
@@ -116,15 +116,15 @@ public class MG extends MGBase{
       resid(u,v,r,0,n1,n2,n3);
     }else{
       mg3Pmaster(u,v,r,n1,n2,n3);
-      residMaster(u,v,r,0,n1,n2,n3);	 
+      residMaster(u,v,r,0,n1,n2,n3);	
     }
 
     zero3(u,0,n1,n2,n3);
     zran3(v,n1,n2,n3,nx[lt-1],ny[lt-1]);
 
     timer.stop(T_init);
-    timer.start(T_bench);     
- 
+    timer.start(T_bench);
+
     if (timeron) timer.start(T_resid2);
     if(serial) resid(u,v,r,0,n1,n2,n3);
     else residMaster(u,v,r,0,n1,n2,n3);
@@ -134,14 +134,14 @@ public class MG extends MGBase{
        if(serial) mg3P(u,v,r,n1,n2,n3);
        else mg3Pmaster(u,v,r,n1,n2,n3);
        if (timeron) timer.stop(T_mg3P);
-       
+
        if (timeron) timer.start(T_resid2);
        if(serial) resid(u,v,r,0,n1,n2,n3);
        else residMaster(u,v,r,0,n1,n2,n3);
        if (timeron) timer.stop(T_resid2);
     }
     timer.stop(T_bench);
-    
+
     double tinit = timer.readTimer(T_init);
     System.out.println(" Initialization time: "+tinit+" seconds");
     rnm2=norm2u3(r,n1,n2,n3,rnmu,nx[lt-1],ny[lt-1],nz[lt-1]);
@@ -160,10 +160,10 @@ public class MG extends MGBase{
   			  serial,
   			  num_threads,
   			  bid);
-    results.print();			      
+    results.print();			
     if (timeron) printTimers();
   }
-  
+
   public int verify(double rnm2){
     double verify_value=0.0;
     epsilon = 1.0E-8;
@@ -171,7 +171,7 @@ public class MG extends MGBase{
        if(CLASS=='S') {
   	  verify_value = 0.530770700573E-4;
        }else if(CLASS=='W') {
-  	  verify_value = 0.250391406439E-17; 
+  	  verify_value = 0.250391406439E-17;
        }else if(CLASS=='A') {
   	  verify_value = 0.2433365309E-5;
        }else if(CLASS=='B') {
@@ -190,11 +190,11 @@ public class MG extends MGBase{
     }else{
        verified = -1;
     }
-    BMResults.printVerificationStatus(CLASS,verified,BMName); 
-    return  verified;  
+    BMResults.printVerificationStatus(CLASS,verified,BMName);
+    return  verified;
   }
   public double getMFLOPS(double tm,int niter){
-    double mflops = 0.0;    
+    double mflops = 0.0;
     if( tm > 0.0 ) {
       mflops = 58.0*n1*n2*n3;
       mflops *= niter / (tm*1000000.0);
@@ -206,7 +206,7 @@ public class MG extends MGBase{
     File f2 = new File("mg.input");
     if ( f2.exists() ){
       System.out.println("Reading from input file mg.input");
-      try{  
+      try{
         FileInputStream fis = new FileInputStream(f2);
         DataInputStream datafile = new DataInputStream(fis);
         lt = datafile.readInt();
@@ -219,18 +219,18 @@ public class MG extends MGBase{
         lnz = datafile.readInt();
         nit = datafile.readInt();
         fis.close();
-      }catch(Exception e){  
+      }catch(Exception e){
         System.err.println("Error reading from file mg.input");
-      }      
+      }
       if (lnx!=lny||lnx!=lnz){
-  	CLASS = 'U'; 
+  	CLASS = 'U';
       }else if(  lnx==32&&nit==4 ){
   	CLASS = 'S';
       }else if( lnx==64&&nit==40 ){
   	CLASS = 'W';
       }else if( lnx==256&&nit==20 ){
   	CLASS = 'B';
-      }else if( lnx==512&&nit==20 ){  
+      }else if( lnx==512&&nit==20 ){
   	CLASS = 'C';
       }else if( lnx==256&&nit==4 ){
   	CLASS = 'A';
@@ -238,12 +238,12 @@ public class MG extends MGBase{
   	CLASS = 'U';
       }
     }else{
-      System.out.println(" No input file mg.input, Using compiled defaults"); 
+      System.out.println(" No input file mg.input, Using compiled defaults");
     }
     System.out.println(" Size:  "+nx[lt-1]+"x"+ny[lt-1]+"x"+nz[lt-1]
                       +" Iterations:   " + nit );
     return nit;
-  } 
+  }
   public void setTimers(){
     File f1 = new File("timer.flag");
     if( f1.exists() ){
@@ -276,7 +276,7 @@ public class MG extends MGBase{
       }
     }
   }
-  
+
   public void setup(int nsizes[]){
     int k;
     int d, i, j;
@@ -316,12 +316,12 @@ public class MG extends MGBase{
     ie1 = 1 + ng[k*size1];
     n1=nsizes[0] = 3 + ie1 - is1;
     is2 = 2 + ng[1+k*size1] - ng[1+k*size1];
-    ie2 = 1 + ng[1+k*size1]; 
+    ie2 = 1 + ng[1+k*size1];
     n2=nsizes[1] = 3 + ie2 - is2;
     is3 = 2 + ng[2+k*size1] - ng[2+k*size1];
     ie3 = 1 + ng[2+k*size1];
     n3=nsizes[2] = 3 + ie3 - is3;
-    
+
     ir[lt-1]=0;
     for(j = lt-2;j>=0;j--){
        ir[j]=ir[j+1]+m1[j+1]*m2[j+1]*m3[j+1];
@@ -336,7 +336,7 @@ public class MG extends MGBase{
   	  for(i1=0;i1<n1;i1++)
   	     z[off+i1+n1*(i2+n2*i3)]=0.0;
   }
-   
+
   public void zran3(double z[],int n1,int n2,int n3,int nx,int ny){
 //c---------------------------------------------------------------------
 //c     zran3  loads +1 at ten randomly chosen points,
@@ -350,10 +350,10 @@ public class MG extends MGBase{
       double ten[]=new double[mm*2];
       double temp, best;
       int i;
-      int j1[]=new int[mm*2], 
+      int j1[]=new int[mm*2],
           j2[]=new int[mm*2],
           j3[]=new int[mm*2];
-      int jg[]=new int[4*mm*2], 
+      int jg[]=new int[4*mm*2],
           jg_temp[]=new int[4];
 
       zero3(z,0,n1,n2,n3);
@@ -395,14 +395,14 @@ public class MG extends MGBase{
          for(i2=1;i2<n2-1;i2++){
             for(i1=1;i1<n1-1;i1++){
                if( z[i1+n1*(i2+n2*i3)] > ten[mm] ){
-                  ten[mm] = z[i1+n1*(i2+n2*i3)]; 
+                  ten[mm] = z[i1+n1*(i2+n2*i3)];
                   j1[mm] = i1;
                   j2[mm] = i2;
                   j3[mm] = i3;
                   bubble( ten, j1, j2, j3, mm, 1 );
                }
                if( z[i1+n1*(i2+n2*i3)] < ten[0] ){
-                  ten[0] = z[i1+n1*(i2+n2*i3)]; 
+                  ten[0] = z[i1+n1*(i2+n2*i3)];
                   j1[0] = i1;
                   j2[0] = i2;
                   j3[0] = i3;
@@ -420,30 +420,30 @@ public class MG extends MGBase{
          best = z[j1[i1-1+mm]+n1*(j2[i1-1+mm]+n2*(j3[i1-1+mm]))];
          if(best==z[j1[i1-1+mm]+n1*(j2[i1-1+mm]+n2*(j3[i1-1+mm]))]){
             jg[4*(i+mm)] = 0;
-            jg[1+4*(i+mm)] = is1 - 2 + j1[i1-1+mm]; 
-            jg[2+4*(i+mm)] = is2 - 2 + j2[i1-1+mm]; 
-            jg[3+4*(i+mm)] = is3 - 2 + j3[i1-1+mm]; 
+            jg[1+4*(i+mm)] = is1 - 2 + j1[i1-1+mm];
+            jg[2+4*(i+mm)] = is2 - 2 + j2[i1-1+mm];
+            jg[3+4*(i+mm)] = is3 - 2 + j3[i1-1+mm];
             i1 = i1-1;
          }else{
             jg[4*(i+mm)] = 0;
-            jg[1+4*(i+mm)] = 0; 
-            jg[2+4*(i+mm)] = 0; 
-            jg[3+4*(i+mm)] = 0; 
-         }	 
+            jg[1+4*(i+mm)] = 0;
+            jg[2+4*(i+mm)] = 0;
+            jg[3+4*(i+mm)] = 0;
+         }	
          ten[i+mm] = best;
 
          best = z[j1[i0-1]+n1*(j2[i0-1]+n2*(j3[i0-1]))];
          if(best==z[j1[i0-1]+n1*(j2[i0-1]+n2*(j3[i0-1]))]){
             jg[4*i] = 0;
-            jg[1+4*i] = is1 - 2 + j1[i0-1]; 
-            jg[2+4*i] = is2 - 2 + j2[i0-1]; 
-            jg[3+4*i] = is3 - 2 + j3[i0-1]; 
+            jg[1+4*i] = is1 - 2 + j1[i0-1];
+            jg[2+4*i] = is2 - 2 + j2[i0-1];
+            jg[3+4*i] = is3 - 2 + j3[i0-1];
             i0 = i0-1;
          }else{
             jg[4*i] = 0;
-            jg[1+4*i] = 0; 
-            jg[2+4*i] = 0; 
-            jg[3+4*i] = 0; 
+            jg[1+4*i] = 0;
+            jg[2+4*i] = 0;
+            jg[3+4*i] = 0;
          }
          ten[i] = best;
       }
@@ -469,7 +469,7 @@ public class MG extends MGBase{
 //c     and eighth weight at the corners) for inhomogeneous boundaries.
 //c---------------------------------------------------------------------
 //      double precision r(n1,n2,n3)
-      if (timeron) timer.start(T_norm2);      
+      if (timeron) timer.start(T_norm2);
       rnmu = 0.0;
       double rnm2=0.0;
       for(int i3=1;i3<n3-1;i3++)
@@ -550,22 +550,22 @@ System.out.println("*****TestNorm  "+rnm2);
             }
          }
       }
-    }   
+    }
 
-   
+
    public void resid(double u[],double v[],double r[],
                      int off,int n1,int n2,int n3){
 //c---------------------------------------------------------------------
 //c     resid computes the residual:  r = v - Au
 //c
 //c     This  implementation costs  15A + 4M per result, where
-//c     A and M denote the costs of Addition (or Subtraction) and 
-//c     Multiplication, respectively. 
+//c     A and M denote the costs of Addition (or Subtraction) and
+//c     Multiplication, respectively.
 //c     Presuming coefficient a(1) is zero (the NPB assumes this,
 //c     but it is thus not a general case), 3A + 1M may be eliminated,
 //c     resulting in 12A + 3M.
-//c     Note that this vectorizes, and is also fine for cache 
-//c     based machines.  
+//c     Note that this vectorizes, and is also fine for cache
+//c     based machines.
 //c---------------------------------------------------------------------
       int i3, i2, i1;
       double u1[]=new double[nm+1];
@@ -621,7 +621,7 @@ System.out.println("*****TestNorm  "+rnm2);
 //c---------------------------------------------------------------------
       zero3(u,ir[k],m1[k],m2[k],m3[k]);
       psinv(r,ir[k],u,ir[k],m1[k],m2[k],m3[k]);
-      for(k=lb;k<lt-1;k++){     
+      for(k=lb;k<lt-1;k++){
           j = k-1;
 //c---------------------------------------------------------------------
 //c        prolongate from level k-1  to k
@@ -665,7 +665,7 @@ System.out.println("*****TestNorm  "+rnm2);
 //c---------------------------------------------------------------------
       zero3(u,ir[k],m1[k],m2[k],m3[k]);
       psinvMaster(r,ir[k],u,ir[k],m1[k],m2[k],m3[k]);
-      for(k=lb;k<lt-1;k++){     
+      for(k=lb;k<lt-1;k++){
           j = k-1;
 //c---------------------------------------------------------------------
 //c        prolongate from level k-1  to k
@@ -687,23 +687,23 @@ System.out.println("*****TestNorm  "+rnm2);
       residMaster(u,v,r,0,n1,n2,n3);
       psinvMaster(r,0,u,0,n1,n2,n3);
   }
- 
+
   public void rprj3(double r[],int roff,int m1k,int m2k,int m3k,
                    int soff,int m1j,int m2j,int m3j){
 //c---------------------------------------------------------------------
-//c     rprj3 projects onto the next coarser grid, 
+//c     rprj3 projects onto the next coarser grid,
 //c     using a trilinear Finite Element projection:  s = r' = P r
-//c     
+//c
 //c     This  implementation costs  20A + 4M per result, where
-//c     A and M denote the costs of Addition and Multiplication.  
-//c     Note that this vectorizes, and is also fine for cache 
-//c     based machines.  
+//c     A and M denote the costs of Addition and Multiplication.
+//c     Note that this vectorizes, and is also fine for cache
+//c     based machines.
 //c---------------------------------------------------------------------
 //      double precision r(m1k,m2k,m3k), s(m1j,m2j,m3j)
       int j3, j2, j1, i3, i2, i1, d1, d2, d3, j;
 
       double x2,y2;
-      double x1[] = new double[nm+1], 
+      double x1[] = new double[nm+1],
              y1[] = new double[nm+1];
 
       if (timeron) timer.start(T_rprj3);
@@ -754,17 +754,17 @@ System.out.println("*****TestNorm  "+rnm2);
       comm3(r,soff,m1j,m2j,m3j);
       if (timeron) timer.stop(T_rprj3);
   }
-  
+
   public void interp(double u[],int zoff,int mm1,int mm2,int mm3,
                      int uoff,int n1,int n2,int n3 ){
 //c---------------------------------------------------------------------
 //c     interp adds the trilinear interpolation of the correction
 //c     from the coarser grid to the current approximation:  u = u + Qu'
-//c     
+//c
 //c     Observe that this  implementation costs  16A + 4M, where
-//c     A and M denote the costs of Addition and Multiplication.  
-//c     Note that this vectorizes, and is also fine for cache 
-//c     based machines.  Vector machines may get slightly better 
+//c     A and M denote the costs of Addition and Multiplication.
+//c     Note that this vectorizes, and is also fine for cache
+//c     based machines.  Vector machines may get slightly better
 //c     performance however, with 8 separate "do i1" loops, rather than 4.
 //c---------------------------------------------------------------------
 //      double precision z(mm1,mm2,mm3),u(n1,n2,n3)
@@ -817,7 +817,7 @@ System.out.println("*****TestNorm  "+rnm2);
             d1 = 1;
             t1 = 0;
          }
-         
+
          if(n2==3){
             d2 = 2;
             t2 = 1;
@@ -825,7 +825,7 @@ System.out.println("*****TestNorm  "+rnm2);
             d2 = 1;
             t2 = 0;
          }
-         
+
          if(n3==3){
             d3 = 2;
             t3 = 1;
@@ -833,7 +833,7 @@ System.out.println("*****TestNorm  "+rnm2);
             d3 = 1;
             t3 = 0;
          }
-         
+
          for(i3=1;i3<=mm3-1;i3++){
             for(i2=1;i2<=mm2-1;i2++){
                for(i1=1;i1<=mm1-1;i1++){
@@ -894,12 +894,12 @@ System.out.println("*****TestNorm  "+rnm2);
 //c     psinv applies an approximate inverse as smoother:  u = u + Cr
 //c
 //c     This  implementation costs  15A + 4M per result, where
-//c     A and M denote the costs of Addition and Multiplication.  
+//c     A and M denote the costs of Addition and Multiplication.
 //c     Presuming coefficient c(3) is zero (the NPB assumes this,
 //c     but it is thus not a general case), 2A + 1M may be eliminated,
 //c     resulting in 13A + 3M.
-//c     Note that this vectorizes, and is also fine for cache 
-//c     based machines.  
+//c     Note that this vectorizes, and is also fine for cache
+//c     based machines.
 //c---------------------------------------------------------------------
 //      double precision u(n1,n2,n3),r(n1,n2,n3),c(0:3)
       int i3, i2, i1;
@@ -917,7 +917,7 @@ System.out.println("*****TestNorm  "+rnm2);
                       + r[roff+i1+n1*(i2-1+n2*(i3+1))] + r[roff+i1+n1*(i2+1+n2*(i3+1))];
             }
             for(i1=1;i1<n1-1;i1++){
-               u[uoff+i1+n1*(i2+n2*i3)] += 
+               u[uoff+i1+n1*(i2+n2*i3)] +=
                              c[0] * r[roff+i1+n1*(i2+n2*i3)]
                            + c[1] * ( r[roff+i1-1+n1*(i2+n2*i3)] + r[roff+i1+1+n1*(i2+n2*i3)]
                                     + r1[i1] )
@@ -937,27 +937,27 @@ System.out.println("*****TestNorm  "+rnm2);
       comm3(u,uoff,n1,n2,n3);
       if (timeron) timer.stop(T_psinv);
   }
-  
+
    public void residMaster(double u[],double v[],double r[],
                            int off,int n1,int n2,int n3){
      if (timeron) timer.start(T_resid);
-     if(num_threads==1) resid(u,v,r,off,n1,n2,n3); 
-     else{       
+     if(num_threads==1) resid(u,v,r,off,n1,n2,n3);
+     else{
        boolean visr=false;
        if(v==r)visr=true;
        synchronized(this){
          for(int l=0;l<num_threads;l++)
            synchronized(resid[l]){
-             resid[l].done=false; 
+             resid[l].done=false;
              resid[l].visr=visr;
              resid[l].wstart=1;
              resid[l].wend=n3;
-        	 
+        	
              resid[l].n1=n1;
              resid[l].n2=n2;
-             resid[l].n3=n3;	       
+             resid[l].n3=n3;	
              resid[l].off=off;
-             
+
              resid[l].notify();
            }
          for(int l=0;l<num_threads;l++)
@@ -970,7 +970,7 @@ System.out.println("*****TestNorm  "+rnm2);
      }
      if (timeron) timer.stop(T_resid);
   }
-  
+
   public void psinvMaster(double r[],int roffl,double u[],
                           int uoffl,int n1,int n2,int n3){
     if (timeron) timer.start(T_psinv);
@@ -979,16 +979,16 @@ System.out.println("*****TestNorm  "+rnm2);
       synchronized(this){
         for(int l=0;l<num_threads;l++)
           synchronized(psinv[l]){
-            psinv[l].done=false;  
+            psinv[l].done=false;
             psinv[l].wstart=1;
-            psinv[l].wend=n3;		   
+            psinv[l].wend=n3;		
 
             psinv[l].n1=n1;
             psinv[l].n2=n2;
             psinv[l].n3=n3;		
             psinv[l].roff=roffl;
             psinv[l].uoff=uoffl;
-            
+
             psinv[l].notify();
           }
         for(int l=0;l<num_threads;l++)
@@ -1001,26 +1001,26 @@ System.out.println("*****TestNorm  "+rnm2);
     }
     if (timeron) timer.stop(T_psinv);
   }
-  
+
   public void interpMaster(double u[],
                            int zoffl,int mm1,int mm2,int mm3,
                            int uoffl,int n1,int n2,int n3 ){
      if (timeron) timer.start(T_interp);
      if(num_threads==1) interp(u,zoffl,mm1,mm2,mm3,uoffl,n1,n2,n3);
-     else{       
+     else{
 	synchronized(this){
 	  for(int l=0;l<num_threads;l++)
 	    synchronized(interp[l]){
 	      interp[l].done=false;
 	      interp[l].wstart=1;
 	      interp[l].wend=mm3;
-	      	      
+	      	
 	      interp[l].mm1=mm1;
 	      interp[l].mm2=mm2;
 	      interp[l].mm3=mm3;
 	      interp[l].n1=n1;
 	      interp[l].n2=n2;
-	      interp[l].n3=n3;	           
+	      interp[l].n3=n3;	
 	      interp[l].zoff=zoffl;
 	      interp[l].uoff=uoffl;
 
@@ -1035,13 +1035,13 @@ System.out.println("*****TestNorm  "+rnm2);
      }
      if (timeron) timer.stop(T_interp);
   }
-  
+
   public void rprj3Master(double r[],
                           int roffl,int m1k,int m2k,int m3k,
                           int soffl,int m1j,int m2j,int m3j){
      if (timeron) timer.start(T_rprj3);
-     if(num_threads==1) rprj3(r,roffl,m1k,m2k,m3k,soffl,m1j,m2j,m3j); 
-     else{       
+     if(num_threads==1) rprj3(r,roffl,m1k,m2k,m3k,soffl,m1j,m2j,m3j);
+     else{
         synchronized(this){
 	  for(int l=0;l<num_threads;l++)
 	    synchronized(rprj[l]){
@@ -1053,7 +1053,7 @@ System.out.println("*****TestNorm  "+rnm2);
 	      rprj[l].m3k=m3k;
 	      rprj[l].m1j=m1j;
 	      rprj[l].m2j=m2j;
-	      rprj[l].m3j=m3j;	           
+	      rprj[l].m3j=m3j;	
 	      rprj[l].roff=roffl;
 	      rprj[l].zoff=soffl;
 
@@ -1062,7 +1062,7 @@ System.out.println("*****TestNorm  "+rnm2);
 	  for(int l=0;l<num_threads;l++){
 	    while(!rprj[l].done){
 	      try{wait();}catch(InterruptedException e){}
-	      notifyAll();	    
+	      notifyAll();	
 	    }
 	  }
 	}
@@ -1070,10 +1070,10 @@ System.out.println("*****TestNorm  "+rnm2);
      }
      if (timeron) timer.stop(T_rprj3);
   }
-  
+
   public double getTime(){return timer.readTimer(T_bench);}
   public void finalize() throws Throwable{
-    System.out.println("MG: is about to be garbage collected"); 
+    System.out.println("MG: is about to be garbage collected");
     super.finalize();
   }
 }

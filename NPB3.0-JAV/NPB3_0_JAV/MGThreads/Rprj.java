@@ -51,7 +51,7 @@ public class Rprj extends MGBase{
   public int m1j, m2j, m3j;
   public int zoff, roff;
 
-  int start,end,work;	      
+  int start,end,work;	
   int state=0;
   double x1[],y1[];
 
@@ -83,15 +83,15 @@ public class Rprj extends MGBase{
     	step();
     	synchronized(master){done=true; master.notify();}
       }
-    }	    
+    }	
   }
 
     public void step(){
       int j3, j2, j1, i3, i2, i1, d1, d2, d3, j;
       double x2,y2;
-      
+
       if(work==0) return;
-      
+
       if(m1k==3) d1 = 2; else d1 = 1;
       if(m2k==3) d2 = 2; else d2 = 1;
       if(m3k==3) d3 = 2; else d3 = 1;
@@ -134,7 +134,7 @@ public class Rprj extends MGBase{
             r[zoff+j1+m1j*(m2j-1+m2j*j3)] = r[zoff+j1+m1j*(1+m2j*j3)];
          }
     }
-    
+
     void GetWork(){
       int workpt=(wend-wstart)/num_threads;
       int remainder=wend-wstart-workpt*num_threads;

@@ -70,13 +70,13 @@ public class RHSCompute extends BTBase{
   void Init(BT bt){
     //initialize shared data
     IMAX=bt.IMAX;
-    JMAX=bt.JMAX; 
-    KMAX=bt.KMAX; 
-    problem_size=bt.problem_size; 
+    JMAX=bt.JMAX;
+    KMAX=bt.KMAX;
+    problem_size=bt.problem_size;
     grid_points=bt.grid_points;
     niter_default=bt.niter_default;
     dt_default=bt.dt_default;
-    
+
     u=bt.u;
     rhs=bt.rhs;
     forcing=bt.forcing;
@@ -86,7 +86,7 @@ public class RHSCompute extends BTBase{
     isize2=bt.isize2;
     jsize2=bt.jsize2;
     ksize2=bt.ksize2;
-    
+
     us=bt.us;
     vs=bt.vs;
     ws=bt.ws;
@@ -95,12 +95,12 @@ public class RHSCompute extends BTBase{
     square=bt.square;
     jsize1=bt.jsize1;
     ksize1=bt.ksize1;
-    
+
     ue=bt.ue;
     buf=bt.buf;
     jsize3=bt.jsize3;
   }
-  public void run(){    
+  public void run(){
     for(;;){
       synchronized(this){
       while(done==true){
@@ -114,9 +114,9 @@ public class RHSCompute extends BTBase{
       }
     }
   }
-    
+
   public void step(){
-    int i, j, k, m;   
+    int i, j, k, m;
     switch(state){
     case 1:
 //---------------------------------------------------------------------
@@ -155,10 +155,10 @@ public class RHSCompute extends BTBase{
             }
          }
       }
-      
+
       break;
     case 2:
-      
+
 //---------------------------------------------------------------------
 //     compute xi-direction fluxes
 //---------------------------------------------------------------------
@@ -259,7 +259,7 @@ public class RHSCompute extends BTBase{
             }
          }
       }
- 
+
       break;
     case 3:
 //---------------------------------------------------------------------
@@ -361,7 +361,7 @@ public class RHSCompute extends BTBase{
             }
          }
       }
-     
+
 
       break;
     case 4:
@@ -375,7 +375,7 @@ public class RHSCompute extends BTBase{
 	    wijk = ws[i+j*jsize1+k*ksize1];
 	    wp1  = ws[i+j*jsize1+(k+1)*ksize1];
 	    wm1  = ws[i+j*jsize1+(k-1)*ksize1];
-	    
+	
 	    rhs[0+i*isize2+j*jsize2+k*ksize2] = rhs[0+i*isize2+j*jsize2+k*ksize2] + dz1tz1 *
                        (u[0+i*isize2+j*jsize2+(k+1)*ksize2] - 2.0*u[0+i*isize2+j*jsize2+k*ksize2] +
                        u[0+i*isize2+j*jsize2+(k-1)*ksize2]) -
@@ -467,7 +467,7 @@ public class RHSCompute extends BTBase{
 	  }
 	}
       }
-      
+
       break;
     case 5:
 
@@ -495,7 +495,7 @@ public class RHSCompute extends BTBase{
 	  rhs_x_momentum+= u[1+i*isize2+j*jsize2+k*ksize2] + rhs[1+i*isize2+j*jsize2+k*ksize2];
 	  rhs_y_momentum+= u[2+i*isize2+j*jsize2+k*ksize2] + rhs[2+i*isize2+j*jsize2+k*ksize2];
 	  rhs_z_momentum+= u[3+i*isize2+j*jsize2+k*ksize2] + rhs[3+i*isize2+j*jsize2+k*ksize2];
-	  rhs_energy+=     u[4+i*isize2+j*jsize2+k*ksize2] + rhs[4+i*isize2+j*jsize2+k*ksize2];	 
+	  rhs_energy+=     u[4+i*isize2+j*jsize2+k*ksize2] + rhs[4+i*isize2+j*jsize2+k*ksize2];	
 	}
       }
     }
@@ -503,7 +503,7 @@ public class RHSCompute extends BTBase{
     System.out.println(" x_momentum: "+rhs_x_momentum);
     System.out.println(" y_momentum: "+rhs_y_momentum);
     System.out.println(" z_momentum: "+rhs_z_momentum);
-    System.out.println(" energy: "+rhs_energy);    
+    System.out.println(" energy: "+rhs_energy);
   }
 }
 

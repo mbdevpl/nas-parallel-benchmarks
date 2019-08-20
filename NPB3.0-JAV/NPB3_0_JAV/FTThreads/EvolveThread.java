@@ -47,12 +47,12 @@ public class EvolveThread extends FTBase{
   public int kt=0;
   public int id;
   public boolean done = true;
-  
-  int lower_bound1,upper_bound1; 
-  double xtr[],xnt[]; 
+
+  int lower_bound1,upper_bound1;
+  double xtr[],xnt[];
   int ixnt,jxnt,kxnt;
   int ixtr,jxtr,kxtr;
-  
+
   static final double ap =  (- 4.0 * alpha * pi*pi );
 
   public EvolveThread(FT ft,int low1, int high1){
@@ -67,11 +67,11 @@ public class EvolveThread extends FTBase{
     //initialize shared data
     xtr=ft.xtr;
     xnt=ft.xnt;
-    
+
     nx=ft.nx;
     ny=ft.ny;
     nz=ft.nz;
-    
+
     ixtr=ft.isize3;
     jxtr=ft.jsize3;
     kxtr=ft.ksize3;
@@ -80,7 +80,7 @@ public class EvolveThread extends FTBase{
     kxnt=ft.ksize4;
   }
 
-  public void run(){    
+  public void run(){
     for(;;){
       synchronized(this){
         while(done==true){
@@ -107,10 +107,10 @@ public class EvolveThread extends FTBase{
 	  double lexp=Math.exp((ap*(jj*jj + ik2))*(kt+1));
 	  int xntidx=j*ixnt+k*jxnt+i*kxnt;
 	  int xtridx=j*ixtr+i*jxtr+k*kxtr;
-	  xnt[REAL+xntidx] = lexp*xtr[REAL+xtridx]; 
+	  xnt[REAL+xntidx] = lexp*xtr[REAL+xtridx];
 	  xnt[IMAG+xntidx] = lexp*xtr[IMAG+xtridx];
 	}
       }
-    }   
+    }
   }
 }

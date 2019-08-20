@@ -5,12 +5,12 @@ c  header.h
 c
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
- 
+
        implicit none
 
 c---------------------------------------------------------------------
 c The following include file is generated automatically by the
-c "setparams" utility. It defines 
+c "setparams" utility. It defines
 c      maxcells:      the square root of the maximum number of processors
 c      problem_size:  12, 64, 102, 162 (for class T, A, B, C)
 c      dt_default:    default time step for this problem size if no
@@ -28,35 +28,35 @@ c---------------------------------------------------------------------
       logical           timeron
       common /global/   elapsed_time, grid_points, timeron
       include 'cnst.h'
-      
-c      double precision  tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, 
-c     >                  dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4, 
-c     >                  dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt, 
-c     >                  ce(5,13), dxmax, dymax, dzmax, xxcon1, xxcon2, 
+
+c      double precision  tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3,
+c     >                  dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4,
+c     >                  dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt,
+c     >                  ce(5,13), dxmax, dymax, dzmax, xxcon1, xxcon2,
 c     >                  xxcon3, xxcon4, xxcon5, dx1tx1, dx2tx1, dx3tx1,
 c     >                  dx4tx1, dx5tx1, yycon1, yycon2, yycon3, yycon4,
 c     >                  yycon5, dy1ty1, dy2ty1, dy3ty1, dy4ty1, dy5ty1,
-c     >                  zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1, 
-c     >                  dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1, 
-c     >                  dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2, 
+c     >                  zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1,
+c     >                  dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1,
+c     >                  dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2,
 c     >                  c3, c4, c5, c4dssp, c5dssp, dtdssp, dttx1,
-c     >                  dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1, 
-c     >                  c2dtty1, c2dttz1, comz1, comz4, comz5, comz6, 
+c     >                  dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1,
+c     >                  c2dtty1, c2dttz1, comz1, comz4, comz5, comz6,
 c     >                  c3c4tx3, c3c4ty3, c3c4tz3, c2iv, con43, con16
 
 c      common /constants/ tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3,
-c     >                  dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4, 
-c     >                  dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt, 
-c     >                  ce, dxmax, dymax, dzmax, xxcon1, xxcon2, 
+c     >                  dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4,
+c     >                  dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt,
+c     >                  ce, dxmax, dymax, dzmax, xxcon1, xxcon2,
 c     >                  xxcon3, xxcon4, xxcon5, dx1tx1, dx2tx1, dx3tx1,
 c     >                  dx4tx1, dx5tx1, yycon1, yycon2, yycon3, yycon4,
 c     >                  yycon5, dy1ty1, dy2ty1, dy3ty1, dy4ty1, dy5ty1,
-c     >                  zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1, 
-c     >                  dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1, 
-c     >                  dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2, 
+c     >                  zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1,
+c     >                  dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1,
+c     >                  dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2,
 c     >                  c3, c4, c5, c4dssp, c5dssp, dtdssp, dttx1,
-c     >                  dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1, 
-c     >                  c2dtty1, c2dttz1, comz1, comz4, comz5, comz6, 
+c     >                  dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1,
+c     >                  c2dtty1, c2dttz1, comz1, comz4, comz5, comz6,
 c     >                  c3c4tx3, c3c4ty3, c3c4tz3, c2iv, con43, con16
 
       integer IMAX, JMAX, KMAX
@@ -64,10 +64,10 @@ c     >                  c3c4tx3, c3c4ty3, c3c4tz3, c2iv, con43, con16
       parameter (IMAX=problem_size,JMAX=problem_size,KMAX=problem_size)
 
 c
-c   to improve cache performance, grid dimensions padded by 1 
+c   to improve cache performance, grid dimensions padded by 1
 c   for even number sizes only.
 c
-      double precision 
+      double precision
      >   us      (   0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1),
      >   vs      (   0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1),
      >   ws      (   0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1),
@@ -77,7 +77,7 @@ c
      >   forcing (5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1),
      >   u       (5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1),
      >   rhs     (5, 0:IMAX/2*2, 0:JMAX/2*2, 0:KMAX-1)
-      common /fields/  u, us, vs, ws, qs, rho_i, square, 
+      common /fields/  u, us, vs, ws, qs, rho_i, square,
      >                 rhs, forcing
 
 !HPF$    template gridx(0:KMAX-1)
@@ -89,7 +89,7 @@ c
 !HPF$    align(*,*,:) with gridx :: rho_i, square
 !HPF$    align(*,*,*,:) with gridx :: forcing
 
-      double precision cv(-2:problem_size+1),   
+      double precision cv(-2:problem_size+1),
      >                 cuf(-2:problem_size+1),  q(-2:problem_size+1),
      >                 ue(-2:problem_size+1,5), buf(-2:problem_size+1,5)
       common /work_1d/ cv, cuf, q, ue, buf
@@ -105,7 +105,7 @@ c
 
       double precision  tmp_block(5,5), b_inverse(5,5), tmp_vec(5)
       common /work_solve/ tmp_block, b_inverse, tmp_vec
-      
+
 
 c-----------------------------------------------------------------------
 c   Timer constants

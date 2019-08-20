@@ -1,7 +1,7 @@
 c---------------------------------------------------------------------
 c   Temp. arrays for redistribution
 c---------------------------------------------------------------------
-      double precision 
+      double precision
      >   wsz     (0:IMAX/2*2, 0:JMAX-1, 0:KMAX-1    ),
      >   rho_iz  (0:IMAX/2*2, 0:JMAX-1, 0:KMAX-1    ),
      >   speedz  (0:IMAX/2*2, 0:JMAX-1, 0:KMAX-1    ),

@@ -70,26 +70,26 @@ public class UpperJac extends LUBase{
     isiz1=lu.isiz1;
     isiz2=lu.isiz2;
     isiz3=lu.isiz3;
-    
+
     itmax_default=lu.itmax_default;
     dt_default=lu.dt_default;
     inorm_default=lu.inorm_default;
-    
+
     u=lu.u;
     rsd=lu.rsd;
     frct=lu.frct;
     isize1=lu.isize1;
     jsize1=lu.jsize1;
     ksize1=lu.ksize1;
-    
+
     flux=lu.flux;
     isize2=lu.isize2;
-    
+
     qs=lu.qs;
     rho_i=lu.rho_i;
     jsize3=lu.jsize3;
     ksize3=lu.ksize3;
-    
+
     a=lu.a;
     b=lu.b;
     c=lu.c;
@@ -97,15 +97,15 @@ public class UpperJac extends LUBase{
     isize4=lu.isize4;
     jsize4=lu.jsize4;
     ksize4=lu.ksize4;
-    
+
     nx=lu.nx;
     ny=lu.ny;
     nz=lu.nz;
-    
+
     nx0=lu.nx0;
     ny0=lu.ny0;
     nz0=lu.nz0;
-    
+
     ist=lu.ist;
     iend=lu.iend;
     jst=lu.jst;
@@ -118,7 +118,7 @@ public class UpperJac extends LUBase{
     ki2=lu.ki2;
 
     dxi=lu.dxi;
-    deta=lu.deta; 
+    deta=lu.deta;
     dzeta=lu.dzeta;
     tx1=lu.tx1;
     tx2=lu.tx2;
@@ -129,7 +129,7 @@ public class UpperJac extends LUBase{
     tz1=lu.tz1;
     tz2=lu.tz2;
     tz3=lu.tz3;
-    
+
     dx1=lu.dx1;
     dx2=lu.dx2;
     dx3=lu.dx3;
@@ -147,35 +147,35 @@ public class UpperJac extends LUBase{
     dz3=lu.dz3;
     dz4=lu.dz4;
     dz5=lu.dz5;
-   
+
     dssp=lu.dssp;
     dt=lu.dt;
     omega=lu.omega;
     frc=lu.frc;
     ttotal=lu.ttotal;
 
-    udz=lu.c; 
+    udz=lu.c;
     udy=lu.b;
     udx=lu.a;
     d=lu.d;
     v=lu.rsd;
-    
-    ldmx=lu.isiz1; 
-    ldmy=lu.isiz2; 
-    ldmz=lu.isiz3; 
+
+    ldmx=lu.isiz1;
+    ldmy=lu.isiz2;
+    ldmz=lu.isiz3;
   }
-  
+
   public void run(){
-    int k;   
+    int k;
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
 	}catch(InterruptedException ie){}
       }
       for(k=nz-2;k>=1;k--){
-        step(k);       
+        step(k);
         if(id>0){
 	  while(todo<=0){
 	    try{wait();}catch(Exception e){}
@@ -195,15 +195,15 @@ public class UpperJac extends LUBase{
       }
     }
   }
-  
+
   public void step(int k){
-      int i, j, m;    
+      int i, j, m;
       double  r43;
       double  c1345;
       double  c34;
       double  tmp, tmp1, tmp2, tmp3;
       double  tmat[] =  new double[5*5];
-      
+
       tmp = 1.0 / ( omega * ( 2.0 - omega ) );
       r43 = ( 4.0 / 3.0 );
       c1345 = c1 * c3 * c4 * c5;
@@ -232,7 +232,7 @@ public class UpperJac extends LUBase{
                  * ( - tx1 * r43 - ty1 - tz1 )
                  * ( c34 * tmp2 * u[1+i*isize1+j*jsize1+k*ksize1] );
                d[1+1*isize4+i*jsize4+j*ksize4] =  1.0
-                + dt * 2.0 * c34 * tmp1 
+                + dt * 2.0 * c34 * tmp1
                 * (  tx1 * r43 + ty1 + tz1 )
                 + dt * 2.0 * (   tx1 * dx2
                                    + ty1 * dy2
@@ -436,7 +436,7 @@ public class UpperJac extends LUBase{
                 * ( c34 - c1345 ) * tmp2 * u[1+i*isize1+(j+1)*jsize1+k*ksize1];
                b[4+2*isize4+i*jsize4+j*ksize4] =  dt * ty2
                 * ( c1 * ( u[4+i*isize1+(j+1)*jsize1+k*ksize1] * tmp1 )
-                - c2 
+                - c2
                 * ( qs[i+(j+1)*jsize3+k*ksize3] * tmp1
                      + u[2+i*isize1+(j+1)*jsize1+k*ksize1]*u[2+i*isize1+(j+1)*jsize1+k*ksize1] * tmp2 ) )
                 - dt * ty1
@@ -527,7 +527,7 @@ public class UpperJac extends LUBase{
       for(j=upper_bound1;j>=lower_bound1;j--){
          for(i=iend-1;i>=ist-1;i--){
             for(m=0;m<=4;m++){
-                  tv[m+ i*isize1+ j *jsize1] = 
+                  tv[m+ i*isize1+ j *jsize1] =
             omega * (  udz[m+ 0*isize4+ i*jsize4+ j *ksize4] * v[0+ i*isize1+ j*jsize1+ (k+1) *ksize1]
                      + udz[m+ 1*isize4+ i*jsize4+ j *ksize4] * v[1+ i*isize1+ j*jsize1+ (k+1) *ksize1]
                      + udz[m+ 2*isize4+ i*jsize4+ j *ksize4] * v[2+ i*isize1+ j*jsize1+ (k+1) *ksize1]
@@ -536,16 +536,16 @@ public class UpperJac extends LUBase{
             }
          }
       }
-  } 
-  
+  }
+
   public void step2(int k){
-      int i, j, m;    
+      int i, j, m;
       double  r43;
       double  c1345;
       double  c34;
       double  tmp, tmp1, tmp2, tmp3;
       double  tmat[] =  new double[5*5];
-      
+
       tmp = 1.0 / ( omega * ( 2.0 - omega ) );
       r43 = ( 4.0 / 3.0 );
       c1345 = c1 * c3 * c4 * c5;
@@ -717,8 +717,8 @@ public class UpperJac extends LUBase{
             v[1+i*isize1+j*jsize1+k*ksize1]= v[1+ i*isize1+ j*jsize1+ k *ksize1] - tv[1+ i*isize1+ j *jsize1];
             v[2+i*isize1+j*jsize1+k*ksize1]= v[2+ i*isize1+ j*jsize1+ k *ksize1] - tv[2+ i*isize1+ j *jsize1];
             v[3+i*isize1+j*jsize1+k*ksize1]= v[3+ i*isize1+ j*jsize1+ k *ksize1] - tv[3+ i*isize1+ j *jsize1];
-            v[4+i*isize1+j*jsize1+k*ksize1]= v[4+ i*isize1+ j*jsize1+ k *ksize1] - tv[4+ i*isize1+ j *jsize1];	    
-	}      
+            v[4+i*isize1+j*jsize1+k*ksize1]= v[4+ i*isize1+ j*jsize1+ k *ksize1] - tv[4+ i*isize1+ j *jsize1];	
+	}
       }
    }
 }

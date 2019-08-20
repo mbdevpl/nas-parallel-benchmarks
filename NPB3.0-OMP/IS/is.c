@@ -1,13 +1,13 @@
 /*************************************************************************
- *                                                                       * 
+ *                                                                       *
  *       N  A  S     P A R A L L E L     B E N C H M A R K S  3.0        *
  *                                                                       *
  *                      O p e n M P     V E R S I O N                    *
- *                                                                       * 
- *                                  I S                                  * 
- *                                                                       * 
- ************************************************************************* 
- *                                                                       * 
+ *                                                                       *
+ *                                  I S                                  *
+ *                                                                       *
+ *************************************************************************
+ *                                                                       *
  *   This benchmark is an OpenMP version of the NPB IS code.             *
  *   It is described in NAS Technical Report 99-011.                     *
  *                                                                       *
@@ -33,12 +33,12 @@
  *         E-mail:  npb@nas.nasa.gov                                     *
  *         Fax:     (650) 604-3957                                       *
  *                                                                       *
- ************************************************************************* 
- *                                                                       * 
- *   Author: M. Yarrow                                                   * 
- *   OpenMP version:                                                     * 
- *           H. Jin                                                      * 
- *                                                                       * 
+ *************************************************************************
+ *                                                                       *
+ *   Author: M. Yarrow                                                   *
+ *   OpenMP version:                                                     *
+ *           H. Jin                                                      *
+ *                                                                       *
  *************************************************************************/
 
 #include "npbparams.h"
@@ -123,8 +123,8 @@
 #define  MAX_KEY             (1 << MAX_KEY_LOG_2)
 #define  NUM_BUCKETS         (1 << NUM_BUCKETS_LOG_2)
 #define  NUM_KEYS            TOTAL_KEYS
-#define  SIZE_OF_BUFFERS     NUM_KEYS  
-                                           
+#define  SIZE_OF_BUFFERS     NUM_KEYS
+
 
 #define  MAX_ITERATIONS      10
 #define  TEST_ARRAY_SIZE     5
@@ -145,14 +145,14 @@ INT_TYPE *key_buff_ptr_global;         /* used by full_verify to get */
                                        /* copies of rank info        */
 
 int      passed_verification;
-                                 
+
 
 /************************************/
 /* These are the three main arrays. */
 /* See SIZE_OF_BUFFERS def above    */
 /************************************/
-INT_TYPE key_array[SIZE_OF_BUFFERS],    
-         key_buff1[MAX_KEY],    
+INT_TYPE key_array[SIZE_OF_BUFFERS],
+         key_buff1[MAX_KEY],
          key_buff2[SIZE_OF_BUFFERS],
          partial_verify_vals[TEST_ARRAY_SIZE];
 
@@ -163,29 +163,29 @@ INT_TYPE key_array[SIZE_OF_BUFFERS],
 INT_TYPE test_index_array[TEST_ARRAY_SIZE],
          test_rank_array[TEST_ARRAY_SIZE],
 
-         S_test_index_array[TEST_ARRAY_SIZE] = 
+         S_test_index_array[TEST_ARRAY_SIZE] =
                              {48427,17148,23627,62548,4431},
-         S_test_rank_array[TEST_ARRAY_SIZE] = 
+         S_test_rank_array[TEST_ARRAY_SIZE] =
                              {0,18,346,64917,65463},
 
-         W_test_index_array[TEST_ARRAY_SIZE] = 
+         W_test_index_array[TEST_ARRAY_SIZE] =
                              {357773,934767,875723,898999,404505},
-         W_test_rank_array[TEST_ARRAY_SIZE] = 
+         W_test_rank_array[TEST_ARRAY_SIZE] =
                              {1249,11698,1039987,1043896,1048018},
 
-         A_test_index_array[TEST_ARRAY_SIZE] = 
+         A_test_index_array[TEST_ARRAY_SIZE] =
                              {2112377,662041,5336171,3642833,4250760},
-         A_test_rank_array[TEST_ARRAY_SIZE] = 
+         A_test_rank_array[TEST_ARRAY_SIZE] =
                              {104,17523,123928,8288932,8388264},
 
-         B_test_index_array[TEST_ARRAY_SIZE] = 
+         B_test_index_array[TEST_ARRAY_SIZE] =
                              {41869,812306,5102857,18232239,26860214},
-         B_test_rank_array[TEST_ARRAY_SIZE] = 
-                             {33422937,10244,59149,33135281,99}, 
+         B_test_rank_array[TEST_ARRAY_SIZE] =
+                             {33422937,10244,59149,33135281,99},
 
-         C_test_index_array[TEST_ARRAY_SIZE] = 
+         C_test_index_array[TEST_ARRAY_SIZE] =
                              {44172927,72999161,74326391,129606274,21736814},
-         C_test_rank_array[TEST_ARRAY_SIZE] = 
+         C_test_rank_array[TEST_ARRAY_SIZE] =
                              {61147,882988,266290,133997595,133525895};
 
 
@@ -199,7 +199,7 @@ void full_verify( void );
 
 void c_print_results( char   *name,
                       char   class,
-                      int    n1, 
+                      int    n1,
                       int    n2,
                       int    n3,
                       int    niter,
@@ -277,13 +277,13 @@ double *A;
       double		Z;
       int     		i, j;
 
-      if (KS == 0) 
+      if (KS == 0)
       {
         R23 = 1.0;
         R46 = 1.0;
         T23 = 1.0;
         T46 = 1.0;
-    
+
         for (i=1; i<=23; i++)
         {
           R23 = 0.50 * R23;
@@ -313,7 +313,7 @@ double *A;
       X1 = j;
       X2 = *X - T23 * X1;
       T1 = A1 * X2 + A2 * X1;
-      
+
       j  = R23 * T1;
       T2 = j;
       Z = T1 - T23 * T2;
@@ -322,7 +322,7 @@ double *A;
       T4 = j;
       *X = T3 - T46 * T4;
       return(R46 * *X);
-} 
+}
 
 
 
@@ -343,7 +343,7 @@ void	create_seq( double seed, double a, int begin, int end )
 	    x = randlc(&seed, &a);
 	    x += randlc(&seed, &a);
     	    x += randlc(&seed, &a);
-	    x += randlc(&seed, &a);  
+	    x += randlc(&seed, &a);
 
             key_array[i] = k*x;
 	}
@@ -413,7 +413,7 @@ void full_verify()
     INT_TYPE    k;
 
 
-    
+
 /*  Now, finally, sort the keys:  */
 
 #ifdef SERIAL_SORT
@@ -510,7 +510,7 @@ void rank( int iteration )
         perror("malloc");
         exit(1);
     }
-   
+
     for ( i=0; i < num_threads; i++ ) {
         begin[i] = num_per_thread * i;
         end[i] = begin[i] + num_per_thread;
@@ -524,7 +524,7 @@ void rank( int iteration )
 
 /*  Ranking of all keys occurs in this section:                 */
 
-/*  In this section, the keys themselves are used as their 
+/*  In this section, the keys themselves are used as their
     own indexes to determine how many of each there are: their
     individual population                                       */
 
@@ -537,7 +537,7 @@ void rank( int iteration )
     population, not forgetting to add m, the total of lesser keys,
     to the first key population                                          */
 
-    for( i=0; i<MAX_KEY-1; i++ )   
+    for( i=0; i<MAX_KEY-1; i++ )
         work_buff[i+1] += work_buff[i];
 
 /*  Accumulate the global histogram */
@@ -562,7 +562,7 @@ void rank( int iteration )
 /* Observe that test_rank_array vals are   */
 /* shifted differently for different cases */
     for( i=0; i<TEST_ARRAY_SIZE; i++ )
-    {                                             
+    {
         k = partial_verify_vals[i];          /* test vals were put here */
         if( 0 <= k  &&  k <= NUM_KEYS-1 )
             switch( CLASS )
@@ -573,7 +573,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]+iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -584,7 +584,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]-iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -594,11 +594,11 @@ void rank( int iteration )
                 case 'W':
                     if( i < 2 )
                     {
-                        if( key_buff_ptr[k-1] != 
+                        if( key_buff_ptr[k-1] !=
                                           test_rank_array[i]+(iteration-2) )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -609,7 +609,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]-iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -619,11 +619,11 @@ void rank( int iteration )
                 case 'A':
                     if( i <= 2 )
         	    {
-                        if( key_buff_ptr[k-1] != 
+                        if( key_buff_ptr[k-1] !=
                                           test_rank_array[i]+(iteration-1) )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -631,11 +631,11 @@ void rank( int iteration )
         	    }
                     else
                     {
-                        if( key_buff_ptr[k-1] != 
+                        if( key_buff_ptr[k-1] !=
                                           test_rank_array[i]-(iteration-1) )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -648,7 +648,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]+iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -659,7 +659,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]-iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -672,7 +672,7 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]+iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
@@ -683,14 +683,14 @@ void rank( int iteration )
                         if( key_buff_ptr[k-1] != test_rank_array[i]-iteration )
                         {
                             printf( "Failed partial verification: "
-                                  "iteration %d, test key %d\n", 
+                                  "iteration %d, test key %d\n",
                                    iteration, i );
                         }
                         else
                             passed_verification++;
                     }
                     break;
-            }        
+            }
     }
 
 
@@ -700,10 +700,10 @@ void rank( int iteration )
     in rank are local; making them global slows down the code, probably
     since they cannot be made register by compiler                        */
 
-    if( iteration == MAX_ITERATIONS ) 
+    if( iteration == MAX_ITERATIONS )
         key_buff_ptr_global = key_buff_ptr;
 
-}      
+}
 
 
 /*****************************************************************/
@@ -723,7 +723,7 @@ main( argc, argv )
 
 
 /*  Initialize timers  */
-    timer_on = 0;            
+    timer_on = 0;
     if ((fp = fopen("timer.flag", "r")) != NULL) {
         fclose(fp);
         timer_on = 1;
@@ -764,7 +764,7 @@ main( argc, argv )
                 break;
         };
 
-        
+
 
 /*  Printout initial NPB info */
     printf
@@ -798,16 +798,16 @@ main( argc, argv )
     if (timer_on) timer_stop( 1 );
 
 
-/*  Do one interation for free (i.e., untimed) to guarantee initialization of  
+/*  Do one interation for free (i.e., untimed) to guarantee initialization of
     all data and code pages and respective tables */
-    rank( 1 );  
+    rank( 1 );
 
 /*  Start verification counter */
     passed_verification = 0;
 
     if( CLASS != 'S' ) printf( "\n   iteration\n" );
 
-/*  Start timer  */             
+/*  Start timer  */
     timer_start( 0 );
 
 
@@ -845,7 +845,7 @@ main( argc, argv )
                      timecounter,
                      ((double) (MAX_ITERATIONS*TOTAL_KEYS))
                                                   /timecounter/1000000.,
-                     "keys ranked", 
+                     "keys ranked",
                      passed_verification,
                      NPBVERSION,
                      COMPILETIME,

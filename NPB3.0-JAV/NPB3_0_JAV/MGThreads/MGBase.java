@@ -47,24 +47,24 @@ import NPB3_0_JAV.MG;
 public class MGBase extends Thread{
   public static final String BMName="MG";
   public char CLASS = 'S';
-  
+
   public static final int maxlevel=11;
   public static int nit;
 
   public int nx_default, ny_default, nz_default;
   public int nit_default, lm, lt_default;
   public int ndim1, ndim2, ndim3;
-  
+
   public int nm,nv,nr,nm2;
   public int nx[],ny[],nz[];
   public int ir[],m1[],m2[],m3[];
   public int lt,lb;
-  
+
   public double u[],v[],r[],a[],c[];
   public int zoff,zsize3,zsize2,zsize1;
   public int uoff,usize1,usize2,usize3;
   public int roff,rsize1,rsize2,rsize3;
-  
+
   protected static final int T_total=0, T_init=1, T_bench=2, T_mg3P=3,
   	            T_psinv=4, T_resid=5, T_resid2=6, T_rprj3=7,
   	            T_interp=8, T_norm2=9, T_last=9;
@@ -85,14 +85,14 @@ public class MGBase extends Thread{
 
     switch( CLASS ){
     case 'S':
-      nx_default=32; 
-      ny_default=32; 
+      nx_default=32;
+      ny_default=32;
       nz_default=32;
-      nit_default=4; 
-      lm=5; 
+      nit_default=4;
+      lm=5;
       lt_default=5;
-      ndim1 = 5; 
-      ndim2 = 5; 
+      ndim1 = 5;
+      ndim2 = 5;
       ndim3 = 5;
       lt=lt_default;
       nit = nit_default;
@@ -101,14 +101,14 @@ public class MGBase extends Thread{
       nz[lt-1] = nz_default;
     break;
     case 'W':
-      nx_default=64; 
-      ny_default=64; 
+      nx_default=64;
+      ny_default=64;
       nz_default=64;
-      nit_default=40; 
-      lm=6; 
+      nit_default=40;
+      lm=6;
       lt_default=6;
-      ndim1 = 6; 
-      ndim2 = 6; 
+      ndim1 = 6;
+      ndim2 = 6;
       ndim3 = 6;
       lt=lt_default;
       nit = nit_default;
@@ -117,14 +117,14 @@ public class MGBase extends Thread{
       nz[lt-1] = nz_default;
     break;
     case 'A':
-      nx_default=256; 
-      ny_default=256; 
+      nx_default=256;
+      ny_default=256;
       nz_default=256;
-      nit_default=4; 
-      lm=8; 
+      nit_default=4;
+      lm=8;
       lt_default=8;
-      ndim1 = 8; 
-      ndim2 = 8; 
+      ndim1 = 8;
+      ndim2 = 8;
       ndim3 = 8;
       lt=lt_default;
       nit = nit_default;
@@ -133,14 +133,14 @@ public class MGBase extends Thread{
       nz[lt-1] = nz_default;
     break;
     case 'B':
-      nx_default=256; 
-      ny_default=256; 
+      nx_default=256;
+      ny_default=256;
       nz_default=256;
-      nit_default=20; 
-      lm=8; 
+      nit_default=20;
+      lm=8;
       lt_default=8;
-      ndim1 = 8; 
-      ndim2 = 8; 
+      ndim1 = 8;
+      ndim2 = 8;
       ndim3 = 8;
       lt=lt_default;
       nit = nit_default;
@@ -149,14 +149,14 @@ public class MGBase extends Thread{
       nz[lt-1] = nz_default;
     break;
     case 'C':
-      nx_default=512; 
-      ny_default=512; 
+      nx_default=512;
+      ny_default=512;
       nz_default=512;
-      nit_default=20; 
-      lm=9; 
+      nit_default=20;
+      lm=9;
       lt_default=9;
-      ndim1 = 9; 
-      ndim2 = 9; 
+      ndim1 = 9;
+      ndim2 = 9;
       ndim3 = 9;
       lt=lt_default;
       nit = nit_default;
@@ -184,11 +184,11 @@ public class MGBase extends Thread{
 	a = new double[4];
 	c = new double[4];
 
-        a[0] = -8.0/3.0; 
-        a[1] =  0.0; 
-        a[2] =  1.0/6.0; 
+        a[0] = -8.0/3.0;
+        a[1] =  0.0;
+        a[2] =  1.0/6.0;
         a[3] =  1.0/12.0;
-      
+
       if(CLASS=='A'||CLASS=='S'||CLASS=='W') {
 //c---------------------------------------------------------------------
 //c     Coefficients for the S(a) smoother
@@ -209,7 +209,7 @@ public class MGBase extends Thread{
     }
 
   public int num_threads=0;
-  public int wstart,wend;    
+  public int wstart,wend;
   public Interp interp[];
   public Psinv psinv[];
   public Rprj rprj[];
@@ -226,7 +226,7 @@ public class MGBase extends Thread{
       interp[i]=new Interp(mg);
       interp[i].id=i;
       interp[i].start();
-      
+
       psinv[i]=new Psinv(mg);
       psinv[i].id=i;
       psinv[i].start();
@@ -238,19 +238,19 @@ public class MGBase extends Thread{
       resid[i]=new Resid(mg);
       resid[i].id=i;
       resid[i].start();
-    } 
+    }
   }
     public void checksum(int arr[], String name, boolean stop){
       double csum=0;
       for(int i=0;i<arr.length;i++) csum+=arr[i];
       System.out.println(name + " checksum MG " + csum);
       if(stop) System.exit(0);
-    }  
+    }
     public double dmax1(double a,double b){if(a<b)return b;else return a;}
-    
+
     public void comm3(double u[],int off,int n1,int n2,int n3){
 //c---------------------------------------------------------------------
-//c     comm3 organizes the communication on all borders 
+//c     comm3 organizes the communication on all borders
 //c---------------------------------------------------------------------
 //      double precision u(n1,n2,n3)
       int i1, i2, i3;

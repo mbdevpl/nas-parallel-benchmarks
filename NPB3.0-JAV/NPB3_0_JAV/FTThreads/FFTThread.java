@@ -47,7 +47,7 @@ import java.io.*;
 public class FFTThread extends FTBase{
   public int id;
   public boolean done = true;
-  
+
   double x[];
   double exp1[];
   double exp2[];
@@ -55,7 +55,7 @@ public class FFTThread extends FTBase{
   int n1,n2,n3;
   int lower_bound1,upper_bound1,lower_bound2,upper_bound2;
   int lb1,ub1,lb2,ub2;
-  
+
   int state;
   int sign;
   double plane[];
@@ -67,7 +67,7 @@ public class FFTThread extends FTBase{
     lb1=low1;
     ub1=high1;
     lb2=low2;
-    ub2=high2;   
+    ub2=high2;
     plane=new double[2*(maxdim+1)*maxdim];
     scr = new double[2*(maxdim+1)*maxdim];
     setPriority(Thread.MAX_PRIORITY);
@@ -78,7 +78,7 @@ public class FFTThread extends FTBase{
     //initialize shared data
     maxdim=ft.maxdim;
   }
-  public void run(){    
+  public void run(){
     for(;;){
       synchronized(this){
         while(done==true){
@@ -94,10 +94,10 @@ public class FFTThread extends FTBase{
       }
     }
   }
-  
-  public void setVariables(int sign1,boolean tr,double x1[], 
+
+  public void setVariables(int sign1,boolean tr,double x1[],
                            double exp11[],double exp21[],double exp31[]){
-    sign = sign1; 
+    sign = sign1;
     x = x1;
     exp1 = exp11;
     exp2 = exp21;
@@ -105,7 +105,7 @@ public class FFTThread extends FTBase{
     n1=exp1.length>>1;
     n2=exp2.length>>1;
     n3=exp3.length>>1;
-    
+
     if(tr){
       lower_bound1=lb2;
       upper_bound1=ub2;
@@ -115,10 +115,10 @@ public class FFTThread extends FTBase{
       lower_bound1=lb1;
       upper_bound1=ub1;
       lower_bound2=lb2;
-      upper_bound2=ub2;   
+      upper_bound2=ub2;
     }
   }
-  
+
   public void step(){
     int log = ilog2(n2);
     int isize3=2,
@@ -151,7 +151,7 @@ public class FFTThread extends FTBase{
       }
       break;
     case 3:
-      log = ilog2(n3);     
+      log = ilog2(n3);
       jsize1=2*(n1+1);
       for(int k=lower_bound2;k<=upper_bound2;k++) {
 	for(int i=0; i<n3;i++){
@@ -167,7 +167,7 @@ public class FFTThread extends FTBase{
 	    x[IMAG+j*isize3+k*jsize3+i*ksize3]=plane[IMAG+j*isize1+i*jsize1];
 	  }
 	}
-      }         
+      }
       break;
     }
   }

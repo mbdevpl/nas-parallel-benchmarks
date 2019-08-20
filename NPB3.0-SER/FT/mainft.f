@@ -91,28 +91,28 @@ c---------------------------------------------------------------------
            mflops = 0.0
          endif
          call print_results('FT', class, nx, ny, nz, niter,
-     >      total_time, mflops, '          floating point', verified, 
-     >      npbversion, compiletime, cs1, cs2, cs3, cs4, 
+     >      total_time, mflops, '          floating point', verified,
+     >      npbversion, compiletime, cs1, cs2, cs3, cs4,
      >      cs5, cs6, cs7)
 !
       end
-      
+
       subroutine getclass(class)
         include 'npbparams.h'
 	character class
-        if ((nx .eq. 64) .and. (ny .eq. 64) .and.                 
+        if ((nx .eq. 64) .and. (ny .eq. 64) .and.
      &      (nz .eq. 64) .and. (niter_default .eq. 6)) then
           class='S'
-        else if ((nx .eq. 128) .and. (ny .eq. 128) .and.                 
+        else if ((nx .eq. 128) .and. (ny .eq. 128) .and.
      &           (nz .eq. 32) .and. (niter_default .eq. 6)) then
           class='W'
-        else if ((nx .eq. 256) .and. (ny .eq. 256) .and.                 
+        else if ((nx .eq. 256) .and. (ny .eq. 256) .and.
      &           (nz .eq. 128) .and. (niter_default .eq. 6)) then
           class='A'
-        else if ((nx .eq. 512) .and. (ny .eq. 256) .and.                 
+        else if ((nx .eq. 512) .and. (ny .eq. 256) .and.
      &           (nz .eq. 256) .and. (niter_default .eq. 20)) then
           class='B'
-        else if ((nx .eq. 512) .and. (ny .eq. 512) .and.                 
+        else if ((nx .eq. 512) .and. (ny .eq. 512) .and.
      &           (nz .eq. 512) .and. (niter_default .eq. 20)) then
           class='C'
         else
@@ -121,4 +121,4 @@ c---------------------------------------------------------------------
 	
 	return
       end
-      
+

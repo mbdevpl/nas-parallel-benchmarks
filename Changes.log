@@ -16,7 +16,7 @@ Changes in non-MPI versions of NPB (previously PBN3.0)
       thus, changes made to remove the use of array variable for reduction.
       Relevant modifications in EP, CG, LU, SP, and BT
 
-   3. NPB-OMP: Remove compiler warnings of "Referenced scalar variables 
+   3. NPB-OMP: Remove compiler warnings of "Referenced scalar variables
       use defaults" by declaring explicitly as shared.
       Relevant modifications in FT, LU, and BT
 
@@ -75,7 +75,7 @@ NPB-JAV has been included in NPB3.0-non-MPI.
 [31-May-01] NPB3.0-non-MPI Beta Release (04)
 
 Change made in NPB-OMP -
-   1. NPB-OMP/LU: Failure in verification for number of threads greater 
+   1. NPB-OMP/LU: Failure in verification for number of threads greater
       than the problem size is now fixed.
 
    2. If OMP_NUM_THREADS is unset, the printout will report as "unset"

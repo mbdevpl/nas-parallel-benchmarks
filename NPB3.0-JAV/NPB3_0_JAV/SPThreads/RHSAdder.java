@@ -49,7 +49,7 @@ public class RHSAdder extends SPBase{
 
   //private data
   int lower_bound, upper_bound;
-  
+
   public RHSAdder(SP sp,int low, int high){
     Init(sp);
     lower_bound=low;
@@ -61,15 +61,15 @@ public class RHSAdder extends SPBase{
   void Init(SP sp){
     //initialize shared data
     IMAX=sp.IMAX;
-    JMAX=sp.JMAX; 
-    KMAX=sp.KMAX; 
-    problem_size=sp.problem_size; 
+    JMAX=sp.JMAX;
+    KMAX=sp.KMAX;
+    problem_size=sp.problem_size;
     nx2=sp.nx2;
     ny2=sp.ny2;
     nz2=sp.nz2;
     grid_points=sp.grid_points;
     niter_default=sp.niter_default;
-    dt_default=sp.dt_default;    
+    dt_default=sp.dt_default;
     u=sp.u;
     rhs=sp.rhs;
     forcing=sp.forcing;
@@ -100,10 +100,10 @@ public class RHSAdder extends SPBase{
     q=sp.q;
     ce=sp.ce;
   }
-  
+
   public void run(){
-    for(;;){ 
-      synchronized(this){ 
+    for(;;){
+      synchronized(this){
         while(done==true){
 	  try{
 	    wait();
@@ -113,20 +113,20 @@ public class RHSAdder extends SPBase{
         step();
         synchronized(master){done = true;master.notify();}
       }
-    }  
+    }
   }
 
-  public void step(){  
+  public void step(){
     int i, j, k, m;
     for(k=lower_bound;k<=upper_bound;k++){
       for(j=1;j<=ny2;j++){
 	for(i=1;i<=nx2;i++){
 	  for(m=0;m<=4;m++){
-	    u[m+i*isize1+j*jsize1+k*ksize1] = u[m+i*isize1+j*jsize1+k*ksize1] + 
+	    u[m+i*isize1+j*jsize1+k*ksize1] = u[m+i*isize1+j*jsize1+k*ksize1] +
 	      rhs[m+i*isize1+j*jsize1+k*ksize1];
 	  }
 	}
       }
-    }    
+    }
   }
 }

@@ -64,26 +64,26 @@ public class Scale extends LUBase{
     isiz1=lu.isiz1;
     isiz2=lu.isiz2;
     isiz3=lu.isiz3;
-    
+
     itmax_default=lu.itmax_default;
     dt_default=lu.dt_default;
     inorm_default=lu.inorm_default;
-    
+
     u=lu.u;
     rsd=lu.rsd;
     frct=lu.frct;
     isize1=lu.isize1;
     jsize1=lu.jsize1;
     ksize1=lu.ksize1;
-    
+
     flux=lu.flux;
     isize2=lu.isize2;
-    
+
     qs=lu.qs;
     rho_i=lu.rho_i;
     jsize3=lu.jsize3;
     ksize3=lu.ksize3;
-    
+
     a=lu.a;
     b=lu.b;
     c=lu.c;
@@ -91,15 +91,15 @@ public class Scale extends LUBase{
     isize4=lu.isize4;
     jsize4=lu.jsize4;
     ksize4=lu.ksize4;
-    
+
     nx=lu.nx;
     ny=lu.ny;
     nz=lu.nz;
-    
+
     nx0=lu.nx0;
     ny0=lu.ny0;
     nz0=lu.nz0;
-    
+
     ist=lu.ist;
     iend=lu.iend;
     jst=lu.jst;
@@ -112,7 +112,7 @@ public class Scale extends LUBase{
     ki2=lu.ki2;
 
     dxi=lu.dxi;
-    deta=lu.deta; 
+    deta=lu.deta;
     dzeta=lu.dzeta;
     tx1=lu.tx1;
     tx2=lu.tx2;
@@ -123,7 +123,7 @@ public class Scale extends LUBase{
     tz1=lu.tz1;
     tz2=lu.tz1;
     tz3=lu.tz3;
-    
+
     dx1=lu.dx1;
     dx2=lu.dx2;
     dx3=lu.dx3;
@@ -141,7 +141,7 @@ public class Scale extends LUBase{
     dz3=lu.dz3;
     dz4=lu.dz4;
     dz5=lu.dz5;
-   
+
     dssp=lu.dssp;
     dt=lu.dt;
     omega=lu.omega;
@@ -149,9 +149,9 @@ public class Scale extends LUBase{
     ttotal=lu.ttotal;
  }
 
-  public void run(){    
+  public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -163,7 +163,7 @@ public class Scale extends LUBase{
       }
     }
   }
-  
+
   public void step(){
     int i,j,m, k;
     for(k=lower_bound1;k<=upper_bound1;k++){

@@ -15,7 +15,7 @@ c---------------------------------------------------------------------
       implicit none
 
       include 'applu.incl'
-      interface       
+      interface
             pure extrinsic (hpf_local) subroutine exact(i,j,k,u000ijk)
               implicit none
               include 'exact.h'

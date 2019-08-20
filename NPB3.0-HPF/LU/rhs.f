@@ -60,7 +60,7 @@ c---------------------------------------------------------------------
 
                q = qs(i,j,k)
 
-               flux(2,i) = u(2,i,j,k) * u21 + c2 * 
+               flux(2,i) = u(2,i,j,k) * u21 + c2 *
      >                        ( u(5,i,j,k) - q )
                flux(3,i) = u(3,i,j,k) * u21
                flux(4,i) = u(4,i,j,k) * u21
@@ -182,7 +182,7 @@ c---------------------------------------------------------------------
                u31 = u(3,i,j,k) * rho_i(i,j,k)
                q = qs(i,j,k)
 
-               flux3(2,i,j,k) = u(2,i,j,k) * u31 
+               flux3(2,i,j,k) = u(2,i,j,k) * u31
                flux3(3,i,j,k) = u(3,i,j,k) * u31 + c2 * (u(5,i,j,k)-q)
                flux3(4,i,j,k) = u(4,i,j,k) * u31
                flux3(5,i,j,k) = ( c1 * u(5,i,j,k) - c2 * q ) * u31
@@ -190,29 +190,29 @@ c---------------------------------------------------------------------
          end do
       end do
 
-       rsd(:,ist:iend,jst:jend,2:nz-1) = 
+       rsd(:,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(:,ist:iend,jst:jend,2:nz-1)
-     >           - ty2 * ( flux3(:,ist:iend,jst+1:jend+1,2:nz-1) 
+     >           - ty2 * ( flux3(:,ist:iend,jst+1:jend+1,2:nz-1)
      >                   - flux3(:,ist:iend,jst-1:jend-1,2:nz-1 ) )
-     
-       flux3(2,ist:iend,jst:ny,2:nz-1) = 
+
+       flux3(2,ist:iend,jst:ny,2:nz-1) =
      >             ty3 * ( u(2,ist:iend,jst:ny,2:nz-1)
      >                    /u(1,ist:iend,jst:ny,2:nz-1)
      >                   - u(2,ist:iend,jst-1:ny-1,2:nz-1 )
      >                    /u(1,ist:iend,jst-1:ny-1,2:nz-1) )
 
-       flux3(3,ist:iend,jst:ny,2:nz-1) = 
+       flux3(3,ist:iend,jst:ny,2:nz-1) =
      > (4.0d+00/3.0d+00)*ty3*( u(3,ist:iend,jst:ny,2:nz-1)
      >                        /u(1,ist:iend,jst:ny,2:nz-1)
      >                       - u(3,ist:iend,jst-1:ny-1,2:nz-1 )
      >                        /u(1,ist:iend,jst-1:ny-1,2:nz-1) )
 
-       flux3(4,ist:iend,jst:ny,2:nz-1) = 
+       flux3(4,ist:iend,jst:ny,2:nz-1) =
      >               ty3*( u(4,ist:iend,jst:ny,2:nz-1)
      >                    /u(1,ist:iend,jst:ny,2:nz-1)
      >                   - u(4,ist:iend,jst-1:ny-1,2:nz-1 )
      >                    /u(1,ist:iend,jst-1:ny-1,2:nz-1) )
-       flux3(5,ist:iend,jst:ny,2:nz-1) = 
+       flux3(5,ist:iend,jst:ny,2:nz-1) =
      >               0.50d+00 * ( 1.0d+00 - c1*c5 )*ty3*
      >                   ((u(2,ist:iend,jst:ny,2:nz-1)**2
      >             +       u(3,ist:iend,jst:ny,2:nz-1)**2
@@ -231,41 +231,41 @@ c---------------------------------------------------------------------
      >                    /u(1,ist:iend,jst:ny,2:nz-1)
      >                   - u(5,ist:iend,jst-1:ny-1,2:nz-1 )
      >                    /u(1,ist:iend,jst-1:ny-1,2:nz-1) )
-     
-      rsd(1,ist:iend,jst:jend,2:nz-1) = 
+
+      rsd(1,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(1,ist:iend,jst:jend,2:nz-1)
      >         + dy1 * ty1 * (u(1,ist:iend,jst-1:jend-1,2:nz-1)
      >            - 2.0d+00 * u(1,ist:iend,jst:jend,2:nz-1)
      >                      + u(1,ist:iend,jst+1:jend+1,2:nz-1) )
 
-      rsd(2,ist:iend,jst:jend,2:nz-1) = 
+      rsd(2,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(2,ist:iend,jst:jend,2:nz-1)
-     > + ty3 * c3 * c4 * ( flux3(2,ist:iend,jst+1:jend+1,2:nz-1) 
+     > + ty3 * c3 * c4 * ( flux3(2,ist:iend,jst+1:jend+1,2:nz-1)
      >                   - flux3(2,ist:iend,jst:jend,2:nz-1) )
      >         + dy2 * ty1 * (u(2,ist:iend,jst-1:jend-1,2:nz-1)
      >            - 2.0d+00 * u(2,ist:iend,jst:jend,2:nz-1)
      >                      + u(2,ist:iend,jst+1:jend+1,2:nz-1) )
 
-      rsd(3,ist:iend,jst:jend,2:nz-1) = 
+      rsd(3,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(3,ist:iend,jst:jend,2:nz-1)
-     > + ty3 * c3 * c4 * ( flux3(3,ist:iend,jst+1:jend+1,2:nz-1) 
+     > + ty3 * c3 * c4 * ( flux3(3,ist:iend,jst+1:jend+1,2:nz-1)
      >                   - flux3(3,ist:iend,jst:jend,2:nz-1) )
      >         + dy3 * ty1 * (u(3,ist:iend,jst-1:jend-1,2:nz-1)
      >            - 2.0d+00 * u(3,ist:iend,jst:jend,2:nz-1)
      >                      + u(3,ist:iend,jst+1:jend+1,2:nz-1) )
 
-      rsd(4,ist:iend,jst:jend,2:nz-1) = 
+      rsd(4,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(4,ist:iend,jst:jend,2:nz-1)
-     > + ty3 * c3 * c4 * ( flux3(4,ist:iend,jst+1:jend+1,2:nz-1) 
+     > + ty3 * c3 * c4 * ( flux3(4,ist:iend,jst+1:jend+1,2:nz-1)
      >                   - flux3(4,ist:iend,jst:jend,2:nz-1) )
      >         + dy4 * ty1 * (u(4,ist:iend,jst-1:jend-1,2:nz-1)
      >            - 2.0d+00 * u(4,ist:iend,jst:jend,2:nz-1)
      >                      + u(4,ist:iend,jst+1:jend+1,2:nz-1) )
 
 
-      rsd(5,ist:iend,jst:jend,2:nz-1) = 
+      rsd(5,ist:iend,jst:jend,2:nz-1) =
      >                      rsd(5,ist:iend,jst:jend,2:nz-1)
-     > + ty3 * c3 * c4 * ( flux3(5,ist:iend,jst+1:jend+1,2:nz-1) 
+     > + ty3 * c3 * c4 * ( flux3(5,ist:iend,jst+1:jend+1,2:nz-1)
      >                   - flux3(5,ist:iend,jst:jend,2:nz-1) )
      >         + dy5 * ty1 * (u(5,ist:iend,jst-1:jend-1,2:nz-1)
      >            - 2.0d+00 * u(5,ist:iend,jst:jend,2:nz-1)
@@ -316,8 +316,8 @@ c---------------------------------------------------------------------
 
                q = qs(i,j,k)
 
-               flux(2,k) = u(2,i,j,k) * u41 
-               flux(3,k) = u(3,i,j,k) * u41 
+               flux(2,k) = u(2,i,j,k) * u41
+               flux(3,k) = u(3,i,j,k) * u41
                flux(4,k) = u(4,i,j,k) * u41 + c2 * (u(5,i,j,k)-q)
                flux(5,k) = ( c1 * u(5,i,j,k) - c2 * q ) * u41
             end do

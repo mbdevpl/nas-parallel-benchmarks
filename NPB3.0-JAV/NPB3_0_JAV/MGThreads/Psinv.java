@@ -49,8 +49,8 @@ public class Psinv extends MGBase{
 
   public int n1, n2, n3;
   public int roff, uoff;
-  
-  int start,end,work;	      
+
+  int start,end,work;	
   int state=0;
   double r1[],r2[];
 
@@ -84,7 +84,7 @@ public class Psinv extends MGBase{
           step();
           synchronized(master){done=true; master.notify();}
         }
-      }       
+      }
   }
 
   public void step(){
@@ -99,7 +99,7 @@ public class Psinv extends MGBase{
                       + r[roff+i1+n1*(i2-1+n2*(i3+1))] + r[roff+i1+n1*(i2+1+n2*(i3+1))];
             }
             for(i1=1;i1<n1-1;i1++){
-               u[uoff+i1+n1*(i2+n2*i3)] += 
+               u[uoff+i1+n1*(i2+n2*i3)] +=
                              c[0] * r[roff+i1+n1*(i2+n2*i3)]
                            + c[1] * ( r[roff+i1-1+n1*(i2+n2*i3)] + r[roff+i1+1+n1*(i2+n2*i3)]
                                     + r1[i1] )
@@ -129,7 +129,7 @@ public class Psinv extends MGBase{
             u[uoff+i1+n1*(n2-1+n2*i3)] = u[uoff+i1+n1*(1+n2*i3)];
          }
     }
-    
+
     public void GetWork(){
       int workpt=(wend-wstart)/num_threads;
       int remainder=wend-wstart-workpt*num_threads;

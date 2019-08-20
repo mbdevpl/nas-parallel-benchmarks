@@ -51,7 +51,7 @@ public class Interp extends MGBase{
   public int n1, n2, n3;
   public int zoff, uoff;
 
-  int start,end,work;	      
+  int start,end,work;	
   int state=0;
   double z1[],z2[],z3[];
 
@@ -126,7 +126,7 @@ public class Interp extends MGBase{
             d1 = 1;
             t1 = 0;
          }
-         
+
          if(n2==3){
             d2 = 2;
             t2 = 1;
@@ -134,7 +134,7 @@ public class Interp extends MGBase{
             d2 = 1;
             t2 = 0;
          }
-         
+
          if(n3==3){
             d3 = 2;
             t3 = 1;
@@ -142,7 +142,7 @@ public class Interp extends MGBase{
             d3 = 1;
             t3 = 0;
          }
-         
+
          for(i3=start;i3<=end;i3++){
             for(i2=1;i2<=mm2-1;i2++){
                for(i1=1;i1<=mm1-1;i1++){
@@ -196,11 +196,11 @@ public class Interp extends MGBase{
          }
       }
     }
-    
+
     public void step2(){
       if(work==0) return;
     }
-    
+
     private void GetWork(){
       int workpt=(wend-wstart)/num_threads;
       int remainder=wend-wstart-workpt*num_threads;

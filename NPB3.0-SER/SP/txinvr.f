@@ -8,13 +8,13 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c block-diagonal matrix-vector multiplication                  
+c block-diagonal matrix-vector multiplication
 c---------------------------------------------------------------------
 
        include 'header.h'
 
        integer i, j, k
-       double precision t1, t2, t3, ac, ru1, uu, vv, ww, r1, r2, r3, 
+       double precision t1, t2, t3, ac, ru1, uu, vv, ww, r1, r2, r3,
      >                  r4, r5, ac2inv
 
 
@@ -36,7 +36,7 @@ c                ac2inv = ainv(i,j,k)*ainv(i,j,k)
                 r4 = rhs(4,i,j,k)
                 r5 = rhs(5,i,j,k)
 
-                t1 = c2 * ac2inv * ( qs(i,j,k)*r1 - uu*r2  - 
+                t1 = c2 * ac2inv * ( qs(i,j,k)*r1 - uu*r2  -
      >                  vv*r3 - ww*r4 + r5 )
                 t2 = bt * ru1 * ( uu * r1 - r2 )
                 t3 = ( bt * ru1 * ac ) * t1

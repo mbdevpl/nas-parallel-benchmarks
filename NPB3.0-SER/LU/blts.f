@@ -30,7 +30,7 @@ c---------------------------------------------------------------------
       integer k
       double precision  omega
 c---------------------------------------------------------------------
-c   To improve cache performance, second two dimensions padded by 1 
+c   To improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.  Only needed in v.
 c---------------------------------------------------------------------
       double precision  v( 5, ldmx/2*2+1, ldmy/2*2+1, *),
@@ -87,7 +87,7 @@ c---------------------------------------------------------------------
      >           + ldx( m, 5, i, j ) * v( 5, i-1, j, k ) )
 
             end do
-       
+
 c---------------------------------------------------------------------
 c   diagonal block inversion
 c

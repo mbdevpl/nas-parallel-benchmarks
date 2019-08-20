@@ -1,4 +1,4 @@
-#This is for a DEC Alpha 8400. The code will execute on a 
+#This is for a DEC Alpha 8400. The code will execute on a
 #single processor
 #Warning: parallel make does not work properly in general
 F77  = f77
@@ -8,7 +8,7 @@ FFLAGS  = -O4
 
 CC   = cc
 CLINK   = cc
-CFLAGS  = -O5 
+CFLAGS  = -O5
 
 BINDIR  = ../bin
 

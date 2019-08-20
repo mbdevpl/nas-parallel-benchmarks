@@ -16,7 +16,7 @@
 !    for any purpose with or without fee is hereby granted.               !
 !    We request, however, that all derived work reference the             !
 !    NAS Grid Benchmarks 1.0. This software is provided                   !
-!    "as is" without express or implied warranty.                         ! 
+!    "as is" without express or implied warranty.                         !
 !                                                                         !
 !    Information on NPB 3.0, including the Technical Report NAS-02-008	  !
 !    "Implementation of the NAS Parallel Benchmarks in Java",		  !
@@ -40,10 +40,10 @@ import NPB3_0_JAV.*;
 import NPB3_0_JAV.FT;
 
 public class FTBase extends Thread{
-    
+
   public static final String BMName="FT";
   public char CLASS = 'S';
-  
+
   protected int nx, ny, nz, maxdim, niter_default;
 
   //complex arrays
@@ -53,10 +53,10 @@ public class FTBase extends Thread{
   protected int isize3, jsize3, ksize3;
   protected int isize4, jsize4, ksize4;
 
-  protected double checksum[]; 
+  protected double checksum[];
   protected double xtr[];  //isize3=2;jsize3=2*(ny+1);ksize3=2*(ny+1)*nx;
   protected double xnt[];  //isize4=2;jsize4=2*(ny+1);ksize4=2*(ny+1)*nz;
-  protected double exp1[],exp2[],exp3[]; 
+  protected double exp1[],exp2[],exp3[];
 
   public boolean timeron=false;
   public Timer timer = new Timer();
@@ -66,7 +66,7 @@ public class FTBase extends Thread{
   protected static final double pi=Math.PI,alpha=.000001;
 
   public FTBase(){}
-  
+
   public FTBase(char clss, int np, boolean serial){
     CLASS = clss;
     num_threads=np;
@@ -79,13 +79,13 @@ public class FTBase extends Thread{
       nx=ny=128;
       nz=32;
       niter_default=6;
-      break;     
+      break;
     case 'A':
       nx=256;
       ny=256;
       nz=128;
       niter_default=6;
-      break;      
+      break;
     case 'B':
       nx=512;
       ny=nz=256;
@@ -93,9 +93,9 @@ public class FTBase extends Thread{
       break;
     case 'C':
       nx=ny=nz=512;
-      niter_default=20;      
+      niter_default=20;
       break;
-    }    
+    }
     maxdim = max( nx , max( ny , nx ) );
     if(serial){
       scr = new double[2*(maxdim+1)*maxdim];
@@ -111,8 +111,8 @@ public class FTBase extends Thread{
     //complex values
     checksum = new double[2*niter_default]; //isize2=2;
 
-    xtr = new double[2*(ny+1)*nx*nz]; 
-    xnt = new double[2*(ny+1)*nz*nx]; 
+    xtr = new double[2*(ny+1)*nx*nz];
+    xnt = new double[2*(ny+1)*nz*nx];
     exp1 = new double[2*nx];
     exp2 = new double[2*ny];
     exp3 = new double[2*nz];
@@ -128,7 +128,7 @@ public class FTBase extends Thread{
     master = ft;
     if(num_threads>nz) num_threads=nz;
     if(num_threads>nx) num_threads=nx;
-    
+
     int interval1[]=new int[num_threads];
     int interval2[]=new int[num_threads];
     set_interval(num_threads,nz,interval1);
@@ -140,7 +140,7 @@ public class FTBase extends Thread{
     partition2 = new int[interval2.length][2];
     set_partition(0,interval1,partition1);
     set_partition(0,interval2,partition2);
-    doFFT = new FFTThread[num_threads];    
+    doFFT = new FFTThread[num_threads];
     doEvolve = new EvolveThread[num_threads];
 
     for(int ii=0;ii<num_threads;ii++){
@@ -160,25 +160,25 @@ public class FTBase extends Thread{
     int remainder = problem_size%threads;
     for(int i=0;i<remainder;i++) interval[i]++;
   }
-  
+
   public void set_partition(int start, int interval[], int prt[][]){
     prt[0][0]=start;
     if(start==0) prt[0][1]=interval[0]-1;
     else prt[0][1]=interval[0];
-    
+
     for(int i=1;i<interval.length;i++){
       prt[i][0]=prt[i-1][1]+1;
       prt[i][1]=prt[i-1][1]+interval[i];
     }
   }
-  
+
   public int max(int a, int b){if(a>b)return a; else return b;}
 
-  public void CompExp (int n, double exponent[] ){     
+  public void CompExp (int n, double exponent[] ){
     int nu = n;
     int m = ilog2(n);
     exponent[0] = m;
-    
+
     double eps=1.0E-16;
     int ku = 1;
     int ln = 1;
@@ -196,13 +196,13 @@ public class FTBase extends Thread{
       ln = 2 * ln;
     }
   }
-  
-  public void initial_conditions(double u0[], 
+
+  public void initial_conditions(double u0[],
                                  int d1, int d2, int d3){
     double tmp[]= new double[2*maxdim];
     double RanStarts[]= new double[maxdim];
     			//seed has to be init here since
-    			//is called 2 times 
+    			//is called 2 times
     double seed = 314159265, a=Math.pow(5.0,13);
     double start = seed;
 //---------------------------------------------------------------------
@@ -252,11 +252,11 @@ public class FTBase extends Thread{
     int k, n1,li,lj,lk,ku,i11,i12,i21,i22;
     int BlockStart,BlockEnd;
     int isize1=2,jsize1=2*(xd1+1);
-    
+
     //complex values
     double u1[] = new double[2], x11[] = new double[2],x21[] = new double[2];
     if(timeron) timer.start(4);
-    
+
 //---------------------------------------------------------------------
 //   Perform one variant of the Stockham FFT.
 //---------------------------------------------------------------------
@@ -278,15 +278,15 @@ public class FTBase extends Thread{
 	  i12 = i11 + n1;
 	  i21 = i * lj;
 	  i22 = i21 + lk;
-	  
+	
 	  u1[REAL]= exponent[REAL + (ku+i)*2];
-	  if (is >= 1){  
+	  if (is >= 1){
 	    u1[IMAG]= exponent[IMAG + (ku+i)*2];
 	  }else{
 	    u1[IMAG] = - exponent[IMAG + (ku+i)*2];
 	  }
 	  for(k=0;k<=lk-1;k++){
-	    for(j=BlockStart;j<=BlockEnd;j++){	      
+	    for(j=BlockStart;j<=BlockEnd;j++){	
 	      x11[REAL] = x[REAL+j*2+(i11+k)*jsize1 + xoffst];
 	      x11[IMAG] = x[IMAG+j*2+(i11+k)*jsize1 + xoffst];
 	      x21[REAL] = x[REAL+j*2+(i12+k)*jsize1 + xoffst];
@@ -313,13 +313,13 @@ public class FTBase extends Thread{
 	  li = (int)Math.pow(2, m - l - 1);
 	  lj = 2 * lk;
 	  ku = li;
-	  
+	
 	  for(i=0;i<=li-1;i++){
 	    i11 = i * lk;
 	    i12 = i11 + n1;
 	    i21 = i * lj;
 	    i22 = i21 + lk;
-	    
+	
 	    u1[REAL] = exponent[REAL+(ku+i)*2];
 	    if (is>=1){
 	      u1[IMAG] = exponent[IMAG+(ku+i)*2];
@@ -346,7 +346,7 @@ public class FTBase extends Thread{
 	  }
 	}
       }
-    }    
-    if(timeron) timer.stop(4);       
+    }
+    if(timeron) timer.stop(4);
   }
 }

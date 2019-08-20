@@ -55,7 +55,7 @@ public class LU extends LUBase{
   public int bid=-1;
   public BMResults results;
   boolean serial=false;
-  
+
   public LU(char clss, int np, boolean ser){
     super(clss, np);
     serial=ser;
@@ -67,20 +67,20 @@ public class LU extends LUBase{
     char CLSS=BMArgs.CLASS;
     int np=BMArgs.num_threads;
     boolean serial=BMArgs.serial;
-    try{ 
+    try{
       lu = new LU(CLSS,np,serial);
     }catch(OutOfMemoryError e){
       BMArgs.outOfMemoryMessage();
       System.exit(0);
-    }      
+    }
     lu.runBenchMark();
   }
-  
+
   public void run(){runBenchMark();}
-  
+
   public void runBenchMark(){
     BMArgs.Banner(BMName,CLASS,serial,num_threads);
-    
+
     int numTimers=t_last+1;
     String t_names[] = new String[numTimers];
     double trecs[] = new double[numTimers];
@@ -102,7 +102,7 @@ public class LU extends LUBase{
 //   set the boundary values for dependent variables
 //---------------------------------------------------------------------
     setbv();
-  
+
 //---------------------------------------------------------------------
 //   set the initial values for dependent variables
 //---------------------------------------------------------------------
@@ -157,7 +157,7 @@ public class LU extends LUBase{
     double mflops = 0.0;
     if( tm > 0 ){
       mflops = 1984.77*nx0*ny0*nz0
-               -10923.3*Math.pow((nx0+ny0+nz0)/3.0,2) 
+               -10923.3*Math.pow((nx0+ny0+nz0)/3.0,2)
                +27770.9*(nx0+ny0+nz0)/3.0-144010.0;
       mflops *= itmax / (tm*1000000.0);
     }
@@ -169,7 +169,7 @@ public class LU extends LUBase{
     for(int i=0;i<t_last;i++) trecs[i] = timer.readTimer(i);
     if ( tm == 0.0 ) tm = 1.0;
     for(int i=1;i<t_last;i++){
-      System.out.println("  "+t_names[i]+":"+fmt.format(trecs[i])+ 
+      System.out.println("  "+t_names[i]+":"+fmt.format(trecs[i])+
         		 "  ("+fmt.format(trecs[i]*100./tm)+"%)" );
       if (i==t_rhs) {
          double t = trecs[t_rhsx] + trecs[t_rhsy] + trecs[t_rhsz];
@@ -183,7 +183,7 @@ public class LU extends LUBase{
       }
     }
   }
-  
+
   public void setTimers(String t_names[]){
     File f1 = new File("timer.flag");
     timeron = false;
@@ -203,10 +203,10 @@ public class LU extends LUBase{
     }
   }
 
-  public void blts(int ldmx, int ldmy, int ldmz, int nx, int ny, int nz, 
-                   int k, double omega, 
-		   double v[], double tv[], double ldz[], double ldy[], 
-		   double ldx[], double d[], 
+  public void blts(int ldmx, int ldmy, int ldmz, int nx, int ny, int nz,
+                   int k, double omega,
+		   double v[], double tv[], double ldz[], double ldy[],
+		   double ldx[], double d[],
 		   int ist, int iend, int jst, int jend, int nx0, int ny0){
       int i, j, m;
       int iex;
@@ -243,7 +243,7 @@ public class LU extends LUBase{
                  + ldy[m+ 4*isize4+ i*jsize4+ j *ksize4] * v[4+ i*isize1+ (j-1)*jsize1+ k *ksize1]
                  + ldx[m+ 4*isize4+ i*jsize4+ j *ksize4] * v[4+ (i-1)*isize1+ j*jsize1+ k *ksize1] );
             }
-       
+
 //---------------------------------------------------------------------
 //   diagonal block inversion
 //   forward elimination
@@ -395,10 +395,10 @@ public class LU extends LUBase{
       }
   }
 
-  public void buts(int ldmx, int ldmy, int ldmz, int nx, int ny, int nz, 
-                   int k, double omega, 
-		   double v[], double tv[], double d[], double udx[], 
-		   double udy[], double udz[], 
+  public void buts(int ldmx, int ldmy, int ldmz, int nx, int ny, int nz,
+                   int k, double omega,
+		   double v[], double tv[], double d[], double udx[],
+		   double udy[], double udz[],
 		   int ist, int iend, int jst, int jend, int nx0, int ny0){
       int i, j, m;
       double  tmp, tmp1;
@@ -407,7 +407,7 @@ public class LU extends LUBase{
       for(j=jend-1;j>=jst-1;j--){
          for(i=iend-1;i>=ist-1;i--){
             for(m=0;m<=4;m++){
-                  tv[m+ i*isize1+ j *jsize1] = 
+                  tv[m+ i*isize1+ j *jsize1] =
             omega * (  udz[m+ 0*isize4+ i*jsize4+ j *ksize4] * v[0+ i*isize1+ j*jsize1+ (k+1) *ksize1]
                      + udz[m+ 1*isize4+ i*jsize4+ j *ksize4] * v[1+ i*isize1+ j*jsize1+ (k+1) *ksize1]
                      + udz[m+ 2*isize4+ i*jsize4+ j *ksize4] * v[2+ i*isize1+ j*jsize1+ (k+1) *ksize1]
@@ -580,16 +580,16 @@ public class LU extends LUBase{
             tv[0+ i*isize1+ j *jsize1] = tv[0+ i*isize1+ j *jsize1]
                             / tmat[ 0+ 0 *5];
 
-            v[0+ i*isize1+ j*jsize1+ k *ksize1] = v[0+ i*isize1+ j*jsize1+ k *ksize1] 
+            v[0+ i*isize1+ j*jsize1+ k *ksize1] = v[0+ i*isize1+ j*jsize1+ k *ksize1]
 	                                        - tv[0+ i*isize1+ j *jsize1];
-            v[1+ i*isize1+ j*jsize1+ k *ksize1] = v[1+ i*isize1+ j*jsize1+ k *ksize1] 
+            v[1+ i*isize1+ j*jsize1+ k *ksize1] = v[1+ i*isize1+ j*jsize1+ k *ksize1]
 	                                        - tv[1+ i*isize1+ j *jsize1];
-            v[2+ i*isize1+ j*jsize1+ k *ksize1] = v[2+ i*isize1+ j*jsize1+ k *ksize1] 
+            v[2+ i*isize1+ j*jsize1+ k *ksize1] = v[2+ i*isize1+ j*jsize1+ k *ksize1]
 	                                        - tv[2+ i*isize1+ j *jsize1];
-            v[3+ i*isize1+ j*jsize1+ k *ksize1] = v[3+ i*isize1+ j*jsize1+ k *ksize1] 
+            v[3+ i*isize1+ j*jsize1+ k *ksize1] = v[3+ i*isize1+ j*jsize1+ k *ksize1]
 	                                        - tv[3+ i*isize1+ j *jsize1];
-            v[4+ i*isize1+ j*jsize1+ k *ksize1] = v[4+ i*isize1+ j*jsize1+ k *ksize1] 
-	                                        - tv[4+ i*isize1+ j *jsize1];	    
+            v[4+ i*isize1+ j*jsize1+ k *ksize1] = v[4+ i*isize1+ j*jsize1+ k *ksize1]
+	                                        - tv[4+ i*isize1+ j *jsize1];	
         }
      }
   }
@@ -698,7 +698,7 @@ public class LU extends LUBase{
                                + rsd[2+i*isize1+j*jsize1+k*ksize1] * rsd[2+i*isize1+j*jsize1+k*ksize1]
                                + rsd[3+i*isize1+j*jsize1+k*ksize1] * rsd[3+i*isize1+j*jsize1+k*ksize1] )
                             / rsd[0+i*isize1+j*jsize1+k*ksize1];
-               flux[1+i*isize2] = rsd[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 * 
+               flux[1+i*isize2] = rsd[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 *
                                ( rsd[4+i*isize1+j*jsize1+k*ksize1] - q );
                flux[2+i*isize2] = rsd[2+i*isize1+j*jsize1+k*ksize1] * u21;
                flux[3+i*isize2] = rsd[3+i*isize1+j*jsize1+k*ksize1] * u21;
@@ -726,7 +726,7 @@ public class LU extends LUBase{
                u41im1 = tmp * rsd[3+(i-1)*isize1+j*jsize1+k*ksize1];
                u51im1 = tmp * rsd[4+(i-1)*isize1+j*jsize1+k*ksize1];
 
-               flux[1+i*isize2] = (4.0/3.0) * tx3 * 
+               flux[1+i*isize2] = (4.0/3.0) * tx3 *
                               ( u21i - u21im1 );
                flux[2+i*isize2] = tx3 * ( u31i - u31im1 );
                flux[3+i*isize2] = tx3 * ( u41i - u41im1 );
@@ -819,7 +819,7 @@ public class LU extends LUBase{
                                + rsd[3+i*isize1+j*jsize1+k*ksize1] * rsd[3+i*isize1+j*jsize1+k*ksize1] )
                             / rsd[0+i*isize1+j*jsize1+k*ksize1];
                flux[1+j*isize2] = rsd[1+i*isize1+j*jsize1+k*ksize1] * u31 ;
-               flux[2+j*isize2] = rsd[2+i*isize1+j*jsize1+k*ksize1] * u31 + c2 * 
+               flux[2+j*isize2] = rsd[2+i*isize1+j*jsize1+k*ksize1] * u31 + c2 *
                              ( rsd[4+i*isize1+j*jsize1+k*ksize1] - q );
                flux[3+j*isize2] = rsd[3+i*isize1+j*jsize1+k*ksize1] * u31;
                flux[4+j*isize2] = ( c1 * rsd[4+i*isize1+j*jsize1+k*ksize1] - c2 * q ) * u31;
@@ -848,7 +848,7 @@ public class LU extends LUBase{
                u51jm1 = tmp * rsd[4+i*isize1+(j-1)*jsize1+k*ksize1];
 
                flux[1+j*isize2] = ty3 * ( u21j - u21jm1 );
-               flux[2+j*isize2] = (4.0/3.0) * ty3 * 
+               flux[2+j*isize2] = (4.0/3.0) * ty3 *
                              ( u31j - u31jm1 );
                flux[3+j*isize2] = ty3 * ( u41j - u41jm1 );
                flux[4+j*isize2] = 0.50 * ( 1.0 - c1*c5 )
@@ -940,7 +940,7 @@ public class LU extends LUBase{
                             / rsd[0+i*isize1+j*jsize1+k*ksize1];
                flux[1+k*isize2] = rsd[1+i*isize1+j*jsize1+k*ksize1] * u41 ;
                flux[2+k*isize2] = rsd[2+i*isize1+j*jsize1+k*ksize1] * u41 ;
-               flux[3+k*isize2] = rsd[3+i*isize1+j*jsize1+k*ksize1] * u41 + c2 * 
+               flux[3+k*isize2] = rsd[3+i*isize1+j*jsize1+k*ksize1] * u41 + c2 *
                                ( rsd[4+i*isize1+j*jsize1+k*ksize1] - q );
                flux[4+k*isize2] = ( c1 * rsd[4+i*isize1+j*jsize1+k*ksize1] - c2 * q ) * u41;
             }
@@ -969,7 +969,7 @@ public class LU extends LUBase{
 
                flux[1+k*isize2] = tz3 * ( u21k - u21km1 );
                flux[2+k*isize2] = tz3 * ( u31k - u31km1 );
-               flux[3+k*isize2] = (4.0/3.0) * tz3 * ( u41k 
+               flux[3+k*isize2] = (4.0/3.0) * tz3 * ( u41k
                              - u41km1 );
                flux[4+k*isize2] = 0.50 * ( 1.0 - c1*c5 )
                     * tz3 * ( ( Math.pow(u21k,2) + Math.pow(u31k,2) + Math.pow(u41k,2) )
@@ -1072,7 +1072,7 @@ public class LU extends LUBase{
       errnm[m] = Math.sqrt( errnm[m] / ( (nx0-2)*(ny0-2)*(nz0-2) ) );
     }
   }
-    
+
   public void jacld(int k){
       int i, j;
       double  r43;
@@ -1106,7 +1106,7 @@ public class LU extends LUBase{
                 * (  tx1 * r43 + ty1 + tz1  )
                 * c34 * tmp2 * u[1+i*isize1+j*jsize1+k*ksize1];
                d[1+1*isize4+i*jsize4+j*ksize4] =  1.0
-                + dt * 2.0 * c34 * tmp1 
+                + dt * 2.0 * c34 * tmp1
                 * (  tx1 * r43 + ty1 + tz1 )
                 + dt * 2.0 * (   tx1 * dx2
                                    + ty1 * dy2
@@ -1307,7 +1307,7 @@ public class LU extends LUBase{
                 * ( c34 - c1345 ) * tmp2 * u[1+i*isize1+(j-1)*jsize1+k*ksize1];
                b[4+2*isize4+i*jsize4+j*ksize4] = - dt * ty2
                 * ( c1 * ( u[4+i*isize1+(j-1)*jsize1+k*ksize1] * tmp1 )
-                - c2 
+                - c2
                 * ( qs[i+(j-1)*jsize3+k*ksize3] * tmp1
                      + u[2+i*isize1+(j-1)*jsize1+k*ksize1]*u[2+i*isize1+(j-1)*jsize1+k*ksize1] * tmp2 ) )
                 - dt * ty1
@@ -1319,7 +1319,7 @@ public class LU extends LUBase{
                 * ( c1 * ( u[2+i*isize1+(j-1)*jsize1+k*ksize1] * tmp1 ) )
                 - dt * ty1 * c1345 * tmp1
                 - dt * ty1 * dy5;
-	    
+	
 //---------------------------------------------------------------------
 //   form the third block sub-diagonal
 //---------------------------------------------------------------------
@@ -1400,7 +1400,7 @@ public class LU extends LUBase{
   }
 
   public void jacu(int k){
-      int i, j;    
+      int i, j;
       double  r43;
       double  c1345;
       double  c34;
@@ -1433,7 +1433,7 @@ public class LU extends LUBase{
                  * ( - tx1 * r43 - ty1 - tz1 )
                  * ( c34 * tmp2 * u[1+i*isize1+j*jsize1+k*ksize1] );
                d[1+1*isize4+i*jsize4+j*ksize4] =  1.0
-                + dt * 2.0 * c34 * tmp1 
+                + dt * 2.0 * c34 * tmp1
                 * (  tx1 * r43 + ty1 + tz1 )
                 + dt * 2.0 * (   tx1 * dx2
                                    + ty1 * dy2
@@ -1636,7 +1636,7 @@ public class LU extends LUBase{
                 * ( c34 - c1345 ) * tmp2 * u[1+i*isize1+(j+1)*jsize1+k*ksize1];
                b[4+2*isize4+i*jsize4+j*ksize4] =  dt * ty2
                 * ( c1 * ( u[4+i*isize1+(j+1)*jsize1+k*ksize1] * tmp1 )
-                - c2 
+                - c2
                 * ( qs[i+(j+1)*jsize3+k*ksize3] * tmp1
                      + u[2+i*isize1+(j+1)*jsize1+k*ksize1]*u[2+i*isize1+(j+1)*jsize1+k*ksize1] * tmp2 ) )
                 - dt * ty1
@@ -1723,11 +1723,11 @@ public class LU extends LUBase{
              - dt * tz1 * dz5;
 
             }
-         } 
+         }
   }
-  
-  public void l2norm(int ldx, int ldy, int ldz, int nx0, int ny0, int nz0, 
-    		     int ist, int iend, 
+
+  public void l2norm(int ldx, int ldy, int ldz, int nx0, int ny0, int nz0,
+    		     int ist, int iend,
         	     int jst, int jend, double v[], double sum[]){
     int i, j, k, m;
 
@@ -1739,7 +1739,7 @@ public class LU extends LUBase{
        for(j=jst-1;j<=jend-1;j++){
     	  for(i=ist-1;i<=iend-1;i++){
     	     for(m=0;m<=4;m++){
-    		sum[m] = sum[m] + v[m+i*isize1+j*jsize1+k*ksize1] 
+    		sum[m] = sum[m] + v[m+i*isize1+j*jsize1+k*ksize1]
         			  * v[m+i*isize1+j*jsize1+k*ksize1];
     	     }
     	  }
@@ -1755,7 +1755,7 @@ public class LU extends LUBase{
       int i, j, k;
       int ibeg, ifin, ifin1;
       int jbeg, jfin, jfin1;
-      double  phi1[] = new double[(isiz2+2)*(isiz3+2)], 
+      double  phi1[] = new double[(isiz2+2)*(isiz3+2)],
               phi2[] = new double[(isiz2+2)*(isiz3+2)];
       double  frc1, frc2, frc3;
       int isize5 = (isiz2+2);
@@ -1917,9 +1917,9 @@ public class LU extends LUBase{
       frc3 = deta * dzeta * frc3;
       frc = 0.25 * ( frc1 + frc2 + frc3 );
   }
-  
+
   public void getInputPars(){
-      
+
 //---------------------------------------------------------------------
 //    if input file does not exist, it uses defaults
 //       ipr = 1 for detailed progress output
@@ -1932,11 +1932,11 @@ public class LU extends LUBase{
 //---------------------------------------------------------------------
       File f2 = new File("inputlu.data");
       if (f2.exists()){
-        try{  
+        try{
   	  FileInputStream fis = new FileInputStream(f2);
 	  DataInputStream datafile = new DataInputStream(fis);
 	  System.out.println("Reading from input file inputlu.data");
-	  
+	
 	  ipr = datafile.readInt();
 	  inorm = datafile.readInt();
 	  itmax = datafile.readInt();
@@ -1948,13 +1948,13 @@ public class LU extends LUBase{
 	  tolrsd[3] = datafile.readDouble();
 	  tolrsd[4] = datafile.readDouble();
 	  nx0 = datafile.readInt();
-	  ny0 = datafile.readInt(); 
+	  ny0 = datafile.readInt();
 	  nz0 = datafile.readInt();
-	  
+	
 	  fis.close();
-        }catch(Exception e){  
+        }catch(Exception e){
 	  System.err.println("exception caught!");
-        } 
+        }
       }else{
         ipr = ipr_default;
         inorm = inorm_default;
@@ -1987,7 +1987,7 @@ public class LU extends LUBase{
       }
       System.out.println("LU: Iterations="+itmax+" dt="+dt);
   }
-  
+
   public void rhs(){
       int i, j, k, m;
       double  q;
@@ -2008,7 +2008,7 @@ public class LU extends LUBase{
                }
                tmp = 1.0 / u[0+i*isize1+j*jsize1+k*ksize1];
                rho_i[i+j*jsize3+k*ksize3] = tmp;
-               qs[i+j*jsize3+k*ksize3] = 0.50 * (  
+               qs[i+j*jsize3+k*ksize3] = 0.50 * (
 	                         u[1+i*isize1+j*jsize1+k*ksize1] * u[1+i*isize1+j*jsize1+k*ksize1]
                                + u[2+i*isize1+j*jsize1+k*ksize1] * u[2+i*isize1+j*jsize1+k*ksize1]
                                + u[3+i*isize1+j*jsize1+k*ksize1] * u[3+i*isize1+j*jsize1+k*ksize1] )
@@ -2029,7 +2029,7 @@ public class LU extends LUBase{
 
                q = qs[i+j*jsize3+k*ksize3];
 
-               flux[1+i*isize2] = u[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 * 
+               flux[1+i*isize2] = u[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 *
                               ( u[4+i*isize1+j*jsize1+k*ksize1] - q );
                flux[2+i*isize2] = u[2+i*isize1+j*jsize1+k*ksize1] * u21;
                flux[3+i*isize2] = u[3+i*isize1+j*jsize1+k*ksize1] * u21;
@@ -2122,7 +2122,7 @@ public class LU extends LUBase{
                }
             }
 
-	    
+	
             for(m=0;m<=4;m++){
                rsd[m+(nx-3)*isize1+j*jsize1+k*ksize1] = rsd[m+(nx-3)*isize1+j*jsize1+k*ksize1]
                  - dssp * (             u[m+(nx-5)*isize1+j*jsize1+k*ksize1]
@@ -2134,7 +2134,7 @@ public class LU extends LUBase{
                             - 4.0 * u[m+(nx-3)*isize1+j*jsize1+k*ksize1]
                             + 5.0 * u[m+(nx-2)*isize1+j*jsize1+k*ksize1] );
             }
-	    
+	
          }
       }
       if (timeron)  timer.stop(t_rhsx);
@@ -2383,9 +2383,9 @@ public class LU extends LUBase{
             }
          }
       }
-      if (timeron)  timer.stop(t_rhsz);  
+      if (timeron)  timer.stop(t_rhsz);
   }
-  
+
   public void setcoeff(){
       dxi = 1.0 / ( nx0 - 1 );
       deta = 1.0 / ( ny0 - 1 );
@@ -2429,7 +2429,7 @@ public class LU extends LUBase{
 //---------------------------------------------------------------------
       dssp = ( max (dx1, dy1, dz1 ) ) / 4.0;
   }
-   
+
   public void setbv(){
       int i, j, k, m;
       double temp1[] = new double[5], temp2[] = new double[5];
@@ -2475,7 +2475,7 @@ public class LU extends LUBase{
          }
       }
   }
-  
+
   public void setiv(){
     int i, j, k, m;
     double  xi, eta, zeta;
@@ -2555,14 +2555,14 @@ public class LU extends LUBase{
 //---------------------------------------------------------------------
        l2norm( isiz1, isiz2, isiz3, nx0, ny0, nz0,
                    ist, iend, jst, jend,
-                   rsd, rsdnm ); 
-           
+                   rsd, rsdnm );
+
        timer.resetAllTimers();
        timer.start(1);
 //---------------------------------------------------------------------
 //   the timestep loop   itmax
 //---------------------------------------------------------------------
-      for(istep=1;istep<=itmax;istep++){         
+      for(istep=1;istep<=itmax;istep++){
         if(istep % 20 == 0 || istep == itmax || istep == 1) {
           System.out.println(" Time step " + istep);
         }
@@ -2579,7 +2579,7 @@ public class LU extends LUBase{
 	       while(!scaler[m].done){
 	         try{wait();}catch(InterruptedException e){}
 		 notifyAll();
-	       } 
+	       }
              }
 //---------------------------------------------------------------------
 //   form the lower triangular part of the jacobian matrix
@@ -2650,17 +2650,17 @@ public class LU extends LUBase{
 //   compute the steady-state residuals
 //---------------------------------------------------------------------
 
-      if (timeron) timer.start(t_rhs);  
+      if (timeron) timer.start(t_rhs);
       doRHSiteration();
 
       if (timeron) timer.start(t_rhsx);
       doRHSiteration();
       if (timeron) timer.stop(t_rhsx);
-    
+
       if (timeron) timer.start(t_rhsy);
       doRHSiteration();
       if (timeron) timer.stop(t_rhsy);
-   
+
       if (timeron) timer.start(t_rhsz);
       doRHSiteration();
       if (timeron) timer.stop(t_rhsz);
@@ -2688,11 +2688,11 @@ public class LU extends LUBase{
             return timer.readTimer(1);
          }
       }
-      
+
       timer.stop(1);
       return  timer.readTimer(1);
   }
-  
+
   synchronized void doRHSiteration(){
     int m;
     for(m=0;m<num_threads;m++)
@@ -2706,17 +2706,17 @@ public class LU extends LUBase{
 	  notifyAll();
 	}
   }
-  
+
   public double sssor(){
     int i, j, k, m, n;
     int istep;
     double  tmp;
     double  delunm[] = new double[5], tv[] = new double[5*(isiz1/2*2+1)*isiz2];
- 
+
 //---------------------------------------------------------------------
 //   begin pseudo-time stepping iterations
 //---------------------------------------------------------------------
-    tmp = 1.0 / ( omega * ( 2.0 - omega ) ); 
+    tmp = 1.0 / ( omega * ( 2.0 - omega ) );
 //---------------------------------------------------------------------
 //   initialize a,b,c,d to zero (guarantees that page tables have been
 //   formed, if applicable on given architecture, before timestepping).
@@ -2745,16 +2745,16 @@ public class LU extends LUBase{
 //---------------------------------------------------------------------
     l2norm( isiz1, isiz2, isiz3, nx0, ny0, nz0,
 	    ist, iend, jst, jend,
-	    rsd, rsdnm ); 
- 
+	    rsd, rsdnm );
+
     timer.resetAllTimers();
-    
+
     timer.start(1);
- 
+
 //---------------------------------------------------------------------
 //   the timestep loop
 //---------------------------------------------------------------------
-    for(istep=1;istep<=itmax;istep++){         
+    for(istep=1;istep<=itmax;istep++){
       if (istep % 20 == 0 || istep == itmax || istep == 1) {
 	System.out.println(" Time step " + istep);
       }
@@ -2767,14 +2767,14 @@ public class LU extends LUBase{
 	for(j=jst-1;j<=jend-1;j++){
 	  for(i=ist-1;i<=iend-1;i++){
 	    for(m=0;m<=4;m++){
-	      rsd[m+i*isize1+j*jsize1+k*ksize1] = 
+	      rsd[m+i*isize1+j*jsize1+k*ksize1] =
 	                      dt * rsd[m+i*isize1+j*jsize1+k*ksize1];
 	    }
 	  }
 	}
       }
       if (timeron)  timer.stop(t_rhs);
- 
+
       for(k=1;k<=nz -2 ;k++){
 //---------------------------------------------------------------------
 //   form the lower triangular part of the jacobian matrix
@@ -2792,7 +2792,7 @@ public class LU extends LUBase{
 	      omega,
 	      rsd, tv,
 	      a, b, c, d,
-	      ist, iend, jst, jend, 
+	      ist, iend, jst, jend,
 	      nx0, ny0 );
 	if (timeron)  timer.stop(t_blts);
       }
@@ -2817,7 +2817,7 @@ public class LU extends LUBase{
 	      nx0, ny0 );
 	if (timeron)  timer.stop(t_buts);
       }
- 
+
 //---------------------------------------------------------------------
 //   update the variables
 //---------------------------------------------------------------------
@@ -2827,14 +2827,14 @@ public class LU extends LUBase{
 	for(j=jst-1;j<=jend-1;j++){
 	  for(i=ist-1;i<=iend-1;i++){
 	    for(m=0;m<=4;m++){
-	      u[m+ i*isize1+ j*jsize1+ k *ksize1] += 
+	      u[m+ i*isize1+ j*jsize1+ k *ksize1] +=
 		   + tmp * rsd[m+ i*isize1+ j*jsize1+ k *ksize1];
 	    }
 	  }
 	}
       }
       if (timeron)  timer.stop(t_add);
- 
+
 //---------------------------------------------------------------------
 //   compute the max-norms of newton iteration corrections
 //---------------------------------------------------------------------
@@ -2845,14 +2845,14 @@ public class LU extends LUBase{
 		rsd, delunm );
 	if (timeron)  timer.stop(t_l2norm);
       }
- 
+
 //---------------------------------------------------------------------
 //   compute the steady-state residuals
 //---------------------------------------------------------------------
       if (timeron)  timer.start(t_rhs);
-      rhs();    
+      rhs();
       if (timeron)  timer.stop(t_rhs);
- 
+
 //---------------------------------------------------------------------
 //   compute the max-norms of newton iteration residuals
 //---------------------------------------------------------------------
@@ -2875,13 +2875,13 @@ public class LU extends LUBase{
            timer.stop(1);
            return timer.readTimer(1);
         }
-    } 
+    }
     timer.stop(1);
     return timer.readTimer(1);
   }
-  
+
   public int verify(double xcr[], double xce[], double xci){
-    double xcrref[] = new double[5], xceref[] = new double[5],xciref=0, 
+    double xcrref[] = new double[5], xceref[] = new double[5],xciref=0,
            xcrdif[] = new double[5], xcedif[] = new double[5],xcidif=0,
            dtref=0;
     int m;
@@ -2993,7 +2993,7 @@ public class LU extends LUBase{
       xcrref[4] = 7.3087969592545314E+03;
 
 //---------------------------------------------------------------------
-//   Reference values of RMS-norms of solution error, for the (102X102X102) 
+//   Reference values of RMS-norms of solution error, for the (102X102X102)
 //   grid, after 250 time steps, with  DT = 2.0
 //---------------------------------------------------------------------
       xceref[0] = 1.1401176380212709E+02;
@@ -3023,7 +3023,7 @@ public class LU extends LUBase{
       xcrref[4] = 1.78078057261061185E+04;
 
 //---------------------------------------------------------------------
-//   Reference values of RMS-norms of solution error, for the (162X162X162) 
+//   Reference values of RMS-norms of solution error, for the (162X162X162)
 //   grid, after 250 time steps, with  DT = 2.0
 //---------------------------------------------------------------------
       xceref[0] = 2.15986399716949279E+02;
@@ -3036,11 +3036,11 @@ public class LU extends LUBase{
 //   Reference value of surface integral, for the (162X162X162) grid,
 //   after 250 time steps, with DT = 2.0
 //---------------------------------------------------------------------
-      xciref = 6.66404553572181300E+01;      
+      xciref = 6.66404553572181300E+01;
     }
 
 //---------------------------------------------------------------------
-//    verification test for residuals if gridsize is either 12X12X12 or 
+//    verification test for residuals if gridsize is either 12X12X12 or
 //    64X64X64 or 102X102X102 or 162X162X162
 //---------------------------------------------------------------------
 
@@ -3049,7 +3049,7 @@ public class LU extends LUBase{
 //---------------------------------------------------------------------
     for(m=0;m<=4;m++){
       xcrdif[m] = Math.abs((xcr[m]-xcrref[m])/xcrref[m]) ;
-      xcedif[m] = Math.abs((xce[m]-xceref[m])/xceref[m]);       
+      xcedif[m] = Math.abs((xce[m]-xceref[m])/xceref[m]);
     }
     xcidif = Math.abs((xci - xciref)/xciref);
 
@@ -3064,7 +3064,7 @@ public class LU extends LUBase{
     if(clss != 'U') {
       System.out.println(" Verification being performed for class " + clss);
       System.out.println(" Accuracy setting for epsilon = " + epsilon);
-      if (Math.abs(dt-dtref) <= epsilon) {  
+      if (Math.abs(dt-dtref) <= epsilon) {
 	if(verified==-1) verified = 1;
       }else{
 	verified = 0;
@@ -3072,7 +3072,7 @@ public class LU extends LUBase{
 	System.out.println(" DT= "+dt+
 	                   " does not match the reference value of "+ dtref);
       }
-    }else{ 
+    }else{
       System.out.println(" Unknown class");
       verified = -1;
     }
@@ -3100,10 +3100,10 @@ public class LU extends LUBase{
     }
     verified=BMResults.printComparisonStatus(clss,verified,epsilon,
                                              xci,xciref,xcidif);
-    BMResults.printVerificationStatus(clss,verified,BMName); 
+    BMResults.printVerificationStatus(clss,verified,BMName);
     return verified;
   }
-  public void checksum(double array[], int size, 
+  public void checksum(double array[], int size,
                        String arrayname, boolean stop){
     double sum = 0;
     for(int i=0; i<size; i++){
@@ -3126,10 +3126,10 @@ public class LU extends LUBase{
       }
     }
     return csum;
-  }  
-  public double getTime(){ return timer.readTimer(1);} 
+  }
+  public double getTime(){ return timer.readTimer(1);}
   public void finalize() throws Throwable{
-    System.out.println("LU: is about to be garbage collected"); 
+    System.out.println("LU: is about to be garbage collected");
     super.finalize();
   }
 }

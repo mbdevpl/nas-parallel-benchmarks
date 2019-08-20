@@ -55,12 +55,12 @@ public class BMResults implements Serializable{
   public String optype;
   public int numthreads;
   public boolean serial;
-  public int pid;  
+  public int pid;
   public int verified;
   public BufferedWriter out=null;
-  
+
   public BMResults(){}
-  
+
   public BMResults(int bid){
     pid=bid;
     clss='S';
@@ -69,7 +69,7 @@ public class BMResults implements Serializable{
 
   public BMResults(String bname,
 		   char   CLASS,
-		   int    bn1, 
+		   int    bn1,
 		   int    bn2,
 		   int    bn3,
 		   int    bniter,
@@ -79,7 +79,7 @@ public class BMResults implements Serializable{
 		   int    passed_verification,
 		   boolean bserial,
 	           int num_threads,
-	           int bid){ 
+	           int bid){
       pid=bid;
       name=bname;
       clss=CLASS;
@@ -94,8 +94,8 @@ public class BMResults implements Serializable{
       serial=bserial;
       numthreads=num_threads;
   }
-  
-  public void print(){    
+
+  public void print(){
     DecimalFormat fmt = new DecimalFormat("0.000");
     StringBuffer outbuf=new StringBuffer( "                                "
                                          +"                               *");
@@ -106,17 +106,17 @@ public class BMResults implements Serializable{
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Class             = "+clss);
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-     
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     if( n2 == 0 && n3 == 0 ){
       outline=new String("* Size              = "+n1);
     }else{
@@ -126,104 +126,104 @@ public class BMResults implements Serializable{
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Iterations        = "+niter);
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Time in seconds   = "+fmt.format(time));
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* ACCTime           = "+fmt.format(acctime));
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Mops total        = "+fmt.format(mops));
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Operation type    = "+optype);
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     if(verified==1)outline=new String("* Verification      = Successful");
     else if(verified==0)outline=new String("* Verification      = Failed");
     else outline=new String("* Verification      = Not Performed");
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
-    System.out.println(outbuf.toString()); 
-    
+    System.out.println(outbuf.toString());
+
     if(!serial){
       outbuf=new StringBuffer( "                          "
-                              +"                         *");     
+                              +"                         *");
       outline=new String("* Threads requested = "+numthreads);
       outbuf.insert(0,outline);
       outbuf.setLength(len);
       outbuf.insert(len-1,"*");
       System.out.println(outbuf.toString());
     }
-    
+
     outbuf=new StringBuffer( "*                               "
-                            +"                               *");     
+                            +"                               *");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* Please send all errors/feedbacks to:");
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* NPB Working Team");
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String("* npb@nas.nasa.gov");
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     outbuf=new StringBuffer( "                          "
-                            +"                         *");     
+                            +"                         *");
     outline=new String( "********************************"
                        +"*******************************");
     outbuf.insert(0,outline);
     outbuf.setLength(len);
     outbuf.insert(len-1,"*");
     System.out.println(outbuf.toString());
-    
+
     if(out!=null){
       try{
  	outline="***** NAS Parallel Benchmarks Java version (NPB3_0_JAV) "
@@ -262,7 +262,7 @@ public class BMResults implements Serializable{
         else                 outline="Verification Not Performed";
         out.write(outline,0,outline.length());
         out.newLine();
-    
+
     	outline="\n Please send all errors/feedbacks to:";
         out.write(outline,0,outline.length());
         out.newLine();
@@ -276,8 +276,8 @@ public class BMResults implements Serializable{
       }catch(Exception e){
         System.err.println("Res.print: write file: "+e.toString());
       }
-    }    
-  }  
+    }
+  }
 
   public int getFromFile(String filename){
     BufferedReader in=null;
@@ -285,7 +285,7 @@ public class BMResults implements Serializable{
     try{
       in = new BufferedReader(new FileReader(filename));
     }catch(Exception e){
-      System.err.println("BMResults.getFromFile: filename "+e.toString());   
+      System.err.println("BMResults.getFromFile: filename "+e.toString());
       return 0;
     }
     String line=new String();
@@ -313,7 +313,7 @@ public class BMResults implements Serializable{
         }
       }
     }catch(Exception e){
-      System.err.println("BMResults.getFromFile: "+e.toString());   
+      System.err.println("BMResults.getFromFile: "+e.toString());
       return 0;
     }
 //    print();

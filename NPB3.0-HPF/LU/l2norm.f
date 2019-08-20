@@ -1,10 +1,10 @@
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-       pure extrinsic (hpf) 
-     >        subroutine l2norm ( ldx, ldy, ldz, 
+       pure extrinsic (hpf)
+     >        subroutine l2norm ( ldx, ldy, ldz,
      >                    nx0, ny0, nz0,
-     >                    ist, iend, 
+     >                    ist, iend,
      >                    jst, jend,
      >                    v, summ )
       implicit none

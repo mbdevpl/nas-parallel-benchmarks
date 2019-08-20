@@ -52,7 +52,7 @@ public class ZSolver extends SPBase{
   int lower_bound;
   int upper_bound;
   int state= 1;
-  double lhs[],lhsm[],lhsp[],cv[],rhos[]; 
+  double lhs[],lhsm[],lhsp[],cv[],rhos[];
 
   public ZSolver(SP sp,int low, int high){
     Init(sp);
@@ -63,22 +63,22 @@ public class ZSolver extends SPBase{
     master=sp;
     lhs = new double[5*(problem_size+1)];
     lhsp = new double[5*(problem_size+1)];
-    lhsm = new double[5*(problem_size+1)];    
+    lhsm = new double[5*(problem_size+1)];
     cv = new double[problem_size];
     rhos = new double[problem_size];
   }
   void Init(SP sp){
     //initialize shared data
     IMAX=sp.IMAX;
-    JMAX=sp.JMAX; 
-    KMAX=sp.KMAX; 
-    problem_size=sp.problem_size; 
+    JMAX=sp.JMAX;
+    KMAX=sp.KMAX;
+    problem_size=sp.problem_size;
     nx2=sp.nx2;
     ny2=sp.ny2;
     nz2=sp.nz2;
     grid_points=sp.grid_points;
     niter_default=sp.niter_default;
-    dt_default=sp.dt_default;    
+    dt_default=sp.dt_default;
      u=sp.u;
     rhs=sp.rhs;
     forcing=sp.forcing;
@@ -112,7 +112,7 @@ public class ZSolver extends SPBase{
 
   public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -123,11 +123,11 @@ public class ZSolver extends SPBase{
       synchronized(master){done=true;master.notify();}
       }
     }
-  }    
-  
+  }
+
   public void step(){
     int i, j, k, n, k1, k2, m;
-    double  t1, t2, t3, ac, xvel, yvel, zvel, r1, r2, r3,r4, r5, 
+    double  t1, t2, t3, ac, xvel, yvel, zvel, r1, r2, r3,r4, r5,
             btuz, acinv, ac2u, uzik1;
     double ru1, fac1, fac2, rtmp[] = new double[5*(KMAX+1)];
 
@@ -137,11 +137,11 @@ public class ZSolver extends SPBase{
           for(i=1;i<=nx2;i++){
 
 //---------------------------------------------------------------------
-// Computes the left hand side for the three z-factors   
+// Computes the left hand side for the three z-factors
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-// first fill the lhs for the u-eigenvalue                          
+// first fill the lhs for the u-eigenvalue
 //---------------------------------------------------------------------
 
              for(k=0;k<=nz2+1;k++){
@@ -163,14 +163,14 @@ public class ZSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      add fourth order dissipation                                  
+//      add fourth order dissipation
 //---------------------------------------------------------------------
 
              k = 1;
              lhs[2+k*jsize4] = lhs[2+k*jsize4] + comz5;
              lhs[3+k*jsize4] = lhs[3+k*jsize4] - comz4;
              lhs[4+k*jsize4] = lhs[4+k*jsize4] + comz1;
-	       
+	
              k = 2;
              lhs[1+k*jsize4] = lhs[1+k*jsize4] - comz4;
              lhs[2+k*jsize4] = lhs[2+k*jsize4] + comz6;
@@ -197,21 +197,21 @@ public class ZSolver extends SPBase{
              lhs[2+k*jsize4] = lhs[2+k*jsize4] + comz5;
 
 //---------------------------------------------------------------------
-//      subsequently, fill the other factors (u+c), (u-c) 
+//      subsequently, fill the other factors (u+c), (u-c)
 //---------------------------------------------------------------------
              for(k=1;k<=nz2;k++){
                 lhsp[0+k*jsize4] = lhs[0+k*jsize4];
-                lhsp[1+k*jsize4] = lhs[1+k*jsize4] - 
+                lhsp[1+k*jsize4] = lhs[1+k*jsize4] -
                                   dttz2 * speed[i+j*jsize2+(k-1)*ksize2];
                 lhsp[2+k*jsize4] = lhs[2+k*jsize4];
-                lhsp[3+k*jsize4] = lhs[3+k*jsize4] + 
+                lhsp[3+k*jsize4] = lhs[3+k*jsize4] +
                                   dttz2 * speed[i+j*jsize2+(k+1)*ksize2];
                 lhsp[4+k*jsize4] = lhs[4+k*jsize4];
                 lhsm[0+k*jsize4] = lhs[0+k*jsize4];
-                lhsm[1+k*jsize4] = lhs[1+k*jsize4] + 
+                lhsm[1+k*jsize4] = lhs[1+k*jsize4] +
                                   dttz2 * speed[i+j*jsize2+(k-1)*ksize2];
                 lhsm[2+k*jsize4] = lhs[2+k*jsize4];
-                lhsm[3+k*jsize4] = lhs[3+k*jsize4] - 
+                lhsm[3+k*jsize4] = lhs[3+k*jsize4] -
                                   dttz2 * speed[i+j*jsize2+(k+1)*ksize2];
                 lhsm[4+k*jsize4] = lhs[4+k*jsize4];
              }
@@ -229,7 +229,7 @@ public class ZSolver extends SPBase{
 	     }
 
 //---------------------------------------------------------------------
-//                          FORWARD ELIMINATION  
+//                          FORWARD ELIMINATION
 //---------------------------------------------------------------------
 
              for(k=0;k<=grid_points[2]-3;k++){
@@ -260,7 +260,7 @@ public class ZSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      The last two rows in this grid block are a bit different, 
+//      The last two rows in this grid block are a bit different,
 //      since they do not have two more rows available for the
 //      elimination of off-diagonal entries
 //---------------------------------------------------------------------
@@ -289,7 +289,7 @@ public class ZSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      do the u+c and the u-c factors               
+//      do the u+c and the u-c factors
 //---------------------------------------------------------------------
              for(k=0;k<=grid_points[2]-3;k++){
              	k1 = k  + 1;
@@ -365,7 +365,7 @@ public class ZSolver extends SPBase{
              rtmp[4+k1*5] = rtmp[4+k1*5]/lhsm[2+k1*jsize4];
 
 //---------------------------------------------------------------------
-//                         BACKSUBSTITUTION 
+//                         BACKSUBSTITUTION
 //---------------------------------------------------------------------
 
              k  = grid_points[2]-2;
@@ -382,7 +382,7 @@ public class ZSolver extends SPBase{
 
 //---------------------------------------------------------------------
 //      Whether or not this is the last processor, we always have
-//      to complete the back-substitution 
+//      to complete the back-substitution
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
@@ -392,7 +392,7 @@ public class ZSolver extends SPBase{
                 k1 = k  + 1;
                 k2 = k  + 2;
                 for(m=0;m<=2;m++){
-                   rtmp[m+k*5] = rtmp[m+k*5] - 
+                   rtmp[m+k*5] = rtmp[m+k*5] -
                                 lhs[3+k*jsize4]*rtmp[m+k1*5] -
                                 lhs[4+k*jsize4]*rtmp[m+k2*5];
                 }
@@ -400,10 +400,10 @@ public class ZSolver extends SPBase{
 //---------------------------------------------------------------------
 //      And the remaining two
 //---------------------------------------------------------------------
-                rtmp[3+k*5] = rtmp[3+k*5] - 
+                rtmp[3+k*5] = rtmp[3+k*5] -
                                 lhsp[3+k*jsize4]*rtmp[3+k1*5] -
                                 lhsp[4+k*jsize4]*rtmp[3+k2*5];
-                rtmp[4+k*5] = rtmp[4+k*5] - 
+                rtmp[4+k*5] = rtmp[4+k*5] -
                                 lhsm[3+k*jsize4]*rtmp[4+k1*5] -
                                 lhsm[4+k*jsize4]*rtmp[4+k2*5];
              }
@@ -459,7 +459,7 @@ public class ZSolver extends SPBase{
           }
        }
 
-      break;      
+      break;
     };
     state++;
     if(state==3)state=1;
@@ -480,7 +480,7 @@ public class ZSolver extends SPBase{
        }
 
 //---------------------------------------------------------------------
-//      next, set all diagonal values to 1. This is overkill, but 
+//      next, set all diagonal values to 1. This is overkill, but
 //      convenient
 //---------------------------------------------------------------------
        for(i=0;i<=size;i+=size){

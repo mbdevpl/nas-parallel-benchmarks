@@ -40,7 +40,7 @@ c Authors: E. Barszcz
 c          P. Frederickson
 c          A. Woo
 c          M. Yarrow
-c HPF version: 
+c HPF version:
 c          M. Frumkin
 c
 c---------------------------------------------------------------------
@@ -53,16 +53,16 @@ c---------------------------------------------------------------------
       implicit none
 
       include 'globals.h'
-      include 'grid.h'      
-      include 'arr3d.h'      
+      include 'grid.h'
+      include 'arr3d.h'
 
        interface
             extrinsic (HPF) subroutine psinv( r,u,n1,n2,n3,c,k)
               implicit none
               include 'globals.h'
-              include 'psinv.h'    
+              include 'psinv.h'
            end subroutine psinv
-      
+
            extrinsic(HPF) subroutine mg3P(u,v,r,a,c,n1,n2,n3)
              implicit none
              include 'globals.h'
@@ -72,9 +72,9 @@ c---------------------------------------------------------------------
           extrinsic (HPF) subroutine resid( u,v,r,n1,n2,n3,a,k )
             implicit none
             include 'globals.h'
-            include 'resid.h'      
+            include 'resid.h'
           end subroutine resid
-           
+
            extrinsic(HPF) subroutine zran3(z,n1,n2,n3,nx,ny,k)
              implicit none
              include 'zran3.h'
@@ -88,14 +88,14 @@ c and is NOT global. it is the current iteration
 c---------------------------------------------------------------------------c
 
       integer k, it
-      
+
       external timer_read
       double precision t, tinit, mflops, timer_read
 
 c---------------------------------------------------------------------------c
 c These arrays are in common because they are quite large
 c and probably shouldn't be allocated on the stack. They
-c are always passed as subroutine args. 
+c are always passed as subroutine args.
 c---------------------------------------------------------------------------c
 
       double precision a(0:3),c(0:3)
@@ -105,9 +105,9 @@ c---------------------------------------------------------------------------c
       parameter (ny_max=ny_default+pad)
       parameter (nz_max=nz_default+pad)
       double precision :: u(nx_max,ny_max,nz_max,lm),
-     >                    v(nx_max,ny_max,nz_max,lm), 
+     >                    v(nx_max,ny_max,nz_max,lm),
      >                    r(nx_max,ny_max,nz_max,lm)
-!HPF$ align(*,:,:,*) with grid :: u, v, r 
+!HPF$ align(*,:,:,*) with grid :: u, v, r
 
       double precision rnm2, rnmu, old2, oldu, epsilon
       integer n1, n2, n3, nn, nit
@@ -141,18 +141,18 @@ c---------------------------------------------------------------------
       	 timeron = .false.
       endif
 
-      write (*, 1000) 
+      write (*, 1000)
 
       open(unit=7,file="mg.input", status="old", iostat=fstatus)
       if (fstatus .eq. 0) then
-         write(*,50) 
+         write(*,50)
  50      format(' Reading from input file mg.input')
          read(7,*) lt
          read(7,*) nx(lt), ny(lt), nz(lt)
          read(7,*) nit
          read(7,*) (debug_vec(i),i=0,7)
       else
-         write(*,51) 
+         write(*,51)
  51      format(' No input file. Using compiled defaults ')
          lt = lt_default
          nit = nit_default
@@ -166,16 +166,16 @@ c---------------------------------------------------------------------
 
 
       if ( (nx(lt) .ne. ny(lt)) .or. (nx(lt) .ne. nz(lt)) ) then
-         Class = 'U' 
+         Class = 'U'
       else if( nx(lt) .eq. 32 .and. nit .eq. 4 ) then
          Class = 'S'
       else if( nx(lt) .eq. 64 .and. nit .eq. 40 ) then
          Class = 'W'
       else if( nx(lt) .eq. 256 .and. nit .eq. 20 ) then
          Class = 'B'
-      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then  
+      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then
          Class = 'C'
-      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then  
+      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then
          Class = 'A'
       else
          Class = 'U'
@@ -194,11 +194,11 @@ c     debug_vec(5) = k => at level k or below, show result of interp
 c     debug_vec(6) = 1 => (unused)
 c     debug_vec(7) = 1 => (unused)
 c---------------------------------------------------------------------
-      a(0) = -8.0D0/3.0D0 
-      a(1) =  0.0D0 
-      a(2) =  1.0D0/6.0D0 
+      a(0) = -8.0D0/3.0D0
+      a(1) =  0.0D0
+      a(2) =  1.0D0/6.0D0
       a(3) =  1.0D0/12.0D0
-      
+
       if(Class .eq. 'A' .or. Class .eq. 'S'.or. Class .eq.'W') then
 c---------------------------------------------------------------------
 c     Coefficients for the S(a) smoother
@@ -291,7 +291,7 @@ c---------------------------------------------------------------------
       verified = .FALSE.
       verify_value = 0.0
 
-      write( *,'(/A,F15.3,A/)' ) 
+      write( *,'(/A,F15.3,A/)' )
      >     ' Initialization time: ',tinit, ' seconds'
       write(*,100)
  100  format(' Benchmark completed ')
@@ -321,7 +321,7 @@ c---------------------------------------------------------------------
  202        format(' Error is   ', E20.12)
          else
             verified = .FALSE.
-            write(*, 300) 
+            write(*, 300)
             write(*, 301) rnm2
             write(*, 302) verify_value
  300        format(' VERIFICATION FAILED')
@@ -347,9 +347,9 @@ c---------------------------------------------------------------------
       print*,'Benchmark time =',t
       print*,'class = ',class
       print*,'size =',nx(lt), ny(lt), nz(lt)
-      call print_results('MG', class, nx(lt), ny(lt), nz(lt), 
+      call print_results('MG', class, nx(lt), ny(lt), nz(lt),
      >                   nit, nprocs, t,
-     >                   mflops, '          floating point', 
+     >                   mflops, '          floating point',
      >                   verified, npbversion, compiletime,
      >                   cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -420,7 +420,7 @@ c---------------------------------------------------------------------
 
       do  k = lt,1,-1
          do  ax = 1,3
-            mi(ax,k) = 2 + ng(ax,k) 
+            mi(ax,k) = 2 + ng(ax,k)
          enddo
 
          m1(k) = mi(1,k)
@@ -434,10 +434,10 @@ c---------------------------------------------------------------------
       ie1 = 1 + ng(1,k)
       n1 = 3 + ie1 - is1
       is2 = 2 + ng(2,k) - ng(2,lt)
-      ie2 = 1 + ng(2,k) 
+      ie2 = 1 + ng(2,k)
       n2 = 3 + ie2 - is2
       is3 = 2 + ng(3,k) - ng(3,lt)
-      ie3 = 1 + ng(3,k) 
+      ie3 = 1 + ng(3,k)
       n3 = 3 + ie3 - is3
 
 
@@ -476,7 +476,7 @@ c---------------------------------------------------------------------
 
       include 'globals.h'
       include 'mg3p.h'
-      
+
       double precision u1(size(u,1)), u2(size(u,2))
       double precision r1(size(r,1)), r2(size(r,2))
 
@@ -484,28 +484,28 @@ c---------------------------------------------------------------------
           extrinsic (HPF) subroutine psinv( r,u,n1,n2,n3,c,k)
               implicit none
               include 'globals.h'
-              include 'psinv.h'    
+              include 'psinv.h'
           end subroutine psinv
-               
+
           extrinsic(HPF) subroutine interp(z,mm1,mm2,mm3,u,n1,n2,n3,k)
              implicit none
              include 'globals.h'
              include 'interp.h'
           end subroutine interp
-          
+
           extrinsic (HPF) subroutine resid( u,v,r,n1,n2,n3,a,k )
             implicit none
             include 'globals.h'
-            include 'resid.h'      
+            include 'resid.h'
           end subroutine resid
 
-          extrinsic (HPF) 
+          extrinsic (HPF)
      >         subroutine rprj3( r,m1k,m2k,m3k,s,m1j,m2j,m3j,k )
                  implicit none
                  include 'globals.h'
-                 include 'rprj3.h' 
+                 include 'rprj3.h'
           end subroutine rprj3
-           
+
        end interface
 
       integer j, k
@@ -533,7 +533,7 @@ c---------------------------------------------------------------------
      >           u(1:m1(k),1:m2(k),1:m3(k),k),m1(k),m2(k),m3(k),c,k)
       call timer_stop(T_psinv)
 
-      do  k = lb+1, lt-1     
+      do  k = lb+1, lt-1
           j = k-1
 c---------------------------------------------------------------------
 c        prolongate from level k-1  to k
@@ -571,7 +571,7 @@ c---------------------------------------------------------------------
       call timer_start(T_resid)
       call resid(u(:,:,:,lt),v(:,:,:,lt),r(:,:,:,lt),n1,n2,n3,a,k)
       call timer_stop(T_resid)
-       
+
       call timer_start(T_psinv)
       call psinv(r(:,:,:,lt),u(:,:,:,lt),n1,n2,n3,c,k)
       call timer_stop(T_psinv)
@@ -590,23 +590,23 @@ c---------------------------------------------------------------------
 c     psinv applies an approximate inverse as smoother:  u = u + Cr
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
+c     A and M denote the costs of Addition and Multiplication.
 c     Presuming coefficient c(3) is zero (the NPB assumes this,
 c     but it is thus not a general case), 2A + 1M may be eliminated,
 c     resulting in 13A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
       include 'globals.h'
 
-      include 'psinv.h'    
+      include 'psinv.h'
       integer i3, i2, i1
 
       double precision r1(m), r2(m)
 
-!hpf$ independent, new(  r1, r2), onhome(u(i1,i2,i3)) 
+!hpf$ independent, new(  r1, r2), onhome(u(i1,i2,i3))
       do i3=2,n3-1
          do i2=2,n2-1
             do i1=1,n1
@@ -635,7 +635,7 @@ c---------------------------------------------------------------------
        u(n1,:,:) = u(2,:,:)
        u(1,:,:) = u(n1-1,:,:)
        u(:,n2,:) = u(:,2,:)
-       u(:,1,:) = u(:,n2-1,:)       
+       u(:,1,:) = u(:,n2-1,:)
        u(:,:,n3) = u(:,:,2)
        u(:,:,1) = u(:,:,n3-1)
 
@@ -662,23 +662,23 @@ c---------------------------------------------------------------------
 c     resid computes the residual:  r = v - Au
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition (or Subtraction) and 
-c     Multiplication, respectively. 
+c     A and M denote the costs of Addition (or Subtraction) and
+c     Multiplication, respectively.
 c     Presuming coefficient a(1) is zero (the NPB assumes this,
 c     but it is thus not a general case), 3A + 1M may be eliminated,
 c     resulting in 12A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
       include 'globals.h'
 
-      include 'resid.h'            
+      include 'resid.h'
       double precision u1(size(u,1)), u2(size(u,1))
       integer i3, i2, i1
- 
-!hpf$ independent, new(u1,u2), onhome(u(i1,i2,i3)) 
+
+!hpf$ independent, new(u1,u2), onhome(u(i1,i2,i3))
       do i3=2,n3-1
          do i2=2,n2-1
             do i1=1,n1
@@ -708,7 +708,7 @@ c---------------------------------------------------------------------
        r(n1,:,:) = r(2,:,:)
        r(1,:,:) = r(n1-1,:,:)
        r(:,n2,:) = r(:,2,:)
-       r(:,1,:) = r(:,n2-1,:)      
+       r(:,1,:) = r(:,n2-1,:)
        r(:,:,n3) = r(:,:,2)
        r(:,:,1) = r(:,:,n3-1)
 
@@ -732,33 +732,33 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     rprj3 projects onto the next coarser grid, 
+c     rprj3 projects onto the next coarser grid,
 c     using a trilinear Finite Element projection:  s = r' = P r
-c     
+c
 c     This  implementation costs  20A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
       include 'globals.h'
-      include 'rprj3.h'      
+      include 'rprj3.h'
       integer j3, j2, j1, i3, i2, i1, d1, d2, d3, j
       double precision x1(m), y1(m), x2,y2
       double precision w000(m1j,m2j,m3j), w100(m1j,m2j,m3j),
      >                 w010(m1j,m2j,m3j), w110(m1j,m2j,m3j),
      >                 w001(m1j,m2j,m3j), w101(m1j,m2j,m3j),
      >                 w011(m1j,m2j,m3j), w111(m1j,m2j,m3j)
-     
-!hpf$   align w000(i1,i2,i3) with r(2*i1,2*i2,2*i3)      
-!hpf$   align w100(i1,i2,i3) with r(2*i1-1,2*i2,2*i3)      
-!hpf$   align w010(i1,i2,i3) with r(2*i1,2*i2-1,2*i3)      
-!hpf$   align w110(i1,i2,i3) with r(2*i1-1,2*i2-1,2*i3)      
-!hpf$   align w001(i1,i2,i3) with r(2*i1,2*i2,2*i3-1)      
-!hpf$   align w101(i1,i2,i3) with r(2*i1-1,2*i2,2*i3-1)      
-!hpf$   align w011(i1,i2,i3) with r(2*i1,2*i2-1,2*i3-1)      
-!hpf$   align w111(i1,i2,i3) with r(2*i1-1,2*i2-1,2*i3-1)      
+
+!hpf$   align w000(i1,i2,i3) with r(2*i1,2*i2,2*i3)
+!hpf$   align w100(i1,i2,i3) with r(2*i1-1,2*i2,2*i3)
+!hpf$   align w010(i1,i2,i3) with r(2*i1,2*i2-1,2*i3)
+!hpf$   align w110(i1,i2,i3) with r(2*i1-1,2*i2-1,2*i3)
+!hpf$   align w001(i1,i2,i3) with r(2*i1,2*i2,2*i3-1)
+!hpf$   align w101(i1,i2,i3) with r(2*i1-1,2*i2,2*i3-1)
+!hpf$   align w011(i1,i2,i3) with r(2*i1,2*i2-1,2*i3-1)
+!hpf$   align w111(i1,i2,i3) with r(2*i1-1,2*i2-1,2*i3-1)
 
       if(m1k.eq.3)then
         d1 = 2
@@ -782,13 +782,13 @@ c---------------------------------------------------------------------
 !hpf$ independent
             do  i2=1,m2j-1
                do i1=1,m1j-1
-                 w000(i1,i2,i3) = r(2*i1,2*i2,2*i3) 
+                 w000(i1,i2,i3) = r(2*i1,2*i2,2*i3)
      >                          + r(2*i1,2*i2+2,2*i3)
      >                          + r(2*i1+2,2*i2,2*i3)
      >                          + r(2*i1+2,2*i2+2,2*i3)
                end do
             end do
-         end do         
+         end do
 !hpf$ independent, on home(w100(i1,i2,i3))
          do  i3=1,m3j-1
 !hpf$ independent
@@ -818,7 +818,7 @@ c---------------------------------------------------------------------
                end do
             end do
          end do
-         
+
 !hpf$ independent, on home(w001(i1,i2,i3))
          do  i3=1,m3j-1
 !hpf$ independent
@@ -828,7 +828,7 @@ c---------------------------------------------------------------------
      >                          + r(2*i1,2*i2+2,2*i3-1)
                end do
             end do
-         end do         
+         end do
 !hpf$ independent, on home(w101(i1,i2,i3))
          do  i3=1,m3j-1
 !hpf$ independent
@@ -857,7 +857,7 @@ c---------------------------------------------------------------------
             end do
          end do
 
-         s(2:m1j-1,2:m2j-1,2:m3j-1) = 
+         s(2:m1j-1,2:m2j-1,2:m3j-1) =
      >                0.5D0* w111(2:m1j-1,2:m2j-1,2:m3j-1)
      >         + 0.25D0 * (  w011(1:m1j-2,2:m2j-1,2:m3j-1)
      >                  +    w011(2:m1j-1,2:m2j-1,2:m3j-1)
@@ -870,14 +870,14 @@ c---------------------------------------------------------------------
      >                  +  w010(1:m1j-2,2:m2j-1,1:m3j-2)
      >                  +  w010(1:m1j-2,2:m2j-1,2:m3j-1)
      >                  +    w100(2:m1j-1,1:m2j-2,1:m3j-2)
-     >                  +    w100(2:m1j-1,1:m2j-2,2:m3j-1) )    
+     >                  +    w100(2:m1j-1,1:m2j-2,2:m3j-1) )
      >        + 0.0625D0 * ( w000(1:m1j-2,1:m2j-2,1:m3j-2)
-     >                  +  w000(1:m1j-2,1:m2j-2,2:m3j-1)  )    
+     >                  +  w000(1:m1j-2,1:m2j-2,2:m3j-1)  )
 
        s(m1j,:,:) = s(2,:,:)
        s(1,:,:) = s(m1j-1,:,:)
        s(:,m2j,:) = s(:,2,:)
-       s(:,1,:) = s(:,m2j-1,:)       
+       s(:,1,:) = s(:,m2j-1,:)
        s(:,:,m3j) = s(:,:,2)
        s(:,:,1) = s(:,:,m3j-1)
 
@@ -903,11 +903,11 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     interp adds the trilinear interpolation of the correction
 c     from the coarser grid to the current approximation:  u = u + Qu'
-c     
+c
 c     Observe that this  implementation costs  16A + 4M, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  Vector machines may get slightly better 
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.  Vector machines may get slightly better
 c     performance however, with 8 separate "do i1" loops, rather than 4.
 c---------------------------------------------------------------------
       implicit none
@@ -927,41 +927,41 @@ c      parameter( m=535 )
      >                 w010(mm1,mm2,mm3), w110(mm1,mm2,mm3),
      >                 w001(mm1,mm2,mm3), w101(mm1,mm2,mm3),
      >                 w011(mm1,mm2,mm3), w111(mm1,mm2,mm3)
-!hpf$   align w000(i1,i2,i3) with u(2*i1,2*i2,2*i3)      
-!hpf$   align w100(i1,i2,i3) with u(2*i1-1,2*i2,2*i3)      
-!hpf$   align w010(i1,i2,i3) with u(2*i1,2*i2-1,2*i3)      
-!hpf$   align w110(i1,i2,i3) with u(2*i1-1,2*i2-1,2*i3)      
-!hpf$   align w001(i1,i2,i3) with u(2*i1,2*i2,2*i3-1)      
-!hpf$   align w101(i1,i2,i3) with u(2*i1-1,2*i2,2*i3-1)      
-!hpf$   align w011(i1,i2,i3) with u(2*i1,2*i2-1,2*i3-1)      
-!hpf$   align w111(i1,i2,i3) with u(2*i1-1,2*i2-1,2*i3-1)      
+!hpf$   align w000(i1,i2,i3) with u(2*i1,2*i2,2*i3)
+!hpf$   align w100(i1,i2,i3) with u(2*i1-1,2*i2,2*i3)
+!hpf$   align w010(i1,i2,i3) with u(2*i1,2*i2-1,2*i3)
+!hpf$   align w110(i1,i2,i3) with u(2*i1-1,2*i2-1,2*i3)
+!hpf$   align w001(i1,i2,i3) with u(2*i1,2*i2,2*i3-1)
+!hpf$   align w101(i1,i2,i3) with u(2*i1-1,2*i2,2*i3-1)
+!hpf$   align w011(i1,i2,i3) with u(2*i1,2*i2-1,2*i3-1)
+!hpf$   align w111(i1,i2,i3) with u(2*i1-1,2*i2-1,2*i3-1)
 
       if( n1 .ne. 3 .and. n2 .ne. 3 .and. n3 .ne. 3 ) then
       w111(1:mm1-1,1:mm2-1,1:mm3-1) = z(1:mm1-1,1:mm2-1,1:mm3-1)
-      
-      w011(1:mm1-1,1:mm2-1,1:mm3-1) = 
+
+      w011(1:mm1-1,1:mm2-1,1:mm3-1) =
      >  0.5d0*(z(1:mm1-1,1:mm2-1,1:mm3-1) + z(2:mm1,1:mm2-1,1:mm3-1))
 
-      w101(1:mm1-1,1:mm2-1,1:mm3-1) = 
+      w101(1:mm1-1,1:mm2-1,1:mm3-1) =
      >  0.5d0*(z(1:mm1-1,1:mm2-1,1:mm3-1) + z(1:mm1-1,2:mm2,1:mm3-1))
 
-      w001(1:mm1,1:mm2-1,1:mm3-1) = 
+      w001(1:mm1,1:mm2-1,1:mm3-1) =
      >  0.25d0*(z(1:mm1,1:mm2-1,1:mm3-1) + z(1:mm1,2:mm2,1:mm3-1) )
 
-      w110(1:mm1-1,1:mm2-1,1:mm3-1) =  
+      w110(1:mm1-1,1:mm2-1,1:mm3-1) =
      >  0.5d0*(z(1:mm1-1,1:mm2-1,1:mm3-1) + z(1:mm1-1,1:mm2-1,2:mm3))
-      
-      w010(1:mm1,1:mm2-1,1:mm3-1) = 
+
+      w010(1:mm1,1:mm2-1,1:mm3-1) =
      >  0.25d0*(z(1:mm1,1:mm2-1,1:mm3-1) + z(1:mm1,1:mm2-1,2:mm3) )
 
-      w100(1:mm1-1,1:mm2-1,1:mm3-1) = 
+      w100(1:mm1-1,1:mm2-1,1:mm3-1) =
      >  0.25d0*(z(1:mm1-1,1:mm2-1,1:mm3-1) + z(1:mm1-1,2:mm2,1:mm3-1)
      >       + z(1:mm1-1,1:mm2-1,2:mm3) + z(1:mm1-1,2:mm2,2:mm3))
 
-      w000(1:mm1,1:mm2-1,1:mm3-1) = 
+      w000(1:mm1,1:mm2-1,1:mm3-1) =
      >  0.125d0*(z(1:mm1,1:mm2-1,1:mm3-1) + z(1:mm1,2:mm2,1:mm3-1)
-     >        + z(1:mm1,1:mm2-1,2:mm3) + z(1:mm1,2:mm2,2:mm3) ) 
-           
+     >        + z(1:mm1,1:mm2-1,2:mm3) + z(1:mm1,2:mm2,2:mm3) )
+
 !hpf$ independent, on home(w000(i1,i2,i3))
          do  i3=1,mm3-1
 !hpf$ independent
@@ -971,7 +971,7 @@ c      parameter( m=535 )
      >                     + w000(i1+1,i2,i3)
                end do
             end do
-         end do         
+         end do
 !hpf$ independent, on home(w100(i1,i2,i3))
          do  i3=1,mm3-1
 !hpf$ independent
@@ -1000,7 +1000,7 @@ c      parameter( m=535 )
      >                     + w001(i1+1,i2,i3)
                end do
             end do
-         end do         
+         end do
 
 !hpf$ independent, on home(w110(i1,i2,i3))
          do  i3=1,mm3-1
@@ -1010,7 +1010,7 @@ c      parameter( m=535 )
        u(2*i1-1,2*i2-1,2*i3) = u(2*i1-1,2*i2-1,2*i3)+w110(i1,i2,i3)
                end do
             end do
-         end do        
+         end do
 !hpf$ independent, on home(w101(i1,i2,i3))
          do  i3=1,mm3-1
 !hpf$ independent
@@ -1048,7 +1048,7 @@ c      parameter( m=535 )
             d1 = 1
             t1 = 0
          endif
-         
+
          if(n2.eq.3)then
             d2 = 2
             t2 = 1
@@ -1056,7 +1056,7 @@ c      parameter( m=535 )
             d2 = 1
             t2 = 0
          endif
-         
+
          if(n3.eq.3)then
             d3 = 2
             t3 = 1
@@ -1079,7 +1079,7 @@ c      parameter( m=535 )
          call showall(u,n1,n2,n3)
       endif
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -1096,7 +1096,7 @@ c---------------------------------------------------------------------
       implicit none
 
       include 'globals.h'
-      include 'grid.h' 
+      include 'grid.h'
       double precision u(:,:,:)
 c!hpf$    align(*,*,:) with grid :: u
 
@@ -1194,14 +1194,14 @@ c---------------------------------------------------------------------
          do  i2=2,n2-1
             do  i1=2,n1-1
                if( z(i1,i2,i3) .gt. ten( 1, 1 ) )then
-                  ten(1,1) = z(i1,i2,i3) 
+                  ten(1,1) = z(i1,i2,i3)
                   j1(1,1) = i1
                   j2(1,1) = i2
                   j3(1,1) = i3
                   call bubble( ten, j1, j2, j3, mm, 1 )
                endif
                if( z(i1,i2,i3) .lt. ten( 1, 0 ) )then
-                  ten(1,0) = z(i1,i2,i3) 
+                  ten(1,0) = z(i1,i2,i3)
                   j1(1,0) = i1
                   j2(1,0) = i2
                   j3(1,0) = i3
@@ -1222,9 +1222,9 @@ c---------------------------------------------------------------------
          best = z( j1(i1,1), j2(i1,1), j3(i1,1) )
          if(best.eq.z(j1(i1,1),j2(i1,1),j3(i1,1)))then
             jg( 0, i, 1) = 0
-            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 ) 
-            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 ) 
-            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 ) 
+            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 )
+            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 )
+            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 )
             i1 = i1-1
          else
             jg( 0, i, 1) = 0
@@ -1236,9 +1236,9 @@ c---------------------------------------------------------------------
          best = z( j1(i0,0), j2(i0,0), j3(i0,0) )
          if(best.eq.z(j1(i0,0),j2(i0,0),j3(i0,0)))then
             jg( 0, i, 0) = 0
-            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 ) 
-            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 ) 
-            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 ) 
+            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 )
+            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 )
+            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 )
             i0 = i0-1
          else
             jg( 0, i, 0) = 0
@@ -1278,7 +1278,7 @@ c 7    format(10i4)
        z(n1,:,:) = z(2,:,:)
        z(1,:,:) = z(n1-1,:,:)
        z(:,n2,:) = z(:,2,:)
-       z(:,1,:) = z(:,n2-1,:)       
+       z(:,1,:) = z(:,n2-1,:)
        z(:,:,n3) = z(:,:,2)
        z(:,:,1) = z(:,:,n3-1)
 
@@ -1286,7 +1286,7 @@ c---------------------------------------------------------------------
 c          call showall(z,n1,n2,n3)
 c---------------------------------------------------------------------
 
-      return 
+      return
       end
 
 
@@ -1319,7 +1319,7 @@ c---------------------------------------------------------------------
       write(*,*)'  '
  6    format(15f6.3)
 
-      return 
+      return
       end
 
 
@@ -1397,7 +1397,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo
@@ -1423,7 +1423,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo

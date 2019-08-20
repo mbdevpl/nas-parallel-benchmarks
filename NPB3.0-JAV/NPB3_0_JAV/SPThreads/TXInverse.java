@@ -63,15 +63,15 @@ public class TXInverse extends SPBase{
   void Init(SP sp){
     //initialize shared data
     IMAX=sp.IMAX;
-    JMAX=sp.JMAX; 
-    KMAX=sp.KMAX; 
-    problem_size=sp.problem_size; 
+    JMAX=sp.JMAX;
+    KMAX=sp.KMAX;
+    problem_size=sp.problem_size;
     nx2=sp.nx2;
     ny2=sp.ny2;
     nz2=sp.nz2;
     grid_points=sp.grid_points;
     niter_default=sp.niter_default;
-    dt_default=sp.dt_default;    
+    dt_default=sp.dt_default;
     u=sp.u;
     rhs=sp.rhs;
     forcing=sp.forcing;
@@ -105,7 +105,7 @@ public class TXInverse extends SPBase{
 
   public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -116,8 +116,8 @@ public class TXInverse extends SPBase{
       synchronized(master){done=true;master.notify();}
       }
     }
-  }    
-  
+  }
+
   public void step(){
     int i, j, k;
     double t1, t2, t3, ac, ru1, uu, vv, ww, r1, r2, r3, r4, r5, ac2inv;
@@ -138,7 +138,7 @@ public class TXInverse extends SPBase{
                 r4 = rhs[3+i*isize1+j*jsize1+k*ksize1];
                 r5 = rhs[4+i*isize1+j*jsize1+k*ksize1];
 
-                t1 = c2 * ac2inv * ( qs[i+j*jsize2+k*ksize2]*r1 - uu*r2  - 
+                t1 = c2 * ac2inv * ( qs[i+j*jsize2+k*ksize2]*r1 - uu*r2  -
                         vv*r3 - ww*r4 + r5 );
                 t2 = bt * ru1 * ( uu * r1 - r2 );
                 t3 = ( bt * ru1 * ac ) * t1;

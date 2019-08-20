@@ -30,11 +30,11 @@ c---------------------------------------------------------------------
       double precision timer_read
 
 
- 
+
 c---------------------------------------------------------------------
 c   begin pseudo-time stepping iterations
 c---------------------------------------------------------------------
-      tmp = 1.0d+00 / ( omega * ( 2.0d+00 - omega ) ) 
+      tmp = 1.0d+00 / ( omega * ( 2.0d+00 - omega ) )
       lst = ist + jst + 2
       lend = iend + jend + nz - 1
 
@@ -62,7 +62,7 @@ c---------------------------------------------------------------------
 c   compute the steady-state residuals
 c---------------------------------------------------------------------
       call rhs
- 
+
 c---------------------------------------------------------------------
 c   compute the L2 norms of newton iteration residuals
 c---------------------------------------------------------------------
@@ -77,21 +77,21 @@ c         write (*,*)
 c         write (*,1007) ( rsdnm(m), m = 1, 5 )
 c	 write (*,'(/a)') 'Iteration RMS-residual of 5th PDE'
 c      end if
- 
- 
+
+
       do i = 1, t_last
       	 call timer_clear(i)
       end do
       call timer_start(1)
 
       call calcnp(lst, lend, np, indxp, jndxp)
- 
+
 c---------------------------------------------------------------------
 c   the timestep loop
 c---------------------------------------------------------------------
       do istep = 1, itmax
 
-         
+
 c         if ( ( mod ( istep, inorm ) .eq. 0 ) .and.
 c     >          ipr .eq. 1 ) then
 c             write ( *, 1001 ) istep
@@ -102,7 +102,7 @@ c         end if
             write( *, 200) istep
  200        format(' Time step ', i4)
          endif
- 
+
 c---------------------------------------------------------------------
 c   perform SSOR iteration
 c---------------------------------------------------------------------
@@ -117,7 +117,7 @@ c---------------------------------------------------------------------
             end do
          end do
 	 if (timeron) call timer_stop(t_rhs)
- 
+
 	 do l = lst, lend
 c---------------------------------------------------------------------
 c   form the lower triangular part of the jacobian matrix
@@ -125,7 +125,7 @@ c---------------------------------------------------------------------
 	    if (timeron) call timer_start(t_jacld)
             call jacld(l, np(l), indxp(1,l), jndxp(1,l))
 	    if (timeron) call timer_stop(t_jacld)
- 
+
 c---------------------------------------------------------------------
 c   perform the lower triangular solution
 c---------------------------------------------------------------------
@@ -138,7 +138,7 @@ c---------------------------------------------------------------------
      >                 np(l), indxp(1,l), jndxp(1,l) )
 	    if (timeron) call timer_stop(t_blts)
 	 end do
- 
+
 	 do l = lend, lst, -1
 c---------------------------------------------------------------------
 c   form the strictly upper triangular part of the jacobian matrix
@@ -159,7 +159,7 @@ c---------------------------------------------------------------------
      >                 np(l), indxp(1,l), jndxp(1,l) )
 	    if (timeron) call timer_stop(t_buts)
 	 end do
- 
+
 c---------------------------------------------------------------------
 c   update the variables
 c---------------------------------------------------------------------
@@ -176,7 +176,7 @@ c---------------------------------------------------------------------
             end do
          end do
 	 if (timeron) call timer_stop(t_add)
- 
+
 c---------------------------------------------------------------------
 c   compute the max-norms of newton iteration corrections
 c---------------------------------------------------------------------
@@ -192,14 +192,14 @@ c            else if ( ipr .eq. 2 ) then
 c                write (*,'(i5,f15.6)') istep,delunm(5)
 c            end if
          end if
- 
+
 c---------------------------------------------------------------------
 c   compute the steady-state residuals
 c---------------------------------------------------------------------
 	 if (timeron) call timer_start(t_rhs)
          call rhs
 	 if (timeron) call timer_stop(t_rhs)
- 
+
 c---------------------------------------------------------------------
 c   compute the max-norms of newton iteration residuals
 c---------------------------------------------------------------------
@@ -228,16 +228,16 @@ c               write (*,1004) istep
 c            end if
             return
          end if
- 
+
       end do
- 
+
       call timer_stop(1)
       maxtime= timer_read(1)
- 
+
 
 
       return
-      
+
  1001 format (1x/5x,'pseudo-time SSOR iteration no.=',i4/)
  1004 format (1x/1x,'convergence was achieved after ',i4,
      >   ' pseudo-time steps' )
@@ -261,5 +261,5 @@ c            end if
      > 'fourth pde = ',1pe12.5/,
      > 1x,'RMS-norm of steady-state residual for ',
      > 'fifth pde  = ',1pe12.5)
- 
+
       end

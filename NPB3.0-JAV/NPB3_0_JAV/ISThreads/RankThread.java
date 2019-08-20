@@ -9,7 +9,7 @@
 !                                                                         !
 !-------------------------------------------------------------------------!
 !                                                                         !
-!    RankThread implements thread for RankThread subroutine of IS         !    
+!    RankThread implements thread for RankThread subroutine of IS         !
 !    benchmark.                                                           !
 !									  !
 !    Permission to use, copy, distribute and modify this software	  !
@@ -47,10 +47,10 @@ import NPB3_0_JAV.*;
 
 public class RankThread extends ISBase{
   public int id;
-  protected int local_hist[];  
-  int start, end;	  
+  protected int local_hist[];
+  int start, end;	
   int rstart, rend;
-  
+
   public boolean done=true;
   public static int iteration=0;
   public int state;
@@ -78,7 +78,7 @@ public class RankThread extends ISBase{
     master_hist=is.master_hist;
     partial_verify_vals=is.partial_verify_vals;
  }
- 
+
   public void run(){
       for(;;){
         synchronized(this){
@@ -100,27 +100,27 @@ public class RankThread extends ISBase{
           }
   	  synchronized(master){done=true;master.notify();}
         }
-      }       
+      }
   }
 
   protected synchronized void step1(){
     key_array[iteration] = iteration;
     key_array[iteration+MAX_ITERATIONS] = MAX_KEY - iteration;
     for(int i=0; i<TEST_ARRAY_SIZE; i++ ){
-       partial_verify_vals[i] = key_array[test_index_array[i]]; 
+       partial_verify_vals[i] = key_array[test_index_array[i]];
     }
-    	    
+    	
     for(int i=0;i<MAX_KEY;i++) local_hist[i]=0;
-    for(int i=start; i<=end; i++ ) local_hist[key_array[i]]++;  
-    for(int i=0; i<MAX_KEY-1; i++ ) local_hist[i+1] += local_hist[i];  
+    for(int i=start; i<=end; i++ ) local_hist[key_array[i]]++;
+    for(int i=0; i<MAX_KEY-1; i++ ) local_hist[i+1] += local_hist[i];
   }
-  
+
   public void step2(){
     //Parallel calculation of the master's histogram
     for(int i=rstart;i<=rend;i++){
       for(int j=0;j<num_threads;j++){
     	master_hist[i]+=rankthreads[j].local_hist[i];
       }
-    }	    
+    }	
   }
 }

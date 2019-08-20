@@ -8,22 +8,22 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     
+c
 c     Performs line solves in X direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
-c     
+c
 c---------------------------------------------------------------------
 
       include 'header.h'
       interface
-        pure extrinsic (hpf_local) 
+        pure extrinsic (hpf_local)
      >    subroutine matvec_sub(ablock,avec,bvec)
-        double precision, dimension (:,:), intent(in):: ablock 
+        double precision, dimension (:,:), intent(in):: ablock
         double precision, dimension (:), intent(in) :: avec
         double precision, dimension (:), intent(inout) :: bvec
         end subroutine
@@ -31,22 +31,22 @@ c---------------------------------------------------------------------
         pure extrinsic (hpf_local)
      >    subroutine matmul_sub(ablock, bblock, cblock)
         implicit none
-        double precision, dimension (:,:), intent(in):: ablock,bblock 
+        double precision, dimension (:,:), intent(in):: ablock,bblock
         double precision, dimension (:,:), intent(inout) :: cblock	
-        end subroutine 
+        end subroutine
 
         pure extrinsic (hpf_local) subroutine binvcrhs( lhs,c,r )
           implicit none
-          double precision, dimension (:,:), intent(inout):: lhs,c 
+          double precision, dimension (:,:), intent(inout):: lhs,c
           double precision, dimension (:), intent(inout) :: r
-        end subroutine      
+        end subroutine
 
         pure extrinsic (hpf_local) subroutine binvrhs(lhs,r)
         implicit none
-        double precision, dimension (:,:), intent(inout):: lhs 
+        double precision, dimension (:,:), intent(inout):: lhs
         double precision, dimension (:), intent(inout) :: r
-        end subroutine 
-	     
+        end subroutine
+	
       end interface
       integer idx, jdx, kdx
       double precision pivot, coeff
@@ -78,7 +78,7 @@ c---------------------------------------------------------------------
                tmp2 = tmp1 * tmp1
                tmp3 = tmp1 * tmp2
 c---------------------------------------------------------------------
-c     
+c
 c---------------------------------------------------------------------
                fjac(1,1,i) = 0.0d+00
                fjac(1,2,i) = 1.0d+00
@@ -86,7 +86,7 @@ c---------------------------------------------------------------------
                fjac(1,4,i) = 0.0d+00
                fjac(1,5,i) = 0.0d+00
 
-               fjac(2,1,i) = -(u(2,i,j,k) * tmp2 * 
+               fjac(2,1,i) = -(u(2,i,j,k) * tmp2 *
      >              u(2,i,j,k))
      >              + c2 * qs(i,j,k)
                fjac(2,2,i) = ( 2.0d+00 - c2 )
@@ -110,7 +110,7 @@ c---------------------------------------------------------------------
                fjac(5,1,i) = ( c2 * 2.0d0 * square(i,j,k)
      >              - c1 * u(5,i,j,k) )
      >              * ( u(2,i,j,k) * tmp2 )
-               fjac(5,2,i) = c1 *  u(5,i,j,k) * tmp1 
+               fjac(5,2,i) = c1 *  u(5,i,j,k) * tmp1
      >              - c2
      >              * ( u(2,i,j,k)*u(2,i,j,k) * tmp2
      >              + qs(i,j,k) )
@@ -139,7 +139,7 @@ c---------------------------------------------------------------------
                njac(3,5,i) =   0.0d+00
 
                njac(4,1,i) = - c3c4 * tmp2 * u(4,i,j,k)
-               njac(4,2,i) =   0.0d+00 
+               njac(4,2,i) =   0.0d+00
                njac(4,3,i) =   0.0d+00
                njac(4,4,i) =   c3c4 * tmp1
                njac(4,5,i) =   0.0d+00
@@ -172,7 +172,7 @@ c---------------------------------------------------------------------
             lhs(3,3,2,isize) = 1.0d0
             lhs(4,4,2,isize) = 1.0d0
             lhs(5,5,2,isize) = 1.0d0
-	    
+	
             do i = 1, isize-1
 
                tmp1 = dt * tx1
@@ -180,7 +180,7 @@ c---------------------------------------------------------------------
 
                lhs(1,1,aa,i) = - tmp2 * fjac(1,1,i-1)
      >              - tmp1 * njac(1,1,i-1)
-     >              - tmp1 * dx1 
+     >              - tmp1 * dx1
                lhs(1,2,aa,i) = - tmp2 * fjac(1,2,i-1)
      >              - tmp1 * njac(1,2,i-1)
                lhs(1,3,aa,i) = - tmp2 * fjac(1,3,i-1)
@@ -208,7 +208,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(3,2,i-1)
                lhs(3,3,aa,i) = - tmp2 * fjac(3,3,i-1)
      >              - tmp1 * njac(3,3,i-1)
-     >              - tmp1 * dx3 
+     >              - tmp1 * dx3
                lhs(3,4,aa,i) = - tmp2 * fjac(3,4,i-1)
      >              - tmp1 * njac(3,4,i-1)
                lhs(3,5,aa,i) = - tmp2 * fjac(3,5,i-1)
@@ -345,10 +345,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(IMAX) and rhs'(IMAX) will be sent to next cell
 c---------------------------------------------------------------------
@@ -362,7 +362,7 @@ c     multiply c(0,j,k) by b_inverse and copy back to c
 c     multiply rhs(0) by b_inverse(0) and copy to rhs
 c---------------------------------------------------------------------
 
-           do kdx = 1, 5           
+           do kdx = 1, 5
              pivot = 1.00d0/lhs(kdx,kdx,bb,0)
              rhs(kdx,0,j,k) = rhs(kdx,0,j,k)*pivot
              do jdx = kdx+1, 5
@@ -371,38 +371,38 @@ c---------------------------------------------------------------------
              do jdx = 1, 5
                lhs(kdx,jdx,cc,0) = lhs(kdx,jdx,cc,0)*pivot
              end do
-             
-             
+
+
              do jdx = 1, kdx-1
                coeff = lhs(jdx,kdx,bb,0)
                rhs(jdx,0,j,k) = rhs(jdx,0,j,k) - rhs(kdx,0,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,0) = lhs(jdx,idx,bb,0) - 
+                 lhs(jdx,idx,bb,0) = lhs(jdx,idx,bb,0) -
      >               lhs(kdx,idx,bb,0)*coeff
-               end do 
+               end do
                do idx = 1, 5
-                 lhs(jdx,idx,cc,0) = lhs(jdx,idx,cc,0) - 
+                 lhs(jdx,idx,cc,0) = lhs(jdx,idx,cc,0) -
      >               lhs(kdx,idx,cc,0)*coeff
-               end do 
+               end do
 
-             end do 
+             end do
 
              do jdx = kdx+1,5
                coeff = lhs(jdx,kdx,bb,0)
                rhs(jdx,0,j,k) = rhs(jdx,0,j,k) - rhs(kdx,0,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,0) = lhs(jdx,idx,bb,0) - 
+                 lhs(jdx,idx,bb,0) = lhs(jdx,idx,bb,0) -
      >               lhs(kdx,idx,bb,0)*coeff
-               end do 
+               end do
                do idx = 1, 5
-                 lhs(jdx,idx,cc,0) = lhs(jdx,idx,cc,0) - 
+                 lhs(jdx,idx,cc,0) = lhs(jdx,idx,cc,0) -
      >               lhs(kdx,idx,cc,0)*coeff
-               end do 
-             end do 
-           end do 
+               end do
+             end do
+           end do
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
             do i=1,isize-1
 c---------------------------------------------------------------------
@@ -420,121 +420,121 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     rhs(isize) = rhs(isize) - A*rhs(isize-1)
 c---------------------------------------------------------------------
-           do kdx = 1, 5           
+           do kdx = 1, 5
              do jdx = 1, 5
-              rhs(kdx,i,j,k) = rhs(kdx,i,j,k) - 
-     >                     lhs(kdx,jdx,aa,i)*rhs(jdx,i-1,j,k)      
-     
-              lhs(kdx,jdx,bb,i) = lhs(kdx,jdx,bb,i) -          
+              rhs(kdx,i,j,k) = rhs(kdx,i,j,k) -
+     >                     lhs(kdx,jdx,aa,i)*rhs(jdx,i-1,j,k)
+
+              lhs(kdx,jdx,bb,i) = lhs(kdx,jdx,bb,i) -
      >               lhs(kdx,1,aa,i)*lhs(1,jdx,cc,i-1) -
      >               lhs(kdx,2,aa,i)*lhs(2,jdx,cc,i-1) -
      >               lhs(kdx,3,aa,i)*lhs(3,jdx,cc,i-1) -
      >               lhs(kdx,4,aa,i)*lhs(4,jdx,cc,i-1) -
      >               lhs(kdx,5,aa,i)*lhs(5,jdx,cc,i-1)
-             end do                                                    
-           end do 
+             end do
+           end do
 
-           do kdx = 1, 5           
+           do kdx = 1, 5
              pivot = 1.00d0/lhs(kdx,kdx,bb,i)
              rhs(kdx,i,j,k) = rhs(kdx,i,j,k)*pivot
              do jdx = kdx+1, 5
                lhs(kdx,jdx,bb,i) = lhs(kdx,jdx,bb,i)*pivot
              end do
              do jdx = 1, 5
-               lhs(kdx,jdx,cc,i) = lhs(kdx,jdx,cc,i)*pivot   
-             end do                                                  
-             
-             
+               lhs(kdx,jdx,cc,i) = lhs(kdx,jdx,cc,i)*pivot
+             end do
+
+
              do jdx = 1, kdx-1
                coeff = lhs(jdx,kdx,bb,i)
                rhs(jdx,i,j,k) = rhs(jdx,i,j,k) - rhs(kdx,i,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,i) = lhs(jdx,idx,bb,i) - 
+                 lhs(jdx,idx,bb,i) = lhs(jdx,idx,bb,i) -
      >               lhs(kdx,idx,bb,i)*coeff
-               end do 
-                 lhs(jdx,1,cc,i) = lhs(jdx,1,cc,i) - 
+               end do
+                 lhs(jdx,1,cc,i) = lhs(jdx,1,cc,i) -
      >               lhs(kdx,1,cc,i)*coeff
-                 lhs(jdx,2,cc,i) = lhs(jdx,2,cc,i) - 
+                 lhs(jdx,2,cc,i) = lhs(jdx,2,cc,i) -
      >               lhs(kdx,2,cc,i)*coeff
-                 lhs(jdx,3,cc,i) = lhs(jdx,3,cc,i) - 
+                 lhs(jdx,3,cc,i) = lhs(jdx,3,cc,i) -
      >               lhs(kdx,3,cc,i)*coeff
-                 lhs(jdx,4,cc,i) = lhs(jdx,4,cc,i) - 
+                 lhs(jdx,4,cc,i) = lhs(jdx,4,cc,i) -
      >               lhs(kdx,4,cc,i)*coeff
-                 lhs(jdx,5,cc,i) = lhs(jdx,5,cc,i) - 
+                 lhs(jdx,5,cc,i) = lhs(jdx,5,cc,i) -
      >               lhs(kdx,5,cc,i)*coeff
-             end do 
+             end do
 
              do jdx = kdx+1,5
                coeff = lhs(jdx,kdx,bb,i)
                rhs(jdx,i,j,k) = rhs(jdx,i,j,k) - rhs(kdx,i,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,i) = lhs(jdx,idx,bb,i) -      
+                 lhs(jdx,idx,bb,i) = lhs(jdx,idx,bb,i) -
      >               lhs(kdx,idx,bb,i)*coeff
-               end do                                                 
-                 lhs(jdx,1,cc,i) = lhs(jdx,1,cc,i) - 
+               end do
+                 lhs(jdx,1,cc,i) = lhs(jdx,1,cc,i) -
      >               lhs(kdx,1,cc,i)*coeff
-                 lhs(jdx,2,cc,i) = lhs(jdx,2,cc,i) - 
+                 lhs(jdx,2,cc,i) = lhs(jdx,2,cc,i) -
      >               lhs(kdx,2,cc,i)*coeff
-                 lhs(jdx,3,cc,i) = lhs(jdx,3,cc,i) - 
+                 lhs(jdx,3,cc,i) = lhs(jdx,3,cc,i) -
      >               lhs(kdx,3,cc,i)*coeff
-                 lhs(jdx,4,cc,i) = lhs(jdx,4,cc,i) - 
+                 lhs(jdx,4,cc,i) = lhs(jdx,4,cc,i) -
      >               lhs(kdx,4,cc,i)*coeff
-                 lhs(jdx,5,cc,i) = lhs(jdx,5,cc,i) - 
+                 lhs(jdx,5,cc,i) = lhs(jdx,5,cc,i) -
      >               lhs(kdx,5,cc,i)*coeff
-             end do                          
-           end do           
+             end do
+           end do
        end do
 
 c---------------------------------------------------------------------
 c     B(isize) = B(isize) - C(isize-1)*A(isize)
 c---------------------------------------------------------------------
 
-           do kdx = 1, 5           
+           do kdx = 1, 5
              do jdx = 1, 5
-               rhs(kdx,isize,j,k) = rhs(kdx,isize,j,k) - 
+               rhs(kdx,isize,j,k) = rhs(kdx,isize,j,k) -
      >              lhs(kdx,jdx,aa,isize)*rhs(jdx,isize-1,j,k)
-     
-               lhs(kdx,jdx,bb,isize) = lhs(kdx,jdx,bb,isize) - 
+
+               lhs(kdx,jdx,bb,isize) = lhs(kdx,jdx,bb,isize) -
      >            lhs(kdx,1,aa,isize)*lhs(1,jdx,cc,isize-1) -
      >            lhs(kdx,2,aa,isize)*lhs(2,jdx,cc,isize-1) -
      >            lhs(kdx,3,aa,isize)*lhs(3,jdx,cc,isize-1) -
      >            lhs(kdx,4,aa,isize)*lhs(4,jdx,cc,isize-1) -
      >            lhs(kdx,5,aa,isize)*lhs(5,jdx,cc,isize-1)
-             end do 
-           end do 
+             end do
+           end do
 c---------------------------------------------------------------------
 c     multiply rhs() by b_inverse() and copy to rhs
 c---------------------------------------------------------------------
-          do kdx = 1, 5           
+          do kdx = 1, 5
              pivot = 1.00d0/lhs(kdx,kdx,bb,isize)
              rhs(kdx,isize,j,k) = rhs(kdx,isize,j,k)*pivot
              do jdx = kdx+1, 5
-               lhs(kdx,jdx,bb,isize) = 
+               lhs(kdx,jdx,bb,isize) =
      >              lhs(kdx,jdx,bb,isize)*pivot
-             end do       
-             
+             end do
+
              do jdx = 1, kdx-1
                coeff = lhs(jdx,kdx,bb,isize)
-               rhs(jdx,isize,j,k) = rhs(jdx,isize,j,k) - 
+               rhs(jdx,isize,j,k) = rhs(jdx,isize,j,k) -
      >                              rhs(kdx,isize,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,isize) = 
-     >                lhs(jdx,idx,bb,isize) - 
+                 lhs(jdx,idx,bb,isize) =
+     >                lhs(jdx,idx,bb,isize) -
      >               lhs(kdx,idx,bb,isize)*coeff
-               end do 
-             end do 
+               end do
+             end do
 
              do jdx = kdx+1,5
                coeff = lhs(jdx,kdx,bb,isize)
-               rhs(jdx,isize,j,k) = rhs(jdx,isize,j,k) - 
+               rhs(jdx,isize,j,k) = rhs(jdx,isize,j,k) -
      >               rhs(kdx,isize,j,k)*coeff
                do idx = kdx+1, 5
-                 lhs(jdx,idx,bb,isize) = 
-     >                lhs(jdx,idx,bb,isize) - 
+                 lhs(jdx,idx,bb,isize) =
+     >                lhs(jdx,idx,bb,isize) -
      >               lhs(kdx,idx,bb,isize)*coeff
-               end do 
-             end do                           
-           end do  
+               end do
+             end do
+           end do
 
 c---------------------------------------------------------------------
 c     back solve: if last cell, then generate U(isize)=rhs(isize)
@@ -546,7 +546,7 @@ c---------------------------------------------------------------------
             do i=isize-1,0,-1
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,k) = rhs(m,i,j,k) 
+                     rhs(m,i,j,k) = rhs(m,i,j,k)
      >                    - lhs(m,n,cc,i)*rhs(n,i+1,j,k)
                   enddo
                enddo
@@ -558,15 +558,15 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
-      pure extrinsic (hpf_local) 
+      pure extrinsic (hpf_local)
      >  subroutine matvec_sub(ablock,avec,bvec)
       implicit none
-      double precision, dimension (:,:), intent(in):: ablock 
+      double precision, dimension (:,:), intent(in):: ablock
       double precision, dimension (:), intent(in) :: avec
       double precision, dimension (:), intent(inout) :: bvec
 
@@ -581,7 +581,7 @@ c---------------------------------------------------------------------
 
       do i=1,5
 c---------------------------------------------------------------------
-c            rhs(i,ic,jc,kc) = rhs(i,ic,jc,kc) 
+c            rhs(i,ic,jc,kc) = rhs(i,ic,jc,kc)
 c     $           - lhs(i,1,ablock,ia)*
 c---------------------------------------------------------------------
          bvec(i) = bvec(i) - ablock(i,1)*avec(1)
@@ -600,7 +600,7 @@ c---------------------------------------------------------------------
       pure extrinsic (hpf_local)
      >  subroutine matmul_sub(ablock, bblock, cblock)
       implicit none
-      double precision, dimension (:,:), intent(in):: ablock,bblock 
+      double precision, dimension (:,:), intent(in):: ablock,bblock
       double precision, dimension (:,:), intent(inout) :: cblock
 
 c---------------------------------------------------------------------
@@ -641,7 +641,7 @@ c---------------------------------------------------------------------
      >                             - ablock(5,5)*bblock(5,j)
       enddo
 
-              
+
       return
       end
 
@@ -652,12 +652,12 @@ c---------------------------------------------------------------------
 
       pure extrinsic (hpf_local) subroutine binvcrhs( lhs,c,r )
       implicit none
-      double precision, dimension (:,:), intent(inout):: lhs,c 
+      double precision, dimension (:,:), intent(inout):: lhs,c
       double precision, dimension (:), intent(inout) :: r
       double precision pivot, coeff
 
 c---------------------------------------------------------------------
-c     
+c
 c---------------------------------------------------------------------
 
       pivot = 1.00d0/lhs(1,1)
@@ -925,17 +925,17 @@ c---------------------------------------------------------------------
 
       pure extrinsic (hpf_local) subroutine binvrhs(lhs,r)
       implicit none
-      double precision, dimension (:,:), intent(inout):: lhs 
+      double precision, dimension (:,:), intent(inout):: lhs
       double precision, dimension (:), intent(inout) :: r
 c---------------------------------------------------------------------
-c     
+c
 c---------------------------------------------------------------------
 
       double precision pivot, coeff, lhs
       double precision c(5,5)
 
 c---------------------------------------------------------------------
-c     
+c
 c---------------------------------------------------------------------
 
 

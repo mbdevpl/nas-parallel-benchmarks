@@ -22,9 +22,9 @@ For more information on NPB2.3, please refer to README.NPB.
 
    NPB3.0-SER uses the same directory tree as NPB2.3.
    Before compilation, one needs to check the configuration file
-   'make.def' in the config directory and modify the file as necessary.  
+   'make.def' in the config directory and modify the file as necessary.
    If it does not (yet) exist, copy 'make.def.template' or one of the
-   sample files in the NAS.samples subdirectory to 'make.def' and 
+   sample files in the NAS.samples subdirectory to 'make.def' and
    modify/complete
    Check also the 'suite.def' file if one wants to make a suite.  Then
 
@@ -54,7 +54,7 @@ For more information on NPB2.3, please refer to README.NPB.
 3.1 BT
 
 This version is optimized for memory performance.  It uses much less
-memory than the original version due to the size reduction of working 
+memory than the original version due to the size reduction of working
 arrays.
 
 Serial performance in comparison with the original NPB2.3-serial.

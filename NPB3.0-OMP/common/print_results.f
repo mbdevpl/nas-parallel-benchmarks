@@ -1,8 +1,8 @@
 
-      subroutine print_results(name, class, n1, n2, n3, niter, 
-     >               t, mops, optype, verified, npbversion, 
+      subroutine print_results(name, class, n1, n2, n3, niter,
+     >               t, mops, optype, verified, npbversion,
      >               compiletime, cs1, cs2, cs3, cs4, cs5, cs6, cs7)
-      
+
       implicit none
       character*2 name
       character*1 class
@@ -10,7 +10,7 @@
       double precision t, mops
       character optype*24, size*13
       logical verified
-      character*(*) npbversion, compiletime, 
+      character*(*) npbversion, compiletime,
      >              cs1, cs2, cs3, cs4, cs5, cs6, cs7
       integer num_threads, i
       character*12 num_threads_set
@@ -34,7 +34,7 @@ c$omp end parallel
       end do
       num_threads_set(1:i) = ' '
 
-         write (*, 2) name 
+         write (*, 2) name
  2       format(//, ' ', A2, ' Benchmark Completed.')
 
          write (*, 3) Class
@@ -64,13 +64,13 @@ c   Otherwise, we print the grid size n1xn2xn3
 
          write (*, 5) niter
  5       format(' Iterations      = ', 12x, i12)
-         
+
          write (*, 6) t
  6       format(' Time in seconds = ',12x, f12.2)
 
          write (*,7) num_threads
  7       format(' Total threads   = ', 12x, i12)
-         
+
          write (*,8) num_threads_set
  8       format(' Request threads = ', 12x, a12)
 
@@ -78,12 +78,12 @@ c   Otherwise, we print the grid size n1xn2xn3
  9       format(' Mop/s total     = ',12x, f12.2)
 
          write (*,10) mops/float( num_threads )
- 10      format(' Mop/s/thread    = ', 12x, f12.2)        
+ 10      format(' Mop/s/thread    = ', 12x, f12.2)
 
          write(*, 11) optype
  11      format(' Operation type  = ', a24)
 
-         if (verified) then 
+         if (verified) then
             write(*,12) '  SUCCESSFUL'
          else
             write(*,12) 'UNSUCCESSFUL'
@@ -98,7 +98,7 @@ c   Otherwise, we print the grid size n1xn2xn3
 
 
          write (*,121) cs1
- 121     format(/, ' Compile options:', /, 
+ 121     format(/, ' Compile options:', /,
      >          '    F77          = ', A)
 
          write (*,122) cs2
@@ -118,7 +118,7 @@ c   Otherwise, we print the grid size n1xn2xn3
 
          write(*, 127) cs7
  127     format('    RAND         = ', A)
-        
+
          write (*,130)
  130     format(//' Please send all errors/feedbacks to:'//
      >            ' NPB Development Team'/

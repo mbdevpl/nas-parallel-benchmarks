@@ -36,14 +36,14 @@
 
 
 c---------------------------------------------------------------------
-c      NPB CG serial version      
+c      NPB CG serial version
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c
 c Authors: M. Yarrow
 c          C. Kuszmaul
-c HPF version: 
+c HPF version:
 c          M. Frumkin
 c
 c---------------------------------------------------------------------
@@ -133,32 +133,32 @@ c          include 'common.h'
       lastcol  = na
 
 
-      if( na .eq. 1400 .and. 
-     &    nonzer .eq. 7 .and. 
+      if( na .eq. 1400 .and.
+     &    nonzer .eq. 7 .and.
      &    niter .eq. 15 .and.
      &    shift .eq. 10. ) then
          class = 'S'
          zeta_verify_value = 8.5971775078648d0
-      else if( na .eq. 7000 .and. 
-     &         nonzer .eq. 8 .and. 
+      else if( na .eq. 7000 .and.
+     &         nonzer .eq. 8 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 12. ) then
          class = 'W'
          zeta_verify_value = 10.362595087124d0
-      else if( na .eq. 14000 .and. 
-     &         nonzer .eq. 11 .and. 
+      else if( na .eq. 14000 .and.
+     &         nonzer .eq. 11 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 20. ) then
          class = 'A'
          zeta_verify_value = 17.130235054029d0
-      else if( na .eq. 75000 .and. 
-     &         nonzer .eq. 13 .and. 
+      else if( na .eq. 75000 .and.
+     &         nonzer .eq. 13 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 60. ) then
          class = 'B'
          zeta_verify_value = 22.712745482631d0
-      else if( na .eq. 150000 .and. 
-     &         nonzer .eq. 15 .and. 
+      else if( na .eq. 150000 .and.
+     &         nonzer .eq. 15 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 110. ) then
          class = 'C'
@@ -167,7 +167,7 @@ c          include 'common.h'
          class = 'U'
       endif
 
-      write( *,1000 ) 
+      write( *,1000 )
       write( *,1001 ) na
       write( *,1002 ) niter
  1000 format(//,' NAS Parallel Benchmarks (NPB3.0-HPF)',
@@ -189,10 +189,10 @@ c---------------------------------------------------------------------
       zeta    = randlc( tran, amult )
 c
 c---------------------------------------------------------------------
-c  
+c
 c---------------------------------------------------------------------
       call makea(naa, nzz, a, colidx, rowstr, nonzer,
-     >           firstrow, lastrow, firstcol, lastcol, 
+     >           firstrow, lastrow, firstcol, lastcol,
      >           rcond, arow, acol, aelt, v, iv, shift)
 
 
@@ -201,7 +201,7 @@ c  Note: as a result of the above call to makea:
 c        values of j used in indexing rowstr go from 1 --> lastrow-firstrow+1
 c        values of colidx which are col indexes go from firstcol --> lastcol
 c        So:
-c        Shift the col index vals from actual (firstcol --> lastcol ) 
+c        Shift the col index vals from actual (firstcol --> lastcol )
 c        to local, i.e., (1 --> lastcol-firstcol+1)
 c---------------------------------------------------------------------
       do j=1,lastrow-firstrow+1
@@ -259,9 +259,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp1(2)*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp1(2)*z(j)
+         enddo
 
 
       enddo                              ! end of do one iteration untimed
@@ -271,7 +271,7 @@ c---------------------------------------------------------------------
 c  set starting vector to (1, 1, .... 1)
 c---------------------------------------------------------------------
 c
-c  
+c
 c
       do i = 1, na+1
          x(i) = 1.0D0
@@ -333,9 +333,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp1(2)*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp1(2)*z(j)
+         enddo
 
 
       enddo                              ! end of main iter inv pow meth
@@ -365,7 +365,7 @@ c---------------------------------------------------------------------
  202        format(' Error is   ', E20.12)
          else
             verified = .FALSE.
-            write(*, 300) 
+            write(*, 300)
             write(*, 301) zeta
             write(*, 302) zeta_verify_value
  300        format(' VERIFICATION FAILED')
@@ -389,11 +389,11 @@ c---------------------------------------------------------------------
       else
          mflops = 0.0
       endif
-      
-       nprocs  = number_of_processors()     
-c       print*,'#procs         =',number_of_processors()     
+
+       nprocs  = number_of_processors()
+c       print*,'#procs         =',number_of_processors()
 c       print*,'CLASS          = ',class
-c       print*,'iterations     =', niter 
+c       print*,'iterations     =', niter
 c       print*,'benchmark time =',t
        print *, '\n =======    CG profile            =========='
        print *, 'Time of reduction sum =', timer_read(T_sum)
@@ -403,7 +403,7 @@ c       print*,'benchmark time =',t
        print *, 'Benchmark time        =', timer_read(T_bench)
          call print_results('CG', class, na, 0, 0,
      >                      niter, nprocs, t,
-     >                      mflops, '          floating point', 
+     >                      mflops, '          floating point',
      >                      verified, npbversion, compiletime,
      >                      cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -458,10 +458,10 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c  Floaging point arrays here are named as in NPB1 spec discussion of 
+c  Floaging point arrays here are named as in NPB1 spec discussion of
 c  CG algorithm
 c---------------------------------------------------------------------
- 
+
       implicit none
 
       intent(in) :: colidxd, rowstr, adistr
@@ -491,7 +491,7 @@ c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
        rho = sum( r(1:colnum)*r(1:colnum))
-       pd(1:colnum) = r(1:colnum)         
+       pd(1:colnum) = r(1:colnum)
 c---------------------------------------------------------------------
 c---->
 c  The conj grad iteration loop
@@ -505,17 +505,17 @@ c  q = A.p
 c  The partition submatrix-vector multiply: use workspace w
 c---------------------------------------------------------------------
 C
-C  NOTE: this version of the multiply is actually (slightly: maybe %5) 
-C        faster on the sp2 on 16 nodes than is the unrolled-by-2 version 
-C        below.   On the Cray t3d, the reverse is true, i.e., the 
-C        unrolled-by-two version is some 10% faster.  
+C  NOTE: this version of the multiply is actually (slightly: maybe %5)
+C        faster on the sp2 on 16 nodes than is the unrolled-by-2 version
+C        below.   On the Cray t3d, the reverse is true, i.e., the
+C        unrolled-by-two version is some 10% faster.
 C        The unrolled-by-8 version below is significantly faster
 C        on the Cray t3d - overall speed of code is 1.5 times faster.
 C
-         call timer_start(T_redistr)          
-         p(1:colnum) = pd(1:colnum)         
-         call timer_stop(T_redistr)          
-         call timer_start(T_MV)          
+         call timer_start(T_redistr)
+         p(1:colnum) = pd(1:colnum)
+         call timer_stop(T_redistr)
+         call timer_start(T_MV)
 !hpf$ independent
          do j=1,rownum
 	    q(j)=0
@@ -523,10 +523,10 @@ C
                q(j) = q(j) + adistr(k,j)*p(colidxd(k,j))
             end do
          end do
-         call timer_stop(T_MV)          
+         call timer_stop(T_MV)
 
 CC          do j=1,lastrow-firstrow+1
-CC             i = rowstr(j) 
+CC             i = rowstr(j)
 CC             iresidue = mod( rowstr(j+1)-i, 2 )
 CC             sum1 = 0.d0
 CC             sum2 = 0.d0
@@ -540,7 +540,7 @@ CC             w(j) = sum1 + sum2
 CC          enddo
 
 CC          do j=1,lastrow-firstrow+1
-CC             i = rowstr(j) 
+CC             i = rowstr(j)
 CC             iresidue = mod( rowstr(j+1)-i, 8 )
 CC             sum = 0.d0
 CC             do k=i,i+iresidue-1
@@ -558,7 +558,7 @@ CC      &                   + a(k+7)*p(colidx(k+7))
 CC             enddo
 CC             w(j) = sum
 CC          enddo
-            
+
 
 
 c         do j=1,lastcol-firstcol+1
@@ -572,14 +572,14 @@ c---------------------------------------------------------------------
 c         do j=1, lastcol-firstcol+1
 c            w(j) = 0.0d0
 c         enddo
-         
+
 
 c---------------------------------------------------------------------
 c  Obtain p.q
 c---------------------------------------------------------------------
-         call timer_start(T_sum)          
+         call timer_start(T_sum)
          d = sum( pd(1:rownum)*q(1:rownum) )
-         call timer_stop(T_sum)          
+         call timer_stop(T_sum)
 c---------------------------------------------------------------------
 c  Obtain alpha = rho / (p.q)
 c---------------------------------------------------------------------
@@ -593,18 +593,18 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Obtain z = z + alpha*p
 c  and    r = r - alpha*q
-c---------------------------------------------------------------------            
+c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
 c---------------------------------------------------------------------
-         call timer_start(T_vectdiff)          
+         call timer_start(T_vectdiff)
          z(1:colnum) = z(1:colnum) + alpha*pd(1:colnum)
          r(1:colnum) = r(1:colnum) - alpha*q(1:colnum)
-         call timer_stop(T_vectdiff)          
-         call timer_start(T_sum)          
+         call timer_stop(T_vectdiff)
+         call timer_start(T_sum)
          rho = sum( r(1:colnum)*r(1:colnum))
-         call timer_stop(T_sum)          
+         call timer_stop(T_sum)
 c---------------------------------------------------------------------
 c  Obtain beta:
 c---------------------------------------------------------------------
@@ -613,9 +613,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  p = r + beta*p
 c---------------------------------------------------------------------
-         call timer_start(T_vectdiff)          
+         call timer_start(T_vectdiff)
          pd(1:colnum) = r(1:colnum) + beta*pd(1:colnum)
-         call timer_stop(T_vectdiff)          
+         call timer_stop(T_vectdiff)
 
       end do                             ! end of do cgit=1,cgitmax
 

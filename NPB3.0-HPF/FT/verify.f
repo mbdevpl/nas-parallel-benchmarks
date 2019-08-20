@@ -24,7 +24,7 @@
          epsilon = 1.0e-12
          success = .true.
 !
-         if ((n1 .eq. 64) .and. (n2 .eq. 64) .and.                 
+         if ((n1 .eq. 64) .and. (n2 .eq. 64) .and.
      &            (n3 .eq. 64) .and. (nt .eq. 6)) then
 !
 ! Class S reference values.
@@ -35,8 +35,8 @@
             cexpd(4) = dcmplx(554.5423607415D0, 490.1273169046D0)
             cexpd(5) = dcmplx(554.4255039624D0, 491.7475857993D0)
             cexpd(6) = dcmplx(554.2683411902D0, 493.2597244941D0)
-            
-         else if ((n1 .eq. 128) .and. (n2 .eq. 128) .and.                 
+
+         else if ((n1 .eq. 128) .and. (n2 .eq. 128) .and.
      &            (n3 .eq. 32) .and. (nt .eq. 6)) then
 !
 ! Class W reference values.
@@ -48,7 +48,7 @@
             cexpd(5) = dcmplx(553.0898991250D0, 524.9400845633D0)
             cexpd(6) = dcmplx(550.4159734538D0, 523.9212247086D0)
 !
-         else if ((n1 .eq. 256) .and. (n2 .eq. 256) .and.               
+         else if ((n1 .eq. 256) .and. (n2 .eq. 256) .and.
      &            (n3 .eq. 128) .and. (nt .eq. 6)) then
 !
 ! Class A reference values.
@@ -60,7 +60,7 @@
             cexpd(5) = dcmplx(508.5233095391D0, 510.4914655194D0)
             cexpd(6) = dcmplx(509.1487099959D0, 510.7917842803D0)
 !
-         else if ((n1 .eq. 512) .and. (n2 .eq. 256) .and.               
+         else if ((n1 .eq. 512) .and. (n2 .eq. 256) .and.
      &            (n3 .eq. 256) .and. (nt .eq. 20)) then
 !
 ! Class B reference values.
@@ -85,7 +85,7 @@
             cexpd(18) = dcmplx(5.125002331720D+02,5.115053595966D+02)
             cexpd(19) = dcmplx(5.124551951846D+02,5.115415130407D+02)
             cexpd(20) = dcmplx(5.124146770029D+02,5.115744692211D+02)
-         else if ((n1 .eq. 512) .and. (n2 .eq. 512) .and.               
+         else if ((n1 .eq. 512) .and. (n2 .eq. 512) .and.
      &            (n3 .eq. 512) .and. (nt .eq. 20)) then
 !
 ! Class C reference values.

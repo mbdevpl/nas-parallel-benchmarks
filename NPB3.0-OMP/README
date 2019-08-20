@@ -17,7 +17,7 @@ reports and suggestions on the implementation, please contact
 
    NPB3.0-OMP uses the same directory tree as NPB3.0-SER (and NPB2.3) does.
    Before compilation, one needs to check the configuration file
-   'make.def' in the config directory and modify the file if necessary.  
+   'make.def' in the config directory and modify the file if necessary.
    Check also the 'suite.def' file if one wants to make a suite.  Then
 
       make benchmark CLASS=class
@@ -70,5 +70,5 @@ reports and suggestions on the implementation, please contact
      to touch data pages.  This is to set up a data layout based on the
      'first touch' policy.
 
-   - For LU, the pipeline algorithm is used, which seems to perform better 
+   - For LU, the pipeline algorithm is used, which seems to perform better
      than the hyperplane algorithm.

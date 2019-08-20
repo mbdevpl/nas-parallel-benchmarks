@@ -63,27 +63,27 @@ c---------------------------------------------------------------------
 
       include 'global.h'
       integer i
-      
+
 c---------------------------------------------------------------------
-c u0, u1, u2 are the main arrays in the problem. 
-c Depending on the decomposition, these arrays will have different 
-c dimensions. To accomodate all possibilities, we allocate them as 
-c one-dimensional arrays and pass them to subroutines for different 
+c u0, u1, u2 are the main arrays in the problem.
+c Depending on the decomposition, these arrays will have different
+c dimensions. To accomodate all possibilities, we allocate them as
+c one-dimensional arrays and pass them to subroutines for different
 c views
 c  - u0 contains the initial (transformed) initial condition
 c  - u1 and u2 are working arrays
 c  - indexmap maps i,j,k of u0 to the correct i^2+j^2+k^2 for the
-c    time evolution operator. 
+c    time evolution operator.
 c---------------------------------------------------------------------
 
-      double complex u0(ntotalp), 
+      double complex u0(ntotalp),
      >               u1(ntotalp)
 c     >               u2(ntotalp)
       integer indexmap(ntotalp)
 c---------------------------------------------------------------------
 c Large arrays are in common so that they are allocated on the
 c heap rather than the stack. This common block is not
-c referenced directly anywhere else. Padding is to avoid accidental 
+c referenced directly anywhere else. Padding is to avoid accidental
 c cache problems, since all array sizes are powers of two.
 c---------------------------------------------------------------------
 
@@ -98,9 +98,9 @@ c      common /bigarrays/ u0, pad1, u1, pad2, u2, pad3, indexmap
       character class
 
 c---------------------------------------------------------------------
-c Run the entire problem once to make sure all data is touched. 
-c This reduces variable startup costs, which is important for such a 
-c short benchmark. The other NPB 2 implementations are similar. 
+c Run the entire problem once to make sure all data is touched.
+c This reduces variable startup costs, which is important for such a
+c short benchmark. The other NPB 2 implementations are similar.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -114,7 +114,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c Start over from the beginning. Note that all operations must
-c be timed, in contrast to other benchmarks. 
+c be timed, in contrast to other benchmarks.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -162,7 +162,7 @@ c         call checksum(iter, u2, dims)
          mflops = 0.0
       endif
       call print_results('FT', class, nx, ny, nz, niter,
-     >  total_time, mflops, '          floating point', verified, 
+     >  total_time, mflops, '          floating point', verified,
      >  npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6, cs7)
       if (timers_enabled) call print_timers()
 
@@ -244,8 +244,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c Fill in array u0 with initial conditions from 
-c random number generator 
+c Fill in array u0 with initial conditions from
+c random number generator
 c---------------------------------------------------------------------
       implicit none
       include 'global.h'
@@ -253,7 +253,7 @@ c---------------------------------------------------------------------
       double complex u0(d(1)+1, d(2), d(3))
       integer k, j
       double precision x0, start, an, dummy, starts(nz)
-      
+
 
       start = seed
 c---------------------------------------------------------------------
@@ -268,15 +268,15 @@ c---------------------------------------------------------------------
 	 dummy = randlc(start, an)
       	 starts(k) = start
       end do
-      
+
 c---------------------------------------------------------------------
 c Go through by z planes filling in one square at a time.
 c---------------------------------------------------------------------
 !$omp parallel do default(shared) private(k,j,x0)
-      do k = 1, dims(3) 
+      do k = 1, dims(3)
 c         x0 = start
          x0 = starts(k)
-         do j = 1, dims(2) 
+         do j = 1, dims(2)
             call vranlc(2*nx, x0, a, u0(1, j, k))
          end do
 c         if (k .ne. dims(3)) dummy = randlc(start, an)
@@ -285,7 +285,7 @@ c         if (k .ne. dims(3)) dummy = randlc(start, an)
       return
       end
 
-	            
+	
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -318,7 +318,7 @@ c---------------------------------------------------------------------
       do while (n .gt. 1)
          n2 = n/2
          if (n2 * 2 .eq. n) then
-            dummy = randlc(q, q) 
+            dummy = randlc(q, q)
             n = n2
          else
             dummy = randlc(r, q)
@@ -379,15 +379,15 @@ c---------------------------------------------------------------------
 c Set up info for blocking of ffts and transposes.  This improves
 c performance on cache-based systems. Blocking involves
 c working on a chunk of the problem at a time, taking chunks
-c along the first, second, or third dimension. 
+c along the first, second, or third dimension.
 c
 c - In cffts1 blocking is on 2nd dimension (with fft on 1st dim)
 c - In cffts2/3 blocking is on 1st dimension (with fft on 2nd and 3rd dims)
 
-c Since 1st dim is always in processor, we'll assume it's long enough 
+c Since 1st dim is always in processor, we'll assume it's long enough
 c (default blocking factor is 16 so min size for 1st dim is 16)
-c The only case we have to worry about is cffts1 in a 2d decomposition. 
-c so the blocking factor should not be larger than the 2nd dimension. 
+c The only case we have to worry about is cffts1 in a 2d decomposition.
+c so the blocking factor should not be larger than the 2nd dimension.
 c---------------------------------------------------------------------
 
       fftblock = fftblock_default
@@ -398,7 +398,7 @@ c---------------------------------------------------------------------
       return
       end
 
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -408,8 +408,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2 
-c for time evolution exponent. 
+c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2
+c for time evolution exponent.
 c---------------------------------------------------------------------
 
       implicit none
@@ -420,9 +420,9 @@ c---------------------------------------------------------------------
       double precision ap
 
 c---------------------------------------------------------------------
-c basically we want to convert the fortran indices 
-c   1 2 3 4 5 6 7 8 
-c to 
+c basically we want to convert the fortran indices
+c   1 2 3 4 5 6 7 8
+c to
 c   0 1 2 3 -4 -3 -2 -1
 c The following magic formula does the trick:
 c mod(i-1+n/2, n) - n/2
@@ -443,7 +443,7 @@ c---------------------------------------------------------------------
       end do
 
 c---------------------------------------------------------------------
-c compute array of exponentials for time evolution. 
+c compute array of exponentials for time evolution.
 c---------------------------------------------------------------------
       ap = - 4.d0 * alpha * pi *pi
 
@@ -471,13 +471,13 @@ c---------------------------------------------------------------------
       include 'global.h'
       double precision t, t_m
       character*25 tstrings(T_max)
-      data tstrings / '          total ', 
-     >                '          setup ', 
-     >                '            fft ', 
-     >                '         evolve ', 
-     >                '       checksum ', 
-     >                '           fftx ', 
-     >                '           ffty ', 
+      data tstrings / '          total ',
+     >                '          setup ',
+     >                '            fft ',
+     >                '         evolve ',
+     >                '       checksum ',
+     >                '           fftx ',
+     >                '           ffty ',
      >                '           fftz ' /
 
       t_m = timer_read(T_total)
@@ -559,8 +559,8 @@ c---------------------------------------------------------------------
                   y1(j,i) = x(i,j+jj,k)
                enddo
             enddo
-            
-            call cfftz (is, logd(1), 
+
+            call cfftz (is, logd(1),
      >                  d(1), y1, y2)
 
 
@@ -608,9 +608,9 @@ c---------------------------------------------------------------------
               enddo
            enddo
 
-           call cfftz (is, logd(2), 
+           call cfftz (is, logd(2),
      >          d(2), y1, y2)
-           
+
            do j = 1, d(2)
               do i = 1, fftblock
                  xout(i+ii,j,k) = y1(i,j)
@@ -655,7 +655,7 @@ c---------------------------------------------------------------------
               enddo
            enddo
 
-           call cfftz (is, logd(3), 
+           call cfftz (is, logd(3),
      >          d(3), y1, y2)
 
            do k = 1, d(3)
@@ -680,7 +680,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute the roots-of-unity array that will be used for subsequent FFTs. 
+c compute the roots-of-unity array that will be used for subsequent FFTs.
 c---------------------------------------------------------------------
 
       implicit none
@@ -702,16 +702,16 @@ c---------------------------------------------------------------------
 
       do j = 1, m
          t = pi / ln
-         
+
          do i = 0, ln - 1
             ti = i * t
             u(i+ku) = dcmplx (cos (ti), sin(ti))
          enddo
-         
+
          ku = ku + ln
          ln = 2 * ln
       enddo
-      
+
       return
       end
 
@@ -725,10 +725,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c   Computes NY N-point complex-to-complex FFTs of X using an algorithm due
-c   to Swarztrauber.  X is both the input and the output array, while Y is a 
-c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to 
-c   perform FFTs, the array U must be initialized by calling CFFTZ with IS 
-c   set to 0 and M set to MX, where MX is the maximum value of M for any 
+c   to Swarztrauber.  X is both the input and the output array, while Y is a
+c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to
+c   perform FFTs, the array U must be initialized by calling CFFTZ with IS
+c   set to 0 and M set to MX, where MX is the maximum value of M for any
 c   subsequent call.
 c---------------------------------------------------------------------
 
@@ -744,10 +744,10 @@ c---------------------------------------------------------------------
 c   Check if input parameters are invalid.
 c---------------------------------------------------------------------
       mx = u(1)
-      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)    
+      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)
      >  then
         write (*, 1)  is, m, mx
- 1      format ('CFFTZ: Either U has not been initialized, or else'/    
+ 1      format ('CFFTZ: Either U has not been initialized, or else'/
      >    'one of the input parameters is invalid', 3I5)
         stop
       endif
@@ -886,7 +886,7 @@ c---------------------------------------------------------------------
       end do
 
       chk = chk/dble(ntotal)
-      
+
       write (*, 30) i, chk
  30   format (' T =',I5,5X,'Checksum =',1P2D22.12)
       sums(i) = chk
@@ -949,8 +949,8 @@ c---------------------------------------------------------------------
        data vdata_imag_w /
      >               5.293246849175D+02,
      >               5.282149986629D+02,
-     >               5.270996558037D+02, 
-     >               5.260027904925D+02, 
+     >               5.270996558037D+02,
+     >               5.260027904925D+02,
      >               5.249400845633D+02,
      >               5.239212247086D+02/
 
@@ -963,14 +963,14 @@ c---------------------------------------------------------------------
      >                5.077892868474D+02,
      >                5.085233095391D+02,
      >                5.091487099959D+02 /
-      
+
       data vdata_imag_a / 5.114047905510D+02,
      >                5.098809666433D+02,
      >                5.098144042213D+02,
      >                5.101336130759D+02,
      >                5.104914655194D+02,
      >                5.107917842803D+02 /
-      
+
 c---------------------------------------------------------------------
 c   Class B size reference checksums
 c---------------------------------------------------------------------
@@ -994,22 +994,22 @@ c---------------------------------------------------------------------
      >                5.125002331720D+02,
      >                5.124551951846D+02,
      >                5.124146770029D+02 /
-   
+
       data vdata_imag_b / 5.077803458597D+02,
-     >                5.088249431599D+02,                  
-     >                5.096208912659D+02,                     
-     >                5.101023387619D+02,                  
-     >                5.103976610617D+02,                  
-     >                5.105948019802D+02,                  
-     >                5.107404165783D+02,                  
-     >                5.108576573661D+02,                  
-     >                5.109577278523D+02,                  
-     >                5.110460304483D+02,                  
-     >                5.111252433800D+02,                  
-     >                5.111968077718D+02,                  
-     >                5.112616233064D+02,                  
-     >                5.113203605551D+02,                  
-     >                5.113735928093D+02,                  
+     >                5.088249431599D+02,
+     >                5.096208912659D+02,
+     >                5.101023387619D+02,
+     >                5.103976610617D+02,
+     >                5.105948019802D+02,
+     >                5.107404165783D+02,
+     >                5.108576573661D+02,
+     >                5.109577278523D+02,
+     >                5.110460304483D+02,
+     >                5.111252433800D+02,
+     >                5.111968077718D+02,
+     >                5.112616233064D+02,
+     >                5.113203605551D+02,
+     >                5.113735928093D+02,
      >                5.114218460548D+02,
      >                5.114656139760D+02,
      >                5.115053595966D+02,
@@ -1077,7 +1077,7 @@ c---------------------------------------------------------------------
             err = (dble(sums(i)) - vdata_real_s(i)) / vdata_real_s(i)
             if (abs(err) .gt. epsilon) goto 100
             err = (dimag(sums(i)) - vdata_imag_s(i)) / vdata_imag_s(i)
-c If you have a machine where the above does not compile, let 
+c If you have a machine where the above does not compile, let
 c us know and use the following
 c            err = (aimag(sums(i)) - vdata_imag_s(i)) / vdata_imag_s(i)
             if (abs(err) .gt. epsilon) goto 100
@@ -1093,7 +1093,7 @@ c            err = (aimag(sums(i)) - vdata_imag_s(i)) / vdata_imag_s(i)
             err = (dble(sums(i)) - vdata_real_w(i)) / vdata_real_w(i)
             if (.not.(abs(err) .le. epsilon)) goto 105
             err = (dimag(sums(i)) - vdata_imag_w(i)) / vdata_imag_w(i)
-c If you have a machine where the above does not compile, let 
+c If you have a machine where the above does not compile, let
 c us know and use the following
 c            err = (aimag(sums(i)) - vdata_imag_w(i)) / vdata_imag_w(i)
             if (.not.(abs(err) .le. epsilon)) goto 105
@@ -1109,7 +1109,7 @@ c            err = (aimag(sums(i)) - vdata_imag_w(i)) / vdata_imag_w(i)
             err = (dble(sums(i)) - vdata_real_a(i)) / vdata_real_a(i)
             if (.not.(abs(err) .le. epsilon)) goto 110
             err = (dimag(sums(i)) - vdata_imag_a(i)) / vdata_imag_a(i)
-c If you have a machine where the above does not compile, let 
+c If you have a machine where the above does not compile, let
 c us know and use the following
 c            err = (aimag(sums(i)) - vdata_imag_a(i)) / vdata_imag_a(i)
             if (.not.(abs(err) .le. epsilon)) goto 110
@@ -1125,7 +1125,7 @@ c            err = (aimag(sums(i)) - vdata_imag_a(i)) / vdata_imag_a(i)
             err = (dble(sums(i)) - vdata_real_b(i)) / vdata_real_b(i)
             if (.not.(abs(err) .le. epsilon)) goto 120
             err = (dimag(sums(i)) - vdata_imag_b(i)) / vdata_imag_b(i)
-c If you have a machine where the above does not compile, let 
+c If you have a machine where the above does not compile, let
 c us know and use the following
 c            err = (aimag(sums(i)) - vdata_imag_b(i)) / vdata_imag_b(i)
             if (.not.(abs(err) .le. epsilon)) goto 120
@@ -1137,7 +1137,7 @@ c            err = (aimag(sums(i)) - vdata_imag_b(i)) / vdata_imag_b(i)
      >    d3 .eq. 512 .and.
      >    nt .eq. 20) then
          class = 'C'
-         do i = 1, nt 
+         do i = 1, nt
             err = (dble(sums(i)) - vdata_real_c(i)) / vdata_real_c(i)
             if (.not.(abs(err) .le. epsilon)) goto 130
             err = (dimag(sums(i)) - vdata_imag_c(i)) / vdata_imag_c(i)
@@ -1147,7 +1147,7 @@ c            err = (aimag(sums(i)) - vdata_imag_c(i)) / vdata_imag_c(i)
          verified = .TRUE.
  130     continue
       endif
-         
+
       if (class .ne. 'U') then
          if (verified) then
             write(*,2000)

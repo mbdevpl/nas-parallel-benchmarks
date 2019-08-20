@@ -48,7 +48,7 @@ public class CGBase extends Thread{
   public static final String BMName="CG";
   public static final int cgitmax=25;
   public char CLASS = 'S';
-  
+
   public int na, nonzer, niter;
   public double shift,rcond,zeta_verify_value;
   public int nz, naa, nzz;
@@ -61,23 +61,23 @@ public class CGBase extends Thread{
   public String t_names[];
   public double timer_read;
   public boolean timeron;
-  public static final int t_init=1, t_bench=2, 
+  public static final int t_init=1, t_bench=2,
                           t_conj_grad=3, t_last=3;
   public static Timer timer;
-  
+
   public CGWorker worker[];
   public CG master;
   public int num_threads;
   public double dmaster[],rhomaster[],rnormmaster[];
 
   public CGBase(){};
-  
+
   public CGBase(char clss, int np, boolean serial){
     CLASS=clss;
     num_threads = np;
     switch(CLASS){
     case 'S':
-    	na=1400; 
+    	na=1400;
     	nonzer=7;
     	shift=10;
     	niter=15;
@@ -85,13 +85,13 @@ public class CGBase extends Thread{
     	zeta_verify_value = 8.5971775078648;
     	break;
     case 'W':
-    	na=7000; 
+    	na=7000;
     	nonzer=8;
     	shift=12;
     	niter=15;
     	rcond=.1;	
     	zeta_verify_value = 10.362595087124;
-    	break;   
+    	break;
     case 'A':
     	na=14000;
     	nonzer=11;
@@ -109,7 +109,7 @@ public class CGBase extends Thread{
     	zeta_verify_value = 22.712745482631;
     	break;
     case 'C':
-    	na=150000; 
+    	na=150000;
     	nonzer=15;
     	shift=110;
     	niter=75;
@@ -121,13 +121,13 @@ public class CGBase extends Thread{
     timer = new Timer();
 
     nz = (na*(nonzer+1)*(nonzer+1)+ na*(nonzer+2) );
-    colidx = new int[nz +1]; 
-    rowstr = new int[na+2]; 
-    iv = new int[2*na+2]; 
-    arow = new int[nz+1]; 
+    colidx = new int[nz +1];
+    rowstr = new int[na+2];
+    iv = new int[2*na+2];
+    arow = new int[nz+1];
     acol = new int[nz+1];
-    v = new double[na+2]; 
-    aelt = new double[nz+1]; 
+    v = new double[na+2];
+    aelt = new double[nz+1];
     a = new double[nz+1];
     p = new double[na+3];
     q = new double[na+3];

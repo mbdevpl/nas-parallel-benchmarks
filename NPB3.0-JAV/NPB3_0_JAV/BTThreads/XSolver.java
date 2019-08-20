@@ -49,7 +49,7 @@ public class XSolver extends BTBase{
   public boolean done = true;
 
   //private arrays and data
-  double fjac[] = null;  
+  double fjac[] = null;
   double njac[] = null;
   double lhs[] = null;
   double tmp1;
@@ -62,7 +62,7 @@ public class XSolver extends BTBase{
     Init(bt);
     lower_bound=low;
     upper_bound=high;
-    fjac =  new double[5*5*(problem_size+1)]; 
+    fjac =  new double[5*5*(problem_size+1)];
     njac =  new double[5*5*(problem_size+1)];
     lhs =  new double[5*5*3*(problem_size+1)];
     setPriority(Thread.MAX_PRIORITY);
@@ -72,13 +72,13 @@ public class XSolver extends BTBase{
   void Init(BT bt){
     //initialize shared data
     IMAX=bt.IMAX;
-    JMAX=bt.JMAX; 
-    KMAX=bt.KMAX; 
-    problem_size=bt.problem_size; 
+    JMAX=bt.JMAX;
+    KMAX=bt.KMAX;
+    problem_size=bt.problem_size;
     grid_points=bt.grid_points;
     niter_default=bt.niter_default;
     dt_default=bt.dt_default;
-    
+
     u=bt.u;
     rhs=bt.rhs;
     forcing=bt.forcing;
@@ -88,7 +88,7 @@ public class XSolver extends BTBase{
     isize2=bt.isize2;
     jsize2=bt.jsize2;
     ksize2=bt.ksize2;
-    
+
     us=bt.us;
     vs=bt.vs;
     ws=bt.ws;
@@ -97,14 +97,14 @@ public class XSolver extends BTBase{
     square=bt.square;
     jsize1=bt.jsize1;
     ksize1=bt.ksize1;
-    
+
     ue=bt.ue;
     buf=bt.buf;
     jsize3=bt.jsize3;
   }
   public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
         try{
 	  wait();
@@ -115,8 +115,8 @@ public class XSolver extends BTBase{
       synchronized(master){done=true; master.notify();}
       }
     }
-  }    
-  
+  }
+
   public void step(){
   int i,j,k,m,n,isize;
 
@@ -144,7 +144,7 @@ public class XSolver extends BTBase{
                fjac[0+3*isize4+i*jsize4] = 0.0;
                fjac[0+4*isize4+i*jsize4] = 0.0;
 
-               fjac[1+0*isize4+i*jsize4] = -(u[1+i*isize2+j*jsize2+k*ksize2]) * tmp2 * 
+               fjac[1+0*isize4+i*jsize4] = -(u[1+i*isize2+j*jsize2+k*ksize2]) * tmp2 *
                     u[1+i*isize2+j*jsize2+k*ksize2]
                     + c2 * qs[i+j*jsize1+k*ksize1];
                fjac[1+1*isize4+i*jsize4] = ( 2.0 - c2 )
@@ -168,7 +168,7 @@ public class XSolver extends BTBase{
                fjac[4+0*isize4+i*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1]
                     - c1 * u[4+i*isize2+j*jsize2+k*ksize2] )
                     * ( u[1+i*isize2+j*jsize2+k*ksize2] * tmp2 );
-               fjac[4+1*isize4+i*jsize4] = c1 *  u[4+i*isize2+j*jsize2+k*ksize2] * tmp1 
+               fjac[4+1*isize4+i*jsize4] = c1 *  u[4+i*isize2+j*jsize2+k*ksize2] * tmp1
                     - c2
                     * ( u[1+i*isize2+j*jsize2+k*ksize2]*u[1+i*isize2+j*jsize2+k*ksize2] * tmp2
                     + qs[i+j*jsize1+k*ksize1]);
@@ -219,7 +219,7 @@ public class XSolver extends BTBase{
 //     now jacobians set, so form left hand side in x direction
 //---------------------------------------------------------------------
             lhsinit(lhs, isize);
-	    
+	
             for(i=1;i<=isize-1;i++){
 
                tmp1 = dt * tx1;
@@ -292,7 +292,7 @@ public class XSolver extends BTBase{
                lhs[0+2*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+2*isize4+i*jsize4];
                lhs[0+3*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+3*isize4+i*jsize4];
                lhs[0+4*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+4*isize4+i*jsize4];
-              
+
 	       lhs[1+0*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[1+0*isize4+i*jsize4];
                lhs[1+1*isize4+bb*jsize4+i*ksize4] = 1.0
                     + tmp1 * 2.0 * njac[1+1*isize4+i*jsize4]
@@ -324,7 +324,7 @@ public class XSolver extends BTBase{
                lhs[4+4*isize4+bb*jsize4+i*ksize4] = 1.0
                     + tmp1 * 2.0 * njac[4+4*isize4+i*jsize4]
                     + tmp1 * 2.0 * dx5;
-	                      
+	
 	       lhs[0+0*isize4+cc*jsize4+i*ksize4] =  tmp2 * fjac[0+0*isize4+(i+1)*jsize4]
                     - tmp1 * njac[0+0*isize4+(i+1)*jsize4]
                     - tmp1 * dx1;
@@ -386,13 +386,13 @@ public class XSolver extends BTBase{
                     - tmp1 * dx5;
 
             }
-	    
+	
 //---------------------------------------------------------------------
 //     performs guaussian elimination on this cell.
-//     
-//     assumes that unpacking routines for non-first cells 
+//
+//     assumes that unpacking routines for non-first cells
 //     preload C' and rhs' from previous cell.
-//     
+//
 //     assumed send happens outside this routine, but that
 //     c'(IMAX) and rhs'(IMAX) will be sent to next cell
 //---------------------------------------------------------------------
@@ -400,7 +400,7 @@ public class XSolver extends BTBase{
 //---------------------------------------------------------------------
 //     outer most do loops - sweeping in i direction
 //---------------------------------------------------------------------
-	    
+	
 //---------------------------------------------------------------------
 //     multiply c(0,j,k) by b_inverse and copy back to c
 //     multiply rhs(0) by b_inverse(0) and copy to rhs
@@ -408,10 +408,10 @@ public class XSolver extends BTBase{
              binvcrhs( lhs,0+0*isize4+bb*jsize4+0*ksize4,
                               lhs,0+0*isize4+cc*jsize4+0*ksize4,
                               rhs, 0+0*isize2+j*jsize2+k*ksize2);
-	     
+	
 //---------------------------------------------------------------------
 //     begin inner most do loop
-//     do all the elements of the cell unless last 
+//     do all the elements of the cell unless last
 //---------------------------------------------------------------------
             for(i=1;i<=isize-1;i++){
 
@@ -467,7 +467,7 @@ public class XSolver extends BTBase{
             for(i=isize-1;i>=0;i--){
                for(m=0;m<=BLOCK_SIZE-1;m++){
                   for(n=0;n<=BLOCK_SIZE-1;n++){
-                     rhs[m+i*isize2+j*jsize2+k*ksize2] -= 
+                     rhs[m+i*isize2+j*jsize2+k*ksize2] -=
                           lhs[m+n*isize4+cc*jsize4+i*ksize4]*rhs[n+(i+1)*isize2+j*jsize2+k*ksize2];
                   }
                }

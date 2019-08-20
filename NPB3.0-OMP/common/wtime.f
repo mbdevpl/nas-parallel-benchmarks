@@ -1,5 +1,5 @@
 C
-C  Note: currently (NPB2.3), this routine not called 
+C  Note: currently (NPB2.3), this routine not called
 C
       subroutine wtime(tim)
       real*8 tim

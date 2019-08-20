@@ -9,7 +9,7 @@
          integer i, j, k, kt, n12, n22, n32, ii, jj, kk, ii2, ik2
          double precision ap
          double precision twiddle(nx+1,ny,nz)
-        
+
          double complex xnt(nx+1,ny,nz),y(nx+1,ny,nz),
      &                  pad1(128),pad2(128)
          common /mainarrays/ xnt,pad1,y,pad2,twiddle
@@ -18,20 +18,20 @@
 
          do i=1,15
            call timer_clear(i)
-	 end do         
+	 end do
 
-         call timer_start(2)         
+         call timer_start(2)
          call compute_initial_conditions(xnt,nx,ny,nz)
-         
+
          call CompExp( nx, exp1 )
          call CompExp( ny, exp2 )
-         call CompExp( nz, exp3 )           
+         call CompExp( nz, exp3 )
          call fftXYZ(1,xnt,y,exp1,exp2,exp3,nx,ny,nz)
-         call timer_stop(2)      
+         call timer_stop(2)
 
          call timer_start(1)
          if (timers_enabled) call timer_start(13)
-	 
+	
          n12 = nx/2
          n22 = ny/2
          n32 = nz/2
@@ -48,38 +48,38 @@
                end do
             end do
          end do
-         if (timers_enabled) call timer_stop(13)      
-         
+         if (timers_enabled) call timer_stop(13)
+
          if (timers_enabled) call timer_start(12)
-         call compute_initial_conditions(xnt,nx,ny,nz)             
-         if (timers_enabled) call timer_stop(12)      
-         if (timers_enabled) call timer_start(15)      
+         call compute_initial_conditions(xnt,nx,ny,nz)
+         if (timers_enabled) call timer_stop(12)
+         if (timers_enabled) call timer_start(15)
          call fftXYZ(1,xnt,y,exp1,exp2,exp3,nx,ny,nz)
-         if (timers_enabled) call timer_stop(15)      
+         if (timers_enabled) call timer_stop(15)
 
          do kt = 1, niter
-	   if (timers_enabled) call timer_start(11)      
+	   if (timers_enabled) call timer_start(11)
 	   call evolve(xnt,y,twiddle,nx,ny,nz)
-           if (timers_enabled) call timer_stop(11)      
-           if (timers_enabled) call timer_start(15)      
+           if (timers_enabled) call timer_stop(11)
+           if (timers_enabled) call timer_start(15)
            call fftXYZ(-1,xnt,xnt,exp1,exp2,exp3,nx,ny,nz)
-           if (timers_enabled) call timer_stop(15)      
-           if (timers_enabled) call timer_start(10)      
-           call CalculateChecksum(sums(kt),kt,xnt,nx,ny,nz)           
-           if (timers_enabled) call timer_stop(10)      
+           if (timers_enabled) call timer_stop(15)
+           if (timers_enabled) call timer_start(10)
+           call CalculateChecksum(sums(kt),kt,xnt,nx,ny,nz)
+           if (timers_enabled) call timer_stop(10)
          end do
 !
 ! Verification test.
 !
-         if (timers_enabled) call timer_start(14)      
+         if (timers_enabled) call timer_start(14)
          call verify(nx, ny, nz, niter, sums, verified)
-         if (timers_enabled) call timer_stop(14)      
+         if (timers_enabled) call timer_stop(14)
          call timer_stop(1)
 
 	 total_time = timer_read(1)
 	 if (.not.timers_enabled) return
 
-	 print*,'FT subroutine timers '    
+	 print*,'FT subroutine timers '
          write(*,40) 'FT total                  ', timer_read(1)
          write(*,40) 'WarmUp time               ', timer_read(2)
          write(*,40) 'fftXYZ body               ', timer_read(3)

@@ -15,7 +15,7 @@ ${PROGRAM}: config ${OBJS}
 cg.o:		cg.f  globals.h npbparams.h cgarrays.h conj_grad.h
 
 clean:
-	- rm -f *.o *~ 
+	- rm -f *.o *~
 	- rm -f npbparams.h core *.d
 
 

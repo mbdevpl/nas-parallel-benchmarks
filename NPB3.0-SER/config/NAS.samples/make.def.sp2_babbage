@@ -2,11 +2,11 @@
 F77        = xlf
 FLINK      = xlf
 FFLAGS     = -O3 -qtune=pwr2 -qarch=pwr2 -qnohot
-FLINKFLAGS = -bmaxdata:0x60000000 
+FLINKFLAGS = -bmaxdata:0x60000000
 
 CC         = cc
 CLINK      = cc
-CFLAGS     = -O3 
+CFLAGS     = -O3
 CLINKFLAGS = -bmaxdata:0x60000000
 
 BINDIR     = ../bin

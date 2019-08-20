@@ -27,19 +27,19 @@ c---------------------------------------------------------------------
       integer i, j, m, k
       double precision  tmp, tmp1
       double precision  tmat(5,5)
-      double precision  
+      double precision
      >                  uyl(5,isiz1/2*2+1,isiz2),
      >                  uylt(5,isiz1/2*2+1,isiz2),
      >                  uyll(5,isiz1/2*2+1,isiz2),
      >                  tv(5,isiz1/2*2+1,isiz2)
       common/workarrsbl/ uyl, uylt, tv, uyll
-!hpf$    align(*,:,:) with ProjArea :: uyl, uylt, tv, uyll 
+!hpf$    align(*,:,:) with ProjArea :: uyl, uylt, tv, uyll
 
 !HPF$ independent, new(k)
-       do j= jlow(l), jhigh(l) 
+       do j= jlow(l), jhigh(l)
          do i=ilow(l,j), ihigh(l,j)
            k = l-i-j
-           do m = 1, 5              
+           do m = 1, 5
              uyll( m, i, j-1) = v( m, i, j-1, k )
            end do
          end do
@@ -48,44 +48,44 @@ c---------------------------------------------------------------------
 !HPF$ independent
        do j= jlow(l), jhigh(l)
          do i=ilow(l,j), ihigh(l,j)
-               do m = 1, 5              
-                  uyl( m, i, j) = 
+               do m = 1, 5
+                  uyl( m, i, j) =
      >             ldy( m, 1, i, j) * uyll( 1, i, j-1)
      >           + ldy( m, 2, i, j) * uyll( 2, i, j-1)
      >           + ldy( m, 3, i, j) * uyll( 3, i, j-1)
      >           + ldy( m, 4, i, j) * uyll( 4, i, j-1)
-     >           + ldy( m, 5, i, j) * uyll( 5, i, j-1)   
+     >           + ldy( m, 5, i, j) * uyll( 5, i, j-1)
               end do
         end do
       end do
 
 !HPF$ independent, new(k)
-      do j= jlow(l), jhigh(l) 
+      do j= jlow(l), jhigh(l)
         do i=ilow(l,j), ihigh(l,j)
            k = l-i-j
-               do m = 1, 5              
+               do m = 1, 5
                   tv( m, i, j ) =  v( m, i, j, k )
      >    - omega * (  ldz( m, 1, i, j ) * v( 1, i, j, k-1 )
      >               + ldz( m, 2, i, j ) * v( 2, i, j, k-1 )
      >               + ldz( m, 3, i, j ) * v( 3, i, j, k-1 )
      >               + ldz( m, 4, i, j ) * v( 4, i, j, k-1 )
-     >               + ldz( m, 5, i, j ) * v( 5, i, j, k-1 )  
+     >               + ldz( m, 5, i, j ) * v( 5, i, j, k-1 )
      >           + ldx( m, 1, i, j ) * v( 1, i-1, j, k )
      >           + ldx( m, 2, i, j ) * v( 2, i-1, j, k )
      >           + ldx( m, 3, i, j ) * v( 3, i-1, j, k )
      >           + ldx( m, 4, i, j ) * v( 4, i-1, j, k )
-     >           + ldx( m, 5, i, j ) * v( 5, i-1, j, k ) 
-     >           + uyl( m, i, j)   )  
+     >           + ldx( m, 5, i, j ) * v( 5, i-1, j, k )
+     >           + uyl( m, i, j)   )
               end do
 
         end do
       end do
 
 !HPF$ independent new(tmat, k)
-         do j= jlow(l), jhigh(l) 
+         do j= jlow(l), jhigh(l)
            do i=ilow(l,j), ihigh(l,j)
       	     k = l - i - j
-       
+
 c---------------------------------------------------------------------
 c   diagonal block inversion
 c

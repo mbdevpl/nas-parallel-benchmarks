@@ -8,10 +8,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     Performs line solves in Y direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
 c---------------------------------------------------------------------
@@ -28,7 +28,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     This function computes the left hand side for the three y-factors   
+c     This function computes the left hand side for the three y-factors
 c---------------------------------------------------------------------
 
       jsize = grid_points(2)-1
@@ -64,8 +64,8 @@ c---------------------------------------------------------------------
      >              + c2 * qs(i,j,k)
                fjac(3,2,j) = - c2 *  u(2,i,j,k) * tmp1
                fjac(3,3,j) = ( 2.0d+00 - c2 )
-     >              *  u(3,i,j,k) * tmp1 
-               fjac(3,4,j) = - c2 * u(4,i,j,k) * tmp1 
+     >              *  u(3,i,j,k) * tmp1
+               fjac(3,4,j) = - c2 * u(4,i,j,k) * tmp1
                fjac(3,5,j) = c2
 
                fjac(4,1,j) = - ( u(3,i,j,k)*u(4,i,j,k) )
@@ -78,15 +78,15 @@ c---------------------------------------------------------------------
                fjac(5,1,j) = ( c2 * 2.0d0 * square(i,j,k)
      >              - c1 * u(5,i,j,k) )
      >              * u(3,i,j,k) * tmp2
-               fjac(5,2,j) = - c2 * u(2,i,j,k)*u(3,i,j,k) 
+               fjac(5,2,j) = - c2 * u(2,i,j,k)*u(3,i,j,k)
      >              * tmp2
-               fjac(5,3,j) = c1 * u(5,i,j,k) * tmp1 
-     >              - c2 
+               fjac(5,3,j) = c1 * u(5,i,j,k) * tmp1
+     >              - c2
      >              * ( qs(i,j,k)
      >              + u(3,i,j,k)*u(3,i,j,k) * tmp2 )
                fjac(5,4,j) = - c2 * ( u(3,i,j,k)*u(4,i,j,k) )
      >              * tmp2
-               fjac(5,5,j) = c1 * u(3,i,j,k) * tmp1 
+               fjac(5,5,j) = c1 * u(3,i,j,k) * tmp1
 
                njac(1,1,j) = 0.0d+00
                njac(1,2,j) = 0.0d+00
@@ -138,7 +138,7 @@ c---------------------------------------------------------------------
 
                lhs(1,1,aa,j) = - tmp2 * fjac(1,1,j-1)
      >              - tmp1 * njac(1,1,j-1)
-     >              - tmp1 * dy1 
+     >              - tmp1 * dy1
                lhs(1,2,aa,j) = - tmp2 * fjac(1,2,j-1)
      >              - tmp1 * njac(1,2,j-1)
                lhs(1,3,aa,j) = - tmp2 * fjac(1,3,j-1)
@@ -166,7 +166,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(3,2,j-1)
                lhs(3,3,aa,j) = - tmp2 * fjac(3,3,j-1)
      >              - tmp1 * njac(3,3,j-1)
-     >              - tmp1 * dy3 
+     >              - tmp1 * dy3
                lhs(3,4,aa,j) = - tmp2 * fjac(3,4,j-1)
      >              - tmp1 * njac(3,4,j-1)
                lhs(3,5,aa,j) = - tmp2 * fjac(3,5,j-1)
@@ -233,7 +233,7 @@ c---------------------------------------------------------------------
                lhs(5,3,bb,j) = tmp1 * 2.0d+00 * njac(5,3,j)
                lhs(5,4,bb,j) = tmp1 * 2.0d+00 * njac(5,4,j)
                lhs(5,5,bb,j) = 1.0d+00
-     >              + tmp1 * 2.0d+00 * njac(5,5,j) 
+     >              + tmp1 * 2.0d+00 * njac(5,5,j)
      >              + tmp1 * 2.0d+00 * dy5
 
                lhs(1,1,cc,j) =  tmp2 * fjac(1,1,j+1)
@@ -303,10 +303,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(JMAX) and rhs'(JMAX) will be sent to next cell
 c---------------------------------------------------------------------
@@ -321,13 +321,13 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
             do j=1,jsize-1
 
 c---------------------------------------------------------------------
 c     subtract A*lhs_vector(j-1) from lhs_vector(j)
-c     
+c
 c     rhs(j) = rhs(j) - A*rhs(j-1)
 c---------------------------------------------------------------------
                call matvec_sub(lhs(1,1,aa,j),
@@ -379,11 +379,11 @@ c     else assume U(jsize) is loaded in un pack backsub_info
 c     so just use it
 c     after call u(jstart) will be sent to next cell
 c---------------------------------------------------------------------
-      
+
             do j=jsize-1,0,-1
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,k) = rhs(m,i,j,k) 
+                     rhs(m,i,j,k) = rhs(m,i,j,k)
      >                    - lhs(m,n,cc,j)*rhs(n,i,j+1,k)
                   enddo
                enddo

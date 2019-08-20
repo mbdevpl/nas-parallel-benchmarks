@@ -55,24 +55,24 @@ public class Timer{
     }
   }
 
-  public void start(int n){  
+  public void start(int n){
     start_time[n]=System.currentTimeMillis();
   }
-  
+
   public void stop(int n){
     elapsed_time[n]=System.currentTimeMillis()-start_time[n];
     elapsed_time[n]/=1000;
     total_time[n] += elapsed_time[n];
   }
-  
+
   public double readTimer(int n){
     return total_time[n];
   }
-  
+
   public void resetTimer(int n){
     elapsed_time[n]=start_time[n]=total_time[n]=0;
   }
-  
+
   public void resetAllTimers(){
     for(int i=0;i<max_counters;i++) resetTimer(i);
   }

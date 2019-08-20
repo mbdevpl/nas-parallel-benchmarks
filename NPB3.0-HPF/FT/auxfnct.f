@@ -1,19 +1,19 @@
 c---------------------------------------------------------------------
-c compute the roots-of-unity array that will be used for subsequent FFTs. 
+c compute the roots-of-unity array that will be used for subsequent FFTs.
 c---------------------------------------------------------------------
       PURE extrinsic (hpf_local) subroutine CompExp (n, exponent)
 
       implicit none
       integer, intent(in) :: n
       double complex, dimension(:), intent(inout) :: exponent
-            
+
       interface
         pure extrinsic (hpf_local) integer function ilog2 (n)
           integer, intent(in) :: n
         end function ilog2
       end interface
       integer m,nu,ku,i,j,ln
-      double precision t, ti, pi 
+      double precision t, ti, pi
       data pi /3.141592653589793238d0/
 
       nu = n
@@ -26,11 +26,11 @@ c---------------------------------------------------------------------
          do i = 0, ln - 1
             ti = i * t
             exponent(i+ku) = dcmplx(cos(ti),sin(ti))
-         enddo        
+         enddo
          ku = ku + ln
          ln = 2 * ln
       enddo
-            
+
       return
       end
 
@@ -46,7 +46,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
-      
+
       integer nn, lg
       if (n .eq. 1) then
          ilog2=0
@@ -87,8 +87,8 @@ c---------------------------------------------------------------------
       parameter (seed = 314159265.d0, a = 1220703125.d0)
       external randlc
       double precision randlc
-      
-      start = seed                                    
+
+      start = seed
 c---------------------------------------------------------------------
 c Jump to the starting element for our first plane.
 c---------------------------------------------------------------------
@@ -99,13 +99,13 @@ c---------------------------------------------------------------------
 c Go through by z planes filling in one square at a time.
 c---------------------------------------------------------------------
       RanStarts(1) = start
-      do k = 2, d3 
+      do k = 2, d3
          dummy = randlc(start, an)
          RanStarts(k) = start
       end do
-      
-!HPF$ independent      
-      do k = 1, d3 
+
+!HPF$ independent
+      do k = 1, d3
          do j = 1, d1
            call VRanComp(d1,RanStarts(k),a,u0(j,:,k),d2)
          end do
@@ -118,11 +118,11 @@ c---------------------------------------------------------------------
 
       pure extrinsic(HPF) SUBROUTINE VRanComp(N, X, A, Y,m)
       implicit none
-      
+
       integer, intent(in) :: n,m
       double precision, intent(inout) :: x, a
       double complex, dimension(m), intent(out) :: y
-            
+
       integer*8 i246m1, Lx, La, i
       double precision d2m46, Re, Im
 
@@ -175,7 +175,7 @@ c---------------------------------------------------------------------
       do while (n .gt. 1)
          n2 = n/2
          if (n2 * 2 .eq. n) then
-            dummy = randlc(q, q) 
+            dummy = randlc(q, q)
             n = n2
          else
             dummy = randlc(r, q)
@@ -212,7 +212,7 @@ c---------------------------------------------------------------------
         csum = csum + u(ji,ii,ki)
       end do
       csum = csum/dble(dl1*dl2*dl3)
-      print*,'T =',iterN,' checksum =',csum  
+      print*,'T =',iterN,' checksum =',csum
       return
       end
-      
+

@@ -56,7 +56,7 @@ public class LowerJac extends LUBase{
   int upper_bound1;
   int todo=0;
   boolean go = false;
-  
+
   public LowerJac(LU lu,int low1, int high1){
     Init(lu);
     lower_bound1=low1;
@@ -72,26 +72,26 @@ public class LowerJac extends LUBase{
     isiz1=lu.isiz1;
     isiz2=lu.isiz2;
     isiz3=lu.isiz3;
-    
+
     itmax_default=lu.itmax_default;
     dt_default=lu.dt_default;
     inorm_default=lu.inorm_default;
-    
+
     u=lu.u;
     rsd=lu.rsd;
     frct=lu.frct;
     isize1=lu.isize1;
     jsize1=lu.jsize1;
     ksize1=lu.ksize1;
-    
+
     flux=lu.flux;
     isize2=lu.isize2;
-    
+
     qs=lu.qs;
     rho_i=lu.rho_i;
     jsize3=lu.jsize3;
     ksize3=lu.ksize3;
-    
+
     a=lu.a;
     b=lu.b;
     c=lu.c;
@@ -99,15 +99,15 @@ public class LowerJac extends LUBase{
     isize4=lu.isize4;
     jsize4=lu.jsize4;
     ksize4=lu.ksize4;
-    
+
     nx=lu.nx;
     ny=lu.ny;
     nz=lu.nz;
-    
+
     nx0=lu.nx0;
     ny0=lu.ny0;
     nz0=lu.nz0;
-    
+
     ist=lu.ist;
     iend=lu.iend;
     jst=lu.jst;
@@ -120,7 +120,7 @@ public class LowerJac extends LUBase{
     ki2=lu.ki2;
 
     dxi=lu.dxi;
-    deta=lu.deta; 
+    deta=lu.deta;
     dzeta=lu.dzeta;
     tx1=lu.tx1;
     tx2=lu.tx2;
@@ -131,7 +131,7 @@ public class LowerJac extends LUBase{
     tz1=lu.tz1;
     tz2=lu.tz2;
     tz3=lu.tz3;
-    
+
     dx1=lu.dx1;
     dx2=lu.dx2;
     dx3=lu.dx3;
@@ -149,28 +149,28 @@ public class LowerJac extends LUBase{
     dz3=lu.dz3;
     dz4=lu.dz4;
     dz5=lu.dz5;
-   
+
     dssp=lu.dssp;
     dt=lu.dt;
     omega=lu.omega;
     frc=lu.frc;
     ttotal=lu.ttotal;
 
-    ldz=lu.a; 
+    ldz=lu.a;
     ldy=lu.b;
     ldx=lu.c;
-    d=lu.d;   
+    d=lu.d;
     v=lu.rsd;
-    
-    ldmx=lu.isiz1; 
-    ldmy=lu.isiz2; 
-    ldmz=lu.isiz3; 
+
+    ldmx=lu.isiz1;
+    ldmy=lu.isiz2;
+    ldmz=lu.isiz3;
   }
 
   public void run(){
-    int k;   
+    int k;
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -197,7 +197,7 @@ public class LowerJac extends LUBase{
       }
     }
   }
-  
+
   public void step(int k){
       int i, j, m;
       double  r43;
@@ -233,7 +233,7 @@ public class LowerJac extends LUBase{
                 * (  tx1 * r43 + ty1 + tz1  )
                 * c34 * tmp2 * u[1+i*isize1+j*jsize1+k*ksize1];
                d[1+1*isize4+i*jsize4+j*ksize4] =  1.0
-                + dt * 2.0 * c34 * tmp1 
+                + dt * 2.0 * c34 * tmp1
                 * (  tx1 * r43 + ty1 + tz1 )
                 + dt * 2.0 * (   tx1 * dx2
                                    + ty1 * dy2
@@ -434,7 +434,7 @@ public class LowerJac extends LUBase{
                 * ( c34 - c1345 ) * tmp2 * u[1+i*isize1+(j-1)*jsize1+k*ksize1];
                b[4+2*isize4+i*jsize4+j*ksize4] = - dt * ty2
                 * ( c1 * ( u[4+i*isize1+(j-1)*jsize1+k*ksize1] * tmp1 )
-                - c2 
+                - c2
                 * ( qs[i+(j-1)*jsize3+k*ksize3] * tmp1
                      + u[2+i*isize1+(j-1)*jsize1+k*ksize1]*u[2+i*isize1+(j-1)*jsize1+k*ksize1] * tmp2 ) )
                 - dt * ty1
@@ -446,7 +446,7 @@ public class LowerJac extends LUBase{
                 * ( c1 * ( u[2+i*isize1+(j-1)*jsize1+k*ksize1] * tmp1 ) )
                 - dt * ty1 * c1345 * tmp1
                 - dt * ty1 * dy5;
-	    
+	
 //---------------------------------------------------------------------
 //   form the third block sub-diagonal
 //---------------------------------------------------------------------
@@ -538,9 +538,9 @@ public class LowerJac extends LUBase{
                      + ldz[m+ 4*isize4+ i*jsize4+ j *ksize4] * v[4+ i*isize1+ j*jsize1+ (k-1) *ksize1]);
             }
          }
-      }     
+      }
   }
-  
+
   private void step2(int k){
       int i, j, m;
       double  r43;
@@ -568,7 +568,7 @@ public class LowerJac extends LUBase{
                  + ldy[m+ 4*isize4+ i*jsize4+ j *ksize4] * v[4+ i*isize1+ (j-1)*jsize1+ k *ksize1]
                  + ldx[m+ 4*isize4+ i*jsize4+ j *ksize4] * v[4+ (i-1)*isize1+ j*jsize1+ k *ksize1]);
             }
-       
+
 //---------------------------------------------------------------------
 //   diagonal block inversion
 //

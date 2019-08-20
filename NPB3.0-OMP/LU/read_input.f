@@ -108,7 +108,7 @@ c---------------------------------------------------------------------
  1001    format(' Size: ', i3, 'x', i3, 'x', i3)
  1002    format(' Iterations: ', i3)
  1003    format(' Number of active threads: ', i5, /)
-         
+
 
 
       return

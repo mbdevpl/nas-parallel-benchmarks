@@ -38,12 +38,12 @@ c---------------------------------------------------------------------
      >              tx1, tx2, tx3,
      >              ty1, ty2, ty3,
      >              tz1, tz2, tz3,
-     >              nx, ny, nz, 
+     >              nx, ny, nz,
      >              nx0, ny0, nz0,
      >              ist, iend,
      >              jst, jend,
-     >              ii1, ii2, 
-     >              ji1, ji2, 
+     >              ii1, ii2,
+     >              ji1, ji2,
      >              ki1, ki2
       integer m
       double precision xi, eta, zeta

@@ -53,14 +53,14 @@ public class Random{
   //constants
   public static final double d2m46=Math.pow(0.5,46);
   protected static final long i246m1 = (long)Math.pow(2,46)-1;
-  
+
   public Random(){}
   public Random(double sd){seed=sd;}
   //Random number generator with an external seed
   public double randlc(double x, double a){
     double y[],r23,r46,t23,t46,t1,t2,t3,t4,a1,a2,x1,x2,z;
-    r23 = Math.pow(0.5,23); 
-    r46 = Math.pow(r23, 2); 
+    r23 = Math.pow(0.5,23);
+    r46 = Math.pow(r23, 2);
     t23 = Math.pow(2.0,23);
     t46 = Math.pow(t23, 2);
 //---------------------------------------------------------------------
@@ -88,8 +88,8 @@ public class Random{
   //Random number generator with an internal seed
   public double randlc(double a){
     double y[],r23,r46,t23,t46,t1,t2,t3,t4,a1,a2,x1,x2,z;
-    r23 = Math.pow(0.5,23); 
-    r46 = Math.pow(r23, 2); 
+    r23 = Math.pow(0.5,23);
+    r46 = Math.pow(r23, 2);
     t23 = Math.pow(2.0,23);
     t46 = Math.pow(t23, 2);
 //---------------------------------------------------------------------
@@ -114,7 +114,7 @@ public class Random{
     tran = t3 - t46 * t4;
     return(r46 * tran);
   }
-  public double vranlc(double n, double x, double a, double y[],int offset){ 
+  public double vranlc(double n, double x, double a, double y[],int offset){
     long Lx = (long)x;
     long La = (long)a;
 

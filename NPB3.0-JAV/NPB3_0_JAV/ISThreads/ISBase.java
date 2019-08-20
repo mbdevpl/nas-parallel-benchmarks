@@ -48,7 +48,7 @@ public class ISBase extends Thread{
   public static final String BMName="IS";
   public char CLASS = 'S';
   public static final int  MAX_ITERATIONS=10,TEST_ARRAY_SIZE=5;
-  
+
   public int TOTAL_KEYS_LOG_2;
   public int MAX_KEY_LOG_2;
   public int NUM_BUCKETS_LOG_2;
@@ -57,13 +57,13 @@ public class ISBase extends Thread{
   public int MAX_KEY;
   public int NUM_BUCKETS;
   public int NUM_KEYS;
-  public int SIZE_OF_BUFFERS; 
+  public int SIZE_OF_BUFFERS;
 
   public boolean timeron=false;
   public Timer timer = new Timer();
-  
+
   public static int test_index_array[], test_rank_array[];
-  public static int 
+  public static int
        S_test_index_array[] = {48427,17148,23627,62548,4431},
        S_test_rank_array[] = {0,18,346,64917,65463},
 
@@ -74,19 +74,19 @@ public class ISBase extends Thread{
        A_test_rank_array[] = {104,17523,123928,8288932,8388264},
 
        B_test_index_array[] = {41869,812306,5102857,18232239,26860214},
-       B_test_rank_array[] = {33422937,10244,59149,33135281,99}, 
+       B_test_rank_array[] = {33422937,10244,59149,33135281,99},
 
        C_test_index_array[] = {44172927,72999161,74326391,129606274,21736814},
        C_test_rank_array[] = {61147,882988,266290,133997595,133525895};
-  
+
 /************************************/
 /* These are the three main arrays. */
 /************************************/
   public static int passed_verification;
   public int master_hist[], key_array[], partial_verify_vals[];
-  
+
   public ISBase(){}
-  
+
   public ISBase(char clss, int np, boolean serial){
     CLASS=clss;
     num_threads=np;
@@ -132,15 +132,15 @@ public class ISBase extends Thread{
     MAX_KEY	     = (1 << MAX_KEY_LOG_2);
     NUM_BUCKETS      = (1 << NUM_BUCKETS_LOG_2);
     NUM_KEYS	     = TOTAL_KEYS;
-    SIZE_OF_BUFFERS  = NUM_KEYS; 
+    SIZE_OF_BUFFERS  = NUM_KEYS;
 
     key_array = new int[SIZE_OF_BUFFERS];
-    master_hist = new int[MAX_KEY];    
+    master_hist = new int[MAX_KEY];
     partial_verify_vals =  new int[TEST_ARRAY_SIZE];
 
     for( int i=0; i<MAX_KEY; i++ ) master_hist[i] = 0;
   }
-  
+
   public int num_threads=0;
   public RankThread rankthreads[];
   public IS master;
@@ -173,7 +173,7 @@ public class ISBase extends Thread{
       rankthreads[i].rankthreads=rankthreads;
     }
   }
-  
+
   public void checksum(int array[], String name, boolean stop){
     double check=0;
     for(int i=0;i<array.length;i++) check+=array[i];

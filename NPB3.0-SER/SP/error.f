@@ -68,10 +68,10 @@ c---------------------------------------------------------------------
        	       do m = 1, 5
                   add = rhs(m,i,j,k)
                   rms(m) = rms(m) + add*add
-               end do 
-             end do 
-          end do 
-       end do 
+               end do
+             end do
+          end do
+       end do
 
        do   m = 1, 5
           do   d = 1, 3

@@ -60,18 +60,18 @@ c and is NOT global. it is the current iteration
 c---------------------------------------------------------------------------c
 
       integer k, it
-      
+
       external timer_read
       double precision t, tinit, mflops, timer_read
 
 c---------------------------------------------------------------------------c
 c These arrays are in common because they are quite large
 c and probably shouldn't be allocated on the stack. They
-c are always passed as subroutine args. 
+c are always passed as subroutine args.
 c---------------------------------------------------------------------------c
 
       double precision u(nr),v(nv),r(nr),a(0:3),c(0:3)
-      common /noautom/ u,v,r   
+      common /noautom/ u,v,r
 
       double precision rnm2, rnmu, old2, oldu, epsilon
       integer n1, n2, n3, nn, nit
@@ -107,18 +107,18 @@ c---------------------------------------------------------------------
       	 timeron = .false.
       endif
 
-      write (*, 1000) 
+      write (*, 1000)
 
       open(unit=7,file="mg.input", status="old", iostat=fstatus)
       if (fstatus .eq. 0) then
-         write(*,50) 
+         write(*,50)
  50      format(' Reading from input file mg.input')
          read(7,*) lt
          read(7,*) nx(lt), ny(lt), nz(lt)
          read(7,*) nit
          read(7,*) (debug_vec(i),i=0,7)
       else
-         write(*,51) 
+         write(*,51)
  51      format(' No input file. Using compiled defaults ')
          lt = lt_default
          nit = nit_default
@@ -132,16 +132,16 @@ c---------------------------------------------------------------------
 
 
       if ( (nx(lt) .ne. ny(lt)) .or. (nx(lt) .ne. nz(lt)) ) then
-         Class = 'U' 
+         Class = 'U'
       else if( nx(lt) .eq. 32 .and. nit .eq. 4 ) then
          Class = 'S'
       else if( nx(lt) .eq. 64 .and. nit .eq. 40 ) then
          Class = 'W'
       else if( nx(lt) .eq. 256 .and. nit .eq. 20 ) then
          Class = 'B'
-      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then  
+      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then
          Class = 'C'
-      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then  
+      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then
          Class = 'A'
       else
          Class = 'U'
@@ -160,11 +160,11 @@ c     debug_vec(5) = k => at level k or below, show result of interp
 c     debug_vec(6) = 1 => (unused)
 c     debug_vec(7) = 1 => (unused)
 c---------------------------------------------------------------------
-      a(0) = -8.0D0/3.0D0 
-      a(1) =  0.0D0 
-      a(2) =  1.0D0/6.0D0 
+      a(0) = -8.0D0/3.0D0
+      a(1) =  0.0D0
+      a(2) =  1.0D0/6.0D0
       a(3) =  1.0D0/12.0D0
-      
+
       if(Class .eq. 'A' .or. Class .eq. 'S'.or. Class .eq.'W') then
 c---------------------------------------------------------------------
 c     Coefficients for the S(a) smoother
@@ -253,7 +253,7 @@ c---------------------------------------------------------------------
       verified = .FALSE.
       verify_value = 0.0
 
-      write( *,'(/A,F15.3,A/)' ) 
+      write( *,'(/A,F15.3,A/)' )
      >     ' Initialization time: ',tinit, ' seconds'
       write(*,100)
  100  format(' Benchmark completed ')
@@ -283,7 +283,7 @@ c---------------------------------------------------------------------
  202        format(' Error is   ', E20.12)
          else
             verified = .FALSE.
-            write(*, 300) 
+            write(*, 300)
             write(*, 301) rnm2
             write(*, 302) verify_value
  300        format(' VERIFICATION FAILED')
@@ -306,9 +306,9 @@ c---------------------------------------------------------------------
          mflops = 0.0
       endif
 
-      call print_results('MG', class, nx(lt), ny(lt), nz(lt), 
+      call print_results('MG', class, nx(lt), ny(lt), nz(lt),
      >                   nit, t,
-     >                   mflops, '          floating point', 
+     >                   mflops, '          floating point',
      >                   verified, npbversion, compiletime,
      >                   cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -378,7 +378,7 @@ c---------------------------------------------------------------------
 
       do  k = lt,1,-1
          do  ax = 1,3
-            mi(ax,k) = 2 + ng(ax,k) 
+            mi(ax,k) = 2 + ng(ax,k)
          enddo
 
          m1(k) = mi(1,k)
@@ -392,10 +392,10 @@ c---------------------------------------------------------------------
       ie1 = 1 + ng(1,k)
       n1 = 3 + ie1 - is1
       is2 = 2 + ng(2,k) - ng(2,lt)
-      ie2 = 1 + ng(2,k) 
+      ie2 = 1 + ng(2,k)
       n2 = 3 + ie2 - is2
       is3 = 2 + ng(3,k) - ng(3,lt)
-      ie3 = 1 + ng(3,k) 
+      ie3 = 1 + ng(3,k)
       n3 = 3 + ie3 - is3
 
 
@@ -458,7 +458,7 @@ c---------------------------------------------------------------------
       call zero3(u(ir(k)),m1(k),m2(k),m3(k))
       call psinv(r(ir(k)),u(ir(k)),m1(k),m2(k),m3(k),c,k)
 
-      do  k = lb+1, lt-1     
+      do  k = lb+1, lt-1
           j = k-1
 c---------------------------------------------------------------------
 c        prolongate from level k-1  to k
@@ -497,12 +497,12 @@ c---------------------------------------------------------------------
 c     psinv applies an approximate inverse as smoother:  u = u + Cr
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
+c     A and M denote the costs of Addition and Multiplication.
 c     Presuming coefficient c(3) is zero (the NPB assumes this,
 c     but it is thus not a general case), 2A + 1M may be eliminated,
 c     resulting in 13A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
@@ -567,13 +567,13 @@ c---------------------------------------------------------------------
 c     resid computes the residual:  r = v - Au
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition (or Subtraction) and 
-c     Multiplication, respectively. 
+c     A and M denote the costs of Addition (or Subtraction) and
+c     Multiplication, respectively.
 c     Presuming coefficient a(1) is zero (the NPB assumes this,
 c     but it is thus not a general case), 3A + 1M may be eliminated,
 c     resulting in 12A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
@@ -634,13 +634,13 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     rprj3 projects onto the next coarser grid, 
+c     rprj3 projects onto the next coarser grid,
 c     using a trilinear Finite Element projection:  s = r' = P r
-c     
+c
 c     This  implementation costs  20A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
       implicit none
 
@@ -727,11 +727,11 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     interp adds the trilinear interpolation of the correction
 c     from the coarser grid to the current approximation:  u = u + Qu'
-c     
+c
 c     Observe that this  implementation costs  16A + 4M, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  Vector machines may get slightly better 
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.  Vector machines may get slightly better
 c     performance however, with 8 separate "do i1" loops, rather than 4.
 c---------------------------------------------------------------------
       implicit none
@@ -796,7 +796,7 @@ c      parameter( m=535 )
             d1 = 1
             t1 = 0
          endif
-         
+
          if(n2.eq.3)then
             d2 = 2
             t2 = 1
@@ -804,7 +804,7 @@ c      parameter( m=535 )
             d2 = 1
             t2 = 0
          endif
-         
+
          if(n3.eq.3)then
             d3 = 2
             t3 = 1
@@ -812,7 +812,7 @@ c      parameter( m=535 )
             d3 = 1
             t3 = 0
          endif
-         
+
          do  i3=d3,mm3-1
             do  i2=d2,mm2-1
                do  i1=d1,mm1-1
@@ -878,7 +878,7 @@ c      parameter( m=535 )
          call showall(u,n1,n2,n3)
       endif
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -970,7 +970,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     comm3 organizes the communication on all borders 
+c     comm3 organizes the communication on all borders
 c---------------------------------------------------------------------
       implicit none
 
@@ -1085,14 +1085,14 @@ c---------------------------------------------------------------------
          do  i2=2,n2-1
             do  i1=2,n1-1
                if( z(i1,i2,i3) .gt. ten( 1, 1 ) )then
-                  ten(1,1) = z(i1,i2,i3) 
+                  ten(1,1) = z(i1,i2,i3)
                   j1(1,1) = i1
                   j2(1,1) = i2
                   j3(1,1) = i3
                   call bubble( ten, j1, j2, j3, mm, 1 )
                endif
                if( z(i1,i2,i3) .lt. ten( 1, 0 ) )then
-                  ten(1,0) = z(i1,i2,i3) 
+                  ten(1,0) = z(i1,i2,i3)
                   j1(1,0) = i1
                   j2(1,0) = i2
                   j3(1,0) = i3
@@ -1113,9 +1113,9 @@ c---------------------------------------------------------------------
          best = z( j1(i1,1), j2(i1,1), j3(i1,1) )
          if(best.eq.z(j1(i1,1),j2(i1,1),j3(i1,1)))then
             jg( 0, i, 1) = 0
-            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 ) 
-            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 ) 
-            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 ) 
+            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 )
+            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 )
+            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 )
             i1 = i1-1
          else
             jg( 0, i, 1) = 0
@@ -1127,9 +1127,9 @@ c---------------------------------------------------------------------
          best = z( j1(i0,0), j2(i0,0), j3(i0,0) )
          if(best.eq.z(j1(i0,0),j2(i0,0),j3(i0,0)))then
             jg( 0, i, 0) = 0
-            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 ) 
-            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 ) 
-            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 ) 
+            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 )
+            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 )
+            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 )
             i0 = i0-1
          else
             jg( 0, i, 0) = 0
@@ -1178,7 +1178,7 @@ c---------------------------------------------------------------------
 c          call showall(z,n1,n2,n3)
 c---------------------------------------------------------------------
 
-      return 
+      return
       end
 
 
@@ -1211,7 +1211,7 @@ c---------------------------------------------------------------------
       write(*,*)'  '
  6    format(15f6.3)
 
-      return 
+      return
       end
 
 
@@ -1289,7 +1289,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo
@@ -1315,7 +1315,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo

@@ -82,10 +82,10 @@ c---------------------------------------------------------------------
        	       do m = 1, 5
                   add = rhs(m,i,j,k)
                   rmsz(m,k) = rmsz(m,k) + add*add
-               end do 
-             end do 
-          end do 
-       end do 
+               end do
+             end do
+          end do
+       end do
 
        do   m = 1, 5
           rms(m) = sum( rmsz(m,1:nz2) )

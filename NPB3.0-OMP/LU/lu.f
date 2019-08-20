@@ -144,15 +144,15 @@ c---------------------------------------------------------------------
       mflops = float(itmax)*(1984.77*float( nx0 )
      >     *float( ny0 )
      >     *float( nz0 )
-     >     -10923.3*(float( nx0+ny0+nz0 )/3.)**2 
+     >     -10923.3*(float( nx0+ny0+nz0 )/3.)**2
      >     +27770.9* float( nx0+ny0+nz0 )/3.
      >     -144010.)
      >     / (maxtime*1000000.)
 
       call print_results('LU', class, nx0,
      >  ny0, nz0, itmax,
-     >  maxtime, mflops, '          floating point', verified, 
-     >  npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6, 
+     >  maxtime, mflops, '          floating point', verified,
+     >  npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6,
      >  '(none)')
 
 c---------------------------------------------------------------------

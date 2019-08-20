@@ -40,12 +40,12 @@
 !     Mathew Schultz	   					          !
 !-------------------------------------------------------------------------!
 
-The NPB3_0_JAV contains serial and multithreaded versions of the 
-NPB3.0-SER derived from the NPB2.3-serial version of the NAS Parallel 
+The NPB3_0_JAV contains serial and multithreaded versions of the
+NPB3.0-SER derived from the NPB2.3-serial version of the NAS Parallel
 Benchmarks (except EP).
 
 The implementaion was obtaind by a semiautomatic direct translation of
-FORTRAN to Java. The code is written in pure Java. 
+FORTRAN to Java. The code is written in pure Java.
 
 The threaded implementation is similar to OpenMP version. It uses the
 master-worker work distribution model. We use wait()/notify() pair to
@@ -58,4 +58,4 @@ Disclaimer: NPB3_0_JAV is provided "as is", without any warranty.
 
 
 
-  
+

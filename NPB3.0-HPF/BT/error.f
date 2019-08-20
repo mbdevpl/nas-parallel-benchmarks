@@ -18,19 +18,19 @@ c---------------------------------------------------------------------
            include 'cnst.h'
            double precision, intent(in) ::  xi, eta, zeta
            double precision, intent(out), dimension(:) :: dtemp
-         end subroutine 
+         end subroutine
        end interface
       double precision rmsa( 0:grid_points(3)-1, 5)
       integer i, j, k, m, d
       double precision xi, eta, zeta, u_exact(5), rms(5), add
 
-      do m = 1, 5 
+      do m = 1, 5
          rms(m) = 0.0d0
       enddo
 
 !HPF$ independent new(add,zeta,eta,xi)
       do k = 0, grid_points(3)-1
-         do m = 1, 5 
+         do m = 1, 5
             rmsa(k, m) = 0.0d0
          enddo
          zeta = dble(k) * dnzm1
@@ -76,14 +76,14 @@ c---------------------------------------------------------------------
       do m = 1, 5
          rms(m) = sum( rhs(m,1:grid_points(1)-2,
      >                 1:grid_points(2)-2,1:grid_points(3)-2)**2)
-      enddo 
+      enddo
 
       do m = 1, 5
          do d = 1, 3
             rms(m) = rms(m) / dble(grid_points(d)-2)
-         enddo 
+         enddo
          rms(m) = dsqrt(rms(m))
-      enddo 
+      enddo
 
       return
       end

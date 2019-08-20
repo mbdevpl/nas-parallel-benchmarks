@@ -88,10 +88,10 @@ c---------------------------------------------------------------------
        	        do m = 1, 5
                    add = rhs(m,i,j,k)
                    rms_local(m) = rms_local(m) + add*add
-                end do 
-             end do 
-          end do 
-       end do 
+                end do
+             end do
+          end do
+       end do
 !$omp end do nowait
        do m = 1, 5
 !$omp critical

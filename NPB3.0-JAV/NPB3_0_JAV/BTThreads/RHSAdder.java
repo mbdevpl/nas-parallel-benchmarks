@@ -49,7 +49,7 @@ public class RHSAdder extends BTBase{
 
   //private data
   int lower_bound, upper_bound;
-  
+
   public RHSAdder(BT bt,int low, int high){
     Init(bt);
     lower_bound=low;
@@ -61,13 +61,13 @@ public class RHSAdder extends BTBase{
   void Init(BT bt){
     //initialize shared data
     IMAX=bt.IMAX;
-    JMAX=bt.JMAX; 
-    KMAX=bt.KMAX; 
-    problem_size=bt.problem_size; 
+    JMAX=bt.JMAX;
+    KMAX=bt.KMAX;
+    problem_size=bt.problem_size;
     grid_points=bt.grid_points;
     niter_default=bt.niter_default;
     dt_default=bt.dt_default;
-    
+
     u=bt.u;
     rhs=bt.rhs;
     forcing=bt.forcing;
@@ -77,7 +77,7 @@ public class RHSAdder extends BTBase{
     isize2=bt.isize2;
     jsize2=bt.jsize2;
     ksize2=bt.ksize2;
-    
+
     us=bt.us;
     vs=bt.vs;
     ws=bt.ws;
@@ -86,17 +86,17 @@ public class RHSAdder extends BTBase{
     square=bt.square;
     jsize1=bt.jsize1;
     ksize1=bt.ksize1;
-    
+
     ue=bt.ue;
     buf=bt.buf;
     jsize3=bt.jsize3;
   }
-  
+
   public void run(){
     int i, j, k, m;
 
-    for(;;){   
-      synchronized(this){ 
+    for(;;){
+      synchronized(this){
       while(done==true){
 	try{
 	    wait();
@@ -108,7 +108,7 @@ public class RHSAdder extends BTBase{
 	for(j=1;j<=grid_points[1]-2;j++){
 	  for(i=1;i<=grid_points[0]-2;i++){
 	    for(m=0;m<=4;m++){
-	      u[m+i*isize2+j*jsize2+k*ksize2] += 
+	      u[m+i*isize2+j*jsize2+k*ksize2] +=
 	                        rhs[m+i*isize2+j*jsize2+k*ksize2];
 	    }
 	  }
@@ -116,7 +116,7 @@ public class RHSAdder extends BTBase{
       }
       synchronized(master){done = true; master.notify();}
     }
-    }  
+    }
   }
 }
 

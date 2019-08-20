@@ -63,7 +63,7 @@ public class RHSCompute extends LUBase{
     lower_bound2=low2;
     upper_bound2=high2;
     state=1;
-    flux = new double[5*isiz1];    
+    flux = new double[5*isiz1];
     setPriority(Thread.MAX_PRIORITY);
     setDaemon(true);
     master=lu;
@@ -73,26 +73,26 @@ public class RHSCompute extends LUBase{
     isiz1=lu.isiz1;
     isiz2=lu.isiz2;
     isiz3=lu.isiz3;
-    
+
     itmax_default=lu.itmax_default;
     dt_default=lu.dt_default;
     inorm_default=lu.inorm_default;
-    
+
     u=lu.u;
     rsd=lu.rsd;
     frct=lu.frct;
     isize1=lu.isize1;
     jsize1=lu.jsize1;
     ksize1=lu.ksize1;
-    
+
     flux=lu.flux;
     isize2=lu.isize2;
-    
+
     qs=lu.qs;
     rho_i=lu.rho_i;
     jsize3=lu.jsize3;
     ksize3=lu.ksize3;
-    
+
     a=lu.a;
     b=lu.b;
     c=lu.c;
@@ -103,11 +103,11 @@ public class RHSCompute extends LUBase{
     nx=lu.nx;
     ny=lu.ny;
     nz=lu.nz;
-    
+
     nx0=lu.nx0;
     ny0=lu.ny0;
     nz0=lu.nz0;
-    
+
     ist=lu.ist;
     iend=lu.iend;
     jst=lu.jst;
@@ -118,9 +118,9 @@ public class RHSCompute extends LUBase{
     ji2=lu.ji2;
     ki1=lu.ki1;
     ki2=lu.ki2;
-    
+
     dxi=lu.dxi;
-    deta=lu.deta; 
+    deta=lu.deta;
     dzeta=lu.dzeta;
     tx1=lu.tx1;
     tx2=lu.tx2;
@@ -131,7 +131,7 @@ public class RHSCompute extends LUBase{
     tz1=lu.tz1;
     tz2=lu.tz2;
     tz3=lu.tz3;
-    
+
     dx1=lu.dx1;
     dx2=lu.dx2;
     dx3=lu.dx3;
@@ -149,16 +149,16 @@ public class RHSCompute extends LUBase{
     dz3=lu.dz3;
     dz4=lu.dz4;
     dz5=lu.dz5;
-   
+
     dssp=lu.dssp;
     dt=lu.dt;
     omega=lu.omega;
     frc=lu.frc;
     ttotal=lu.ttotal;
   }
-  public void run(){    
+  public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -170,7 +170,7 @@ public class RHSCompute extends LUBase{
       }
     }
   }
-  
+
   public void step(){
     int i, j, k, m;
     double  q;
@@ -182,7 +182,7 @@ public class RHSCompute extends LUBase{
     double  u21im1, u31im1, u41im1, u51im1;
     double  u21jm1, u31jm1, u41jm1, u51jm1;
     double  u21km1, u31km1, u41km1, u51km1;
-    
+
     switch(state){
       case 1:
       for(k=lower_bound1;k<=upper_bound1;k++){
@@ -193,11 +193,11 @@ public class RHSCompute extends LUBase{
 	    }
 	    tmp = 1.0 / u[0+i*isize1+j*jsize1+k*ksize1];
 	    rho_i[i+j*jsize3+k*ksize3] = tmp;
-	    qs[i+j*jsize3+k*ksize3] = 0.50 * (  u[1+i*isize1+j*jsize1+k*ksize1] 
+	    qs[i+j*jsize3+k*ksize3] = 0.50 * (  u[1+i*isize1+j*jsize1+k*ksize1]
 					      * u[1+i*isize1+j*jsize1+k*ksize1]
-					      + u[2+i*isize1+j*jsize1+k*ksize1] 
+					      + u[2+i*isize1+j*jsize1+k*ksize1]
 					      * u[2+i*isize1+j*jsize1+k*ksize1]
-					      + u[3+i*isize1+j*jsize1+k*ksize1] 
+					      + u[3+i*isize1+j*jsize1+k*ksize1]
 					      * u[3+i*isize1+j*jsize1+k*ksize1] )* tmp;
 	  }
 	}
@@ -216,7 +216,7 @@ public class RHSCompute extends LUBase{
 
 	q = qs[i+j*jsize3+k*ksize3];
 	
-	flux[1+i*isize2] = u[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 * 
+	flux[1+i*isize2] = u[1+i*isize1+j*jsize1+k*ksize1] * u21 + c2 *
                               ( u[4+i*isize1+j*jsize1+k*ksize1] - q );
 	flux[2+i*isize2] = u[2+i*isize1+j*jsize1+k*ksize1] * u21;
 	flux[3+i*isize2] = u[3+i*isize1+j*jsize1+k*ksize1] * u21;
@@ -282,7 +282,7 @@ public class RHSCompute extends LUBase{
                                    - 2.0 * u[4+i*isize1+j*jsize1+k*ksize1]
 			   +           u[4+(i+1)*isize1+j*jsize1+k*ksize1] );
       }
-      
+
 //---------------------------------------------------------------------
 //   Fourth-order dissipation
 //---------------------------------------------------------------------
@@ -297,7 +297,7 @@ public class RHSCompute extends LUBase{
 		  - 4.0 * u[m+3*isize1+j*jsize1+k*ksize1]
 		  +           u[m+4*isize1+j*jsize1+k*ksize1] );
     }
-      
+
       for(i=3;i<=nx - 4;i++){
 	for(m=0;m<=4;m++){
 	  rsd[m+i*isize1+j*jsize1+k*ksize1] = rsd[m+i*isize1+j*jsize1+k*ksize1]
@@ -308,8 +308,8 @@ public class RHSCompute extends LUBase{
 		      +           u[m+(i+2)*isize1+j*jsize1+k*ksize1] );
 	}
       }
-      
-	    
+
+	
       for(m=0;m<=4;m++){
 	rsd[m+(nx-3)*isize1+j*jsize1+k*ksize1] = rsd[m+(nx-3)*isize1+j*jsize1+k*ksize1]
 	  - dssp * (             u[m+(nx-5)*isize1+j*jsize1+k*ksize1]
@@ -321,7 +321,7 @@ public class RHSCompute extends LUBase{
 		    - 4.0 * u[m+(nx-3)*isize1+j*jsize1+k*ksize1]
 		    + 5.0 * u[m+(nx-2)*isize1+j*jsize1+k*ksize1] );
       }
-	    
+	
     }
   }
     break;
@@ -422,7 +422,7 @@ public class RHSCompute extends LUBase{
 		- 4.0 * u[m+i*isize1+3*jsize1+k*ksize1]
 		+           u[m+i*isize1+4*jsize1+k*ksize1] );
   }
-      
+
       for(j=3;j<=ny - 4;j++){
 	for(m=0;m<=4;m++){
 	  rsd[m+i*isize1+j*jsize1+k*ksize1] = rsd[m+i*isize1+j*jsize1+k*ksize1]
@@ -433,7 +433,7 @@ public class RHSCompute extends LUBase{
 		      +           u[m+i*isize1+(j+2)*jsize1+k*ksize1] );
 	}
       }
-      
+
       for(m=0;m<=4;m++){
 	rsd[m+i*isize1+(ny-3)*jsize1+k*ksize1] = rsd[m+i*isize1+(ny-3)*jsize1+k*ksize1]
 	  - dssp * (             u[m+i*isize1+(ny-5)*jsize1+k*ksize1]
@@ -444,12 +444,12 @@ public class RHSCompute extends LUBase{
                  - dssp * (             u[m+i*isize1+(ny-4)*jsize1+k*ksize1]
 			   - 4.0 * u[m+i*isize1+(ny-3)*jsize1+k*ksize1]
 			   + 5.0 * u[m+i*isize1+(ny-2)*jsize1+k*ksize1] );
-      }      
+      }
     }
   }
       break;
-      case 4: 
-    
+      case 4:
+
 //---------------------------------------------------------------------
 //   zeta-direction flux differences
 //---------------------------------------------------------------------
@@ -466,14 +466,14 @@ public class RHSCompute extends LUBase{
 	flux[3+k*isize2] = u[3+i*isize1+j*jsize1+k*ksize1] * u41 + c2 * (u[4+i*isize1+j*jsize1+k*ksize1]-q);
                flux[4+k*isize2] = ( c1 * u[4+i*isize1+j*jsize1+k*ksize1] - c2 * q ) * u41;
       }
-      
+
       for(k=1;k<=nz - 2;k++){
 	for(m=0;m<=4;m++){
 	  rsd[m+i*isize1+j*jsize1+k*ksize1] =  rsd[m+i*isize1+j*jsize1+k*ksize1]
 	    - tz2 * ( flux[m+(k+1)*isize2] - flux[m+(k-1)*isize2] );
 	}
       }
-      
+
       for(k=1;k<=nz-1;k++){
 	tmp = rho_i[i+j*jsize3+k*ksize3];
 	
@@ -499,7 +499,7 @@ public class RHSCompute extends LUBase{
 	      * tz3 * ( Math.pow(u41k,2) - Math.pow(u41km1,2) )
 		+ c1 * c5 * tz3 * ( u51k - u51km1 );
             }
-      
+
       for(k=1;k<=nz - 2;k++){
 	rsd[0+i*isize1+j*jsize1+k*ksize1] = rsd[0+i*isize1+j*jsize1+k*ksize1]
 	  + dz1 * tz1 * (            u[0+i*isize1+j*jsize1+(k-1)*ksize1]
@@ -526,7 +526,7 @@ public class RHSCompute extends LUBase{
 			   - 2.0 * u[4+i*isize1+j*jsize1+k*ksize1]
                                    +           u[4+i*isize1+j*jsize1+(k+1)*ksize1] );
       }
-      
+
 //---------------------------------------------------------------------
 //   fourth-order dissipation
 //---------------------------------------------------------------------
@@ -541,7 +541,7 @@ public class RHSCompute extends LUBase{
 		   - 4.0 * u[m+i*isize1+j*jsize1+3*ksize1]
 		   +       u[m+i*isize1+j*jsize1+4*ksize1] );
     }
-      
+
       for(k=3;k<=nz - 4;k++){
 	for(m=0;m<=4;m++){
 	  rsd[m+i*isize1+j*jsize1+k*ksize1] = rsd[m+i*isize1+j*jsize1+k*ksize1]
@@ -552,7 +552,7 @@ public class RHSCompute extends LUBase{
 		      +           u[m+i*isize1+j*jsize1+(k+2)*ksize1] );
 	}
       }
-      
+
       for(m=0;m<=4;m++){
 	rsd[m+i*isize1+j*jsize1+(nz-3)*ksize1] = rsd[m+i*isize1+j*jsize1+(nz-3)*ksize1]
 	  - dssp * (             u[m+i*isize1+j*jsize1+(nz-5)*ksize1]
@@ -567,11 +567,11 @@ public class RHSCompute extends LUBase{
     }
   }
     break;
-    
+
     }
     state++;
     if(state==5)state=1;
-  } 
+  }
 }
 
 

@@ -47,7 +47,7 @@ public class CGWorker extends CGBase{
   public boolean done = true;
   public int id;
   public int TaskOrder;
-  
+
   int start1, end1;
   public double alpha,beta;
   public CGWorker(CG cg,int st,int end){
@@ -73,7 +73,7 @@ public class CGWorker extends CGBase{
     x = cg.x;
     z = cg.z;
   }
-  
+
   public void run(){
     int state=0;
     for(;;){
@@ -81,7 +81,7 @@ public class CGWorker extends CGBase{
         while(done){
           try{
              wait();
-             synchronized(master){ 
+             synchronized(master){
 	       master.notify();
 //	       alpha=master.alpha;
 //	       beta=master.beta;
@@ -106,7 +106,7 @@ public class CGWorker extends CGBase{
               break;
         }
         synchronized(master){
-  	  done=true;master.notify();	  
+  	  done=true;master.notify();	
         }
       }
     }
@@ -127,7 +127,7 @@ public class CGWorker extends CGBase{
     for(int j=start1;j<=end1;j++){
       z[j] = z[j] + alpha*p[j];
       r[j] = r[j] - alpha*q[j];
-    }	    
+    }	
 //---------------------------------------------------------------------
 //  rho = r.r
 //  Now, obtain the norm of r: First, sum squares of r elements locally...
@@ -147,7 +147,7 @@ public class CGWorker extends CGBase{
       r[j] = x[j];
       p[j] = x[j];
       rho += x[j]*x[j];
-    }		 
+    }		
     rhomaster[id]=rho;
   }
 
@@ -163,12 +163,12 @@ public class CGWorker extends CGBase{
   	sum += a[k]*z[colidx[k]];
       }
       r[j] = sum;
-    }	    
+    }	
 //---------------------------------------------------------------------
 //  At this point, r contains A.z
 //---------------------------------------------------------------------
     double sum = 0.0;
-    for(int j=start1;j<=end1;j++) sum+=(x[j]-r[j])*(x[j]-r[j]);      
+    for(int j=start1;j<=end1;j++) sum+=(x[j]-r[j])*(x[j]-r[j]);
     rnormmaster[id]=sum;
   }
 }

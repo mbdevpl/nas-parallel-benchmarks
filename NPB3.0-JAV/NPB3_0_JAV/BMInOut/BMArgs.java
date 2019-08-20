@@ -50,56 +50,56 @@ public class BMArgs implements Serializable{
   public BMArgs(){
     CLASS='U';
     num_threads=4;
-    serial = true;  
+    serial = true;
   }
-  static public void ParseCmdLineArgs(String argv[],String BMName){  
+  static public void ParseCmdLineArgs(String argv[],String BMName){
    for(int i=0; i<argv.length; i++){
-     if(   argv[i].equals("SERIAL") 
-     	|| argv[i].equals("serial") 
-     	|| argv[i].equals("-serial")  
+     if(   argv[i].equals("SERIAL")
+     	|| argv[i].equals("serial")
+     	|| argv[i].equals("-serial")
      	|| argv[i].equals("-SERIAL")){
-       serial = true; 
-     }else  
-     if(   argv[i].startsWith("class=") 
-     	|| argv[i].startsWith("CLASS=") 
-     	|| argv[i].startsWith("-class") 
+       serial = true;
+     }else
+     if(   argv[i].startsWith("class=")
+     	|| argv[i].startsWith("CLASS=")
+     	|| argv[i].startsWith("-class")
      	|| argv[i].startsWith("-CLASS")){
-       
+
        if( argv[i].length()>6 )
-     	 CLASS = Character.toUpperCase( argv[i].charAt(6) ); 
+     	 CLASS = Character.toUpperCase( argv[i].charAt(6) );
        if(CLASS!='A' && CLASS!='B' && CLASS!='C' && CLASS!='S' && CLASS!='W' ){
-     	 System.out.println("classes allowed are A,B,C,W and S.");  
+     	 System.out.println("classes allowed are A,B,C,W and S.");
      	 commandLineError(BMName);
        }
-     }else if(   argv[i].startsWith("np=") 
-     	      || argv[i].startsWith("NP=") 
-     	      || argv[i].startsWith("-NP") 
+     }else if(   argv[i].startsWith("np=")
+     	      || argv[i].startsWith("NP=")
+     	      || argv[i].startsWith("-NP")
      	      || argv[i].startsWith("-np")){
      	 try{
      	   if( argv[i].length()>3 )
      	     num_threads = Integer.parseInt(argv[i].substring(3));
-             serial = false; 
+             serial = false;
      	 }catch(Exception e){
-     	   System.out.println( "argument to " + argv[i].substring(0,3) 
+     	   System.out.println( "argument to " + argv[i].substring(0,3)
      			      +" must be an integer." );
      	   commandLineError(BMName);
      	 }
-       }    
+       }
     }
   }
   public static void commandLineError(String BMName){
     System.out.println("synopsis: java "+BMName
     		      +" CLASS=[ABCWS] -serial [-NPnnn]");
-    System.out.println( "[ABCWS] is the size class \n" 
-    		       +"-serial specifies the serial version and\n" 
+    System.out.println( "[ABCWS] is the size class \n"
+    		       +"-serial specifies the serial version and\n"
     		       +"-NP specifies number of threads where nnn "
     		       +"is an integer");
     System.exit(1);	
-  } 
+  }
   public static void outOfMemoryMessage(){
     System.out.println( "The java maximum heap size is "
     		       +"to small to run this benchmark class");
-    System.out.println( "To allocate more memory, use the -mxn option" 
+    System.out.println( "To allocate more memory, use the -mxn option"
         	       +" where n is the number of bytes to be allocated");
   }
   public static void Banner(String BMName,

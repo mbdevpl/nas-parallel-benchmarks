@@ -47,7 +47,7 @@ c---------------------------------------------------------------------
 
 c This doesn't work, because the compiler does the calculation in 32
 c bits and overflows. No standard way (without f90 stuff) to specify
-c that the rhs should be done in 64 bit arithmetic. 
+c that the rhs should be done in 64 bit arithmetic.
 c      parameter(i246m1=2**46-1)
       save i246m1
       data i246m1/X'00003FFFFFFFFFFF'/
@@ -56,8 +56,8 @@ c      parameter(i246m1=2**46-1)
 
 c Note that the v6 compiler on an R8000 does something stupid with
 c the above. Using the following instead (or various other things)
-c makes the calculation run almost 10 times as fast. 
-c 
+c makes the calculation run almost 10 times as fast.
+c
 c      save d2m46
 c      data d2m46/0.0d0/
 c      if (d2m46 .eq. 0.0d0) then

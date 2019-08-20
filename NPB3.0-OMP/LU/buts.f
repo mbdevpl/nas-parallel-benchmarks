@@ -30,10 +30,10 @@ c---------------------------------------------------------------------
       integer k
       double precision  omega
 c---------------------------------------------------------------------
-c   To improve cache performance, second two dimensions padded by 1 
+c   To improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.  Only needed in v.
 c---------------------------------------------------------------------
-      double precision  v( 5,ldmx/2*2+1, ldmy/2*2+1, *), 
+      double precision  v( 5,ldmx/2*2+1, ldmy/2*2+1, *),
      >        tv(5, ldmx/2*2+1, ldmy),
      >        d( 5, 5, ldmx/2*2+1, ldmy),
      >        udx( 5, 5, ldmx/2*2+1, ldmy),
@@ -64,7 +64,7 @@ c---------------------------------------------------------------------
       do j = jend, jst, -1
          do i = iend, ist, -1
             do m = 1, 5
-                  tv( m, i, j ) = 
+                  tv( m, i, j ) =
      >      omega * (  udz( m, 1, i, j ) * v( 1, i, j, k+1 )
      >               + udz( m, 2, i, j ) * v( 2, i, j, k+1 )
      >               + udz( m, 3, i, j ) * v( 3, i, j, k+1 )
@@ -274,6 +274,6 @@ c---------------------------------------------------------------------
 !$omp flush(isync)
       endif
 
- 
+
       return
       end

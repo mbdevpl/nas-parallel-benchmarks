@@ -8,33 +8,33 @@ default: header
 BT: bt
 bt: header
 	cd BT; $(MAKE) CLASS=$(CLASS)
-		       
-SP: sp		       
-sp: header	       
+		
+SP: sp		
+sp: header	
 	cd SP; $(MAKE) CLASS=$(CLASS)
-		       
-LU: lu		       
-lu: header	       
+		
+LU: lu		
+lu: header	
 	cd LU; $(MAKE) CLASS=$(CLASS)
-		       
-MG: mg		       
-mg: header	       
+		
+MG: mg		
+mg: header	
 	cd MG; $(MAKE) CLASS=$(CLASS)
-		       
-FT: ft		       
-ft: header	       
+		
+FT: ft		
+ft: header	
 	cd FT; $(MAKE) CLASS=$(CLASS)
-		       
-IS: is		       
-is: header	       
+		
+IS: is		
+is: header	
 	cd IS; $(MAKE) CLASS=$(CLASS)
-		       
-CG: cg		       
-cg: header	       
+		
+CG: cg		
+cg: header	
 	cd CG; $(MAKE) CLASS=$(CLASS)
-		       
-EP: ep		       
-ep: header	       
+		
+EP: ep		
+ep: header	
 	cd EP; $(MAKE) CLASS=$(CLASS)
 
 # Awk script courtesy cmg@cray.com
@@ -48,7 +48,7 @@ suite:
 # are defined) but on a really clean system this will won't work
 # because those makefiles need config/make.def
 clean:
-	- rm -f core 
+	- rm -f core
 	- rm -f *~ */core */*~ */*.o */npbparams.h */*.obj */*.exe
 	- rm -f sys/setparams sys/makesuite sys/setparams.h
 	- rm -f omp_lib_dum/*.a
@@ -61,7 +61,7 @@ veryclean: clean
 header:
 	@ sys/print_header
 
-kit: 
+kit:
 	- makekit -s100k -k30 * */* */*/*
 
 

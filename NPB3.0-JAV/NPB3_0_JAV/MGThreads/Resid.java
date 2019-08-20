@@ -47,12 +47,12 @@ public class Resid extends MGBase{
   public int id;
   public boolean visr;
   public boolean done=true;
-  
+
   public int n1, n2, n3;
   public int off;
-  
+
   int state=0;
-  int start,end,work;	      
+  int start,end,work;	
   double u1[],u2[];
 
   public Resid(MG mg){
@@ -86,7 +86,7 @@ public class Resid extends MGBase{
           step();
           synchronized(master){done=true; master.notify();}
         }
-      }       
+      }
   }
 
     public void step(){
@@ -103,7 +103,7 @@ public class Resid extends MGBase{
                       + u[off+i1+n1*(i2-1+n3*(i3+1))] + u[off+i1+n1*(i2+1+n3*(i3+1))];
             }
             for(i1=1;i1<n1-1;i1++){
-               r[off+i1+n1*(i2+n3*i3)] = 
+               r[off+i1+n1*(i2+n3*i3)] =
 	       tmp[off+i1+n1*(i2+n3*i3)]
                            - a[0] * u[off+i1+n1*(i2+n3*i3)]
 //c---------------------------------------------------------------------
@@ -131,7 +131,7 @@ public class Resid extends MGBase{
             r[off+i1+n1*(n2-1+n2*i3)] = r[off+i1+n1*(1+n2*i3)];
          }
     }
-    
+
     private void GetWork(){
       int workpt=(wend-wstart)/num_threads;
       int remainder=wend-wstart-workpt*num_threads;

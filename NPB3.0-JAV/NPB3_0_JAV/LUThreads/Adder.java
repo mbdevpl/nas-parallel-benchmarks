@@ -64,26 +64,26 @@ public class Adder extends LUBase{
     isiz1=lu.isiz1;
     isiz2=lu.isiz2;
     isiz3=lu.isiz3;
-    
+
     itmax_default=lu.itmax_default;
     dt_default=lu.dt_default;
     inorm_default=lu.inorm_default;
-    
+
     u=lu.u;
     rsd=lu.rsd;
     frct=lu.frct;
     isize1=lu.isize1;
     jsize1=lu.jsize1;
     ksize1=lu.ksize1;
-    
+
     flux=lu.flux;
     isize2=lu.isize2;
-    
+
     qs=lu.qs;
     rho_i=lu.rho_i;
     jsize3=lu.jsize3;
     ksize3=lu.ksize3;
-    
+
     a=lu.a;
     b=lu.b;
     c=lu.c;
@@ -95,11 +95,11 @@ public class Adder extends LUBase{
     nx=lu.nx;
     ny=lu.ny;
     nz=lu.nz;
-    
+
     nx0=lu.nx0;
     ny0=lu.ny0;
     nz0=lu.nz0;
-    
+
     ist=lu.ist;
     iend=lu.iend;
     jst=lu.jst;
@@ -112,7 +112,7 @@ public class Adder extends LUBase{
     ki2=lu.ki2;
 
     dxi=lu.dxi;
-    deta=lu.deta; 
+    deta=lu.deta;
     dzeta=lu.dzeta;
     tx1=lu.tx1;
     tx2=lu.tx2;
@@ -142,14 +142,14 @@ public class Adder extends LUBase{
     dz4=lu.dz4;
     dz5=lu.dz5;
     dssp=lu.dssp;
-    
+
     dt=lu.dt;
     omega=lu.omega;
     frc=lu.frc;
     ttotal=lu.ttotal;
   }
 
-  public void run(){    
+  public void run(){
     for(;;){
       synchronized(this){
       while(done==true){
@@ -163,10 +163,10 @@ public class Adder extends LUBase{
       }
     }
   }
-  
+
   public void step(){
     int i,j,m, k;
-    double tmp = 1.0 / ( omega * ( 2.0 - omega ) ); 
+    double tmp = 1.0 / ( omega * ( 2.0 - omega ) );
 
     for(k=lower_bound1;k<=upper_bound1;k++){
       for(j=jst-1;j<=jend-1;j++){

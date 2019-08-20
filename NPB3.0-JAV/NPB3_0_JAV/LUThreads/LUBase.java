@@ -48,14 +48,14 @@ public class LUBase extends Thread{
 
   public static final String BMName="LU";
   public char CLASS = 'S';
-  
+
   protected int isiz1, isiz2, isiz3;
   protected int itmax_default, inorm_default;
   protected double dt_default;
   protected int ipr_default = 1;
-  protected static final double 
-                   omega_default = 1.2,tolrsd1_def=.00000001, 
-                   tolrsd2_def=.00000001, tolrsd3_def=.00000001, 
+  protected static final double
+                   omega_default = 1.2,tolrsd1_def=.00000001,
+                   tolrsd2_def=.00000001, tolrsd3_def=.00000001,
                    tolrsd4_def=.00000001, tolrsd5_def=.00000001,
 		   c1 = 1.4, c2 = 0.4, c3 = .1, c4 = 1, c5 = 1.4;
 //---------------------------------------------------------------------
@@ -83,16 +83,16 @@ public class LUBase extends Thread{
 
 //---------------------------------------------------------------------
 //   field variables and residuals
-//   to improve cache performance, second two dimensions padded by 1 
+//   to improve cache performance, second two dimensions padded by 1
 //   for even number sizes only.
-//   Note: corresponding array (called "v") in routines blts, buts, 
+//   Note: corresponding array (called "v") in routines blts, buts,
 //   and l2norm are similarly padded
 //---------------------------------------------------------------------
 
   protected double u[], rsd[], frct[];
-  protected int isize1, jsize1, ksize1; 
+  protected int isize1, jsize1, ksize1;
 
-  protected double flux[]; 
+  protected double flux[];
   protected int isize2;
 
   protected double qs[], rho_i[];
@@ -107,7 +107,7 @@ public class LUBase extends Thread{
 //---------------------------------------------------------------------
   protected int itmax;
   protected double dt, omega, frc, ttotal,
-            tolrsd[] = new double[5],rsdnm[] = new double[5], 
+            tolrsd[] = new double[5],rsdnm[] = new double[5],
             errnm[] = new double[5];
 
   protected double   a[], b[], c[], d[];
@@ -115,7 +115,7 @@ public class LUBase extends Thread{
 //---------------------------------------------------------------------
 //   coefficients of the exact solution
 //---------------------------------------------------------------------
-  protected static double ce[] ={ 
+  protected static double ce[] ={
                  2.0, 1.0, 2.0, 2.0, 5.0,
     		 0.0, 0.0, 2.0, 2.0, 4.0,
     		 0.0, 0.0, 0.0, 0.0, 3.0,
@@ -178,7 +178,7 @@ public class LUBase extends Thread{
     isize1=5;
     jsize1=5*(isiz1/2*2+1);
     ksize1=5*(isiz1/2*2+1)*(isiz2/2*2+1);
-    
+
     flux= new double[5*isiz1];
     isize2=5;
 
@@ -187,16 +187,16 @@ public class LUBase extends Thread{
     jsize3 = (isiz1/2*2+1);
     ksize3 = (isiz1/2*2+1)*(isiz2/2*2+1);
 
-    a = new double[5*5*(isiz1/2*2+1)*(isiz2)]; 
+    a = new double[5*5*(isiz1/2*2+1)*(isiz2)];
     b = new double[5*5*(isiz1/2*2+1)*(isiz2)];
-    c = new double[5*5*(isiz1/2*2+1)*(isiz2)]; 
+    c = new double[5*5*(isiz1/2*2+1)*(isiz2)];
     d = new double[5*5*(isiz1/2*2+1)*(isiz2)];
 
     isize4=5;
     jsize4=5*5;
     ksize4=5*5*(isiz1/2*2+1);
   }
-  
+
   protected Thread master=null;
   protected int num_threads;
   protected RHSCompute rhscomputer[] = null;
@@ -204,20 +204,20 @@ public class LUBase extends Thread{
   protected Adder adder[] =null;
   protected LowerJac lowerjac[] =null;
   protected UpperJac upperjac[] =null;
-  
+
   public void setupThreads(LU lu){
     master = lu;
     if(num_threads>isiz1-2)
       num_threads=isiz1-2;
     int interval1[]=new int[num_threads];
-    int interval2[]=new int[num_threads];    
+    int interval2[]=new int[num_threads];
     set_interval(num_threads, isiz1, interval1);
     set_interval(num_threads, isiz1-2, interval2);
     int partition1[][] = new int[interval1.length][2];
     int partition2[][] = new int[interval2.length][2];
     set_partition(0,interval1,partition1);
     set_partition(1,interval2,partition2);
-   
+
     rhscomputer = new RHSCompute[num_threads];
     scaler = new Scale[num_threads];
     adder = new Adder[num_threads];
@@ -250,14 +250,14 @@ public class LUBase extends Thread{
     }
   }
 
-  public void checksum(double array[], int size, 
+  public void checksum(double array[], int size,
                        String arrayname, boolean stop){
     double sum = 0;
     for(int i=0; i<size; i++) sum += array[i];
     System.out.println("array:"+arrayname + " checksum is: " + sum);
     if(stop)System.exit(0);
   }
-  
+
   public void set_interval(int threads, int problem_size, int interval[] ){
     interval[0]= problem_size/threads;
     for(int i=1;i<threads;i++)
@@ -265,13 +265,13 @@ public class LUBase extends Thread{
     int remainder = problem_size%threads;
     for(int i=0;i<remainder;i++)
       interval[i]++;
-  } 
-  
+  }
+
   public void set_partition(int start, int interval[], int array[][]){
     array[0][0]=start;
     if(start==0) array[0][1]=interval[0]-1;
     else array[0][1]=interval[0];
-    
+
     for(int i=1;i<interval.length;i++){
       array[i][0]=array[i-1][1]+1;
       array[i][1]=array[i-1][1]+interval[i];

@@ -1,4 +1,4 @@
-#    This is for a Sun SparcCenter or UltraEnterprise machine 
+#    This is for a Sun SparcCenter or UltraEnterprise machine
 F77     = f77
 FLINK      = f77
 #    sparc10,20 SparcCenter{1,2}000 (uname -m returns sun4m)

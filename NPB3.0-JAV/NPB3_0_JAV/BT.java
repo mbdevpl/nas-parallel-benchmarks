@@ -56,15 +56,15 @@ public class BT extends BTBase{
   public int bid=-1;
   public BMResults results;
   public boolean serial=true;
-  double fjac[];  
-  double njac[];  
-  double lhs[];  
-  
+  double fjac[];
+  double njac[];
+  double lhs[];
+
   double tmp1;
   double tmp2;
   double tmp3;
-   
-  public BT(char clss, int threads,boolean ser){            
+
+  public BT(char clss, int threads,boolean ser){
     super(clss, threads);
     serial=ser;
     fjac =  new double[5*5*(problem_size+1)];
@@ -78,15 +78,15 @@ public class BT extends BTBase{
     char CLSS=BMArgs.CLASS;
     int np=BMArgs.num_threads;
     boolean serial=BMArgs.serial;
-    try{ 
+    try{
       bt = new BT(CLSS,np,serial);
     }catch(OutOfMemoryError e){
       BMArgs.outOfMemoryMessage();
       System.exit(0);
-    }         
+    }
      bt.runBenchMark();
   }
-  
+
   public void run(){runBenchMark();}
 
   public void runBenchMark(){
@@ -101,30 +101,30 @@ public class BT extends BTBase{
     set_constants();
     initialize();
     exact_rhs();
-    
-    if(!serial) setupThreads(this);    
+
+    if(!serial) setupThreads(this);
 //---------------------------------------------------------------------
 //      do one time step to touch all code, and reinitialize
 //---------------------------------------------------------------------
     if(serial) adi_serial();
-    else adi(); 
+    else adi();
     initialize();
-    
+
     timer.resetAllTimers();
     timer.start(t_total);
 
     for(int step=1;step<=niter;step++){   //niter
-      if ( step % 20 == 0 || step == 1||step==niter) {   
+      if ( step % 20 == 0 || step == 1||step==niter) {
         System.out.println("Time step "+step);
       }
       if(serial) adi_serial();
-      else adi(); 
+      else adi();
     }
 
     timer.stop(t_total);
-    int verified = verify(niter); 
+    int verified = verify(niter);
 
-    double time = timer.readTimer(t_total);  
+    double time = timer.readTimer(t_total);
     results=new BMResults(BMName,
     			  CLASS,
     			  grid_points[0],
@@ -141,7 +141,7 @@ public class BT extends BTBase{
     results.print();				
     if(timeron) printTimers(t_names,trecs,time);
   }
-  
+
   public double getMFLOPS(double total_time,int niter){
     double mflops = 0.0;
     if( total_time > 0 ){
@@ -167,10 +167,10 @@ public class BT extends BTBase{
 
     if(timeron)timer.start(t_rhsx);
     doRHS();
-    if(timeron)timer.stop(t_rhsx);   
+    if(timeron)timer.stop(t_rhsx);
 
     if(timeron)timer.start(t_rhsy);
-    doRHS(); 
+    doRHS();
     if(timeron)timer.stop(t_rhsy);
 
     if(timeron)timer.start(t_rhsz);
@@ -189,7 +189,7 @@ public class BT extends BTBase{
         }
       for(int m=0;m<num_threads;m++)
           while(!xsolver[m].done){
-	    try{wait();}catch(InterruptedException e){} 
+	    try{wait();}catch(InterruptedException e){}
             notifyAll();
 	  }
     }
@@ -219,7 +219,7 @@ public class BT extends BTBase{
         }
       for(int m=0;m<num_threads;m++)
           while(!zsolver[m].done){
-	    try{wait();}catch(InterruptedException e){} 
+	    try{wait();}catch(InterruptedException e){}
             notifyAll();
 	  }
     }
@@ -234,12 +234,12 @@ public class BT extends BTBase{
         }
       for(int m=0;m<num_threads;m++)
           while(!rhsadder[m].done){
-	    try{wait();}catch(InterruptedException e){} 
+	    try{wait();}catch(InterruptedException e){}
             notifyAll();
 	  }
     }
-    if(timeron)timer.stop(t_add);    
-  } 
+    if(timeron)timer.stop(t_add);
+  }
 
   synchronized void doRHS(){
     int m;
@@ -257,14 +257,14 @@ public class BT extends BTBase{
 
   public void printTimers(String t_names[], double trecs[],double tmax){
     DecimalFormat fmt = new DecimalFormat("0.000");
-    double t;      
+    double t;
     System.out.println("SECTION  Time           (secs)");
     for(int i=1;i<=t_last;i++) trecs[i] = timer.readTimer(i);
     if (tmax == 0.0) tmax = 1.0;
     for(int i=1;i<=t_last;i++){
       System.out.println(t_names[i]+":"+fmt.format(trecs[i])+":"+
                          "  ("+fmt.format(trecs[i]*100/tmax)+"%)");
-      
+
       if (i==t_rhs) {
 	t = trecs[t_rhsx] + trecs[t_rhsy] + trecs[t_rhsz];
 	System.out.print("    --> total ");
@@ -296,9 +296,9 @@ public class BT extends BTBase{
 	System.out.print( "  " );
 	System.out.println(fmt.format(t*100/tmax));  	
       }
-    } 
+    }
   }
-  
+
   public int getInputPars(){
     int niter=0;
     File f2 = new File("inputbt.data");
@@ -333,10 +333,10 @@ public class BT extends BTBase{
       System.out.println("Problem size too big for array");
       System.exit(0);
     }
-    System.out.println("Iterations: "+niter+" dt: "+dt); 
+    System.out.println("Iterations: "+niter+" dt: "+dt);
     return niter;
   }
-  
+
   public void setTimers(String t_names[]){
     File f1 = new File("timer.flag");
     timeron = false;
@@ -361,26 +361,26 @@ public class BT extends BTBase{
    double add;
 
       for(m=0;m<rms.length;m++) rms[m+rmsoffst] = 0.0;
-      
+
       for(k=1;k<=grid_points[2]-2;k++){
          for(j=1;j<=grid_points[1]-2;j++){
             for(i=1;i<=grid_points[0]-2;i++){
                for(m=0;m<rms.length;m++){
                   add = rhs[m+i*isize2+j*jsize2+k*ksize2];
                   rms[m] += add*add;
-               } 
-            } 
-         } 
-      } 
+               }
+            }
+         }
+      }
 
       for(m=0;m<rms.length;m++){
          for(d=0;d<=2;d++){
             rms[m] /= grid_points[d]-2;
-         } 
+         }
          rms[m] = Math.sqrt(rms[m+rmsoffst]);
-      } 
+      }
   }
-  
+
   public void error_norm( double rms[], int rmsoffst ){
   int i, j, k, m, d;
   double xi, eta, zeta, u_exact[]=new double[5], add;
@@ -412,8 +412,8 @@ public class BT extends BTBase{
 
   public int verify(int no_time_steps){
     double xcrref[]=new double[5],xceref[]=new double[5],
-           xcrdif[]=new double[5],xcedif[]=new double[5], 
-           xce[]=new double[5], xcr[]=new double[5], 
+           xcrdif[]=new double[5],xcedif[]=new double[5],
+           xce[]=new double[5], xcr[]=new double[5],
 	   dtref=0;
     int m;
     int verified=-1;
@@ -438,7 +438,7 @@ public class BT extends BTBase{
      if (  grid_points[0] == 12
 	       &&grid_points[1] == 12
 	       &&grid_points[2] == 12
-	       &&no_time_steps  == 60    
+	       &&no_time_steps  == 60
      ){
 
        clss = 'S';
@@ -469,7 +469,7 @@ public class BT extends BTBase{
 	       (grid_points[1] == 24) &&
 	       (grid_points[2] == 24) &&
 	       (no_time_steps  == 200) ) {
-       
+
        clss = 'W';
        dtref = 0.0008;
 //---------------------------------------------------------------------
@@ -527,7 +527,7 @@ public class BT extends BTBase{
 		(grid_points[1] == 102) &&
 		(grid_points[2] == 102) &&
 		(no_time_steps == 200) ) {
-       
+
        clss = 'B';
        dtref = .0003;
 
@@ -557,7 +557,7 @@ public class BT extends BTBase{
 	       (grid_points[1] == 162) &&
 	       (grid_points[2] == 162) &&
 	       (no_time_steps == 200) ) {
-       
+
        clss = 'C';
        dtref = .0001;
 
@@ -582,9 +582,9 @@ public class BT extends BTBase{
 //---------------------------------------------------------------------
 //    Compute the difference of solution values and the known reference values.
 //---------------------------------------------------------------------
-     for(m=0;m<xcr.length;m++){       
+     for(m=0;m<xcr.length;m++){
 	 xcrdif[m] = Math.abs((xcr[m]-xcrref[m])/xcrref[m]);
-	 xcedif[m] = Math.abs((xce[m]-xceref[m])/xceref[m]);      
+	 xcedif[m] = Math.abs((xce[m]-xceref[m])/xceref[m]);
      }
 //---------------------------------------------------------------------
 //   tolerance level
@@ -601,14 +601,14 @@ public class BT extends BTBase{
        }else{
 	 verified = 0;
 	 clss = 'U';
-	 System.out.println("DT does not match the reference value of "+dtref);	 
+	 System.out.println("DT does not match the reference value of "+dtref);	
        }
      }else{
-       System.out.println("Unknown class");  
+       System.out.println("Unknown class");
      }
-     
+
      if (clss != 'U') System.out.println("Comparison of RMS-norms of residual");
-     else System.out.println("RMS-norms of residual"); 
+     else System.out.println("RMS-norms of residual");
      verified=BMResults.printComparisonStatus(clss,verified,epsilon,
                                               xcr,xcrref,xcrdif);
 
@@ -620,10 +620,10 @@ public class BT extends BTBase{
      verified=BMResults.printComparisonStatus(clss,verified,epsilon,
                                               xce,xceref,xcedif);
 
-     BMResults.printVerificationStatus(clss,verified,BMName); 
+     BMResults.printVerificationStatus(clss,verified,BMName);
      return verified;
   }
-  
+
   public void add(){
     int i, j, k, m;
     if(timeron)timer.start(t_add);
@@ -644,7 +644,7 @@ public class BT extends BTBase{
     int m, i, j, k, ip1, im1, jp1, jm1, km1, kp1;
 
 //---------------------------------------------------------------------
-//     initialize                                  
+//     initialize
 //---------------------------------------------------------------------
       for(k=0;k<=grid_points[2]-1;k++){
          for(j=0;j<=grid_points[1]-1;j++){
@@ -654,9 +654,9 @@ public class BT extends BTBase{
                }
             }
          }
-      } 
+      }
 //---------------------------------------------------------------------
-//     xi-direction flux differences                      
+//     xi-direction flux differences
 //---------------------------------------------------------------------
       for(k=1;k<=grid_points[2]-2;k++){
          zeta = k * dnzm1;
@@ -678,13 +678,13 @@ public class BT extends BTBase{
                }
 
                cuf[i]   = buf[i+1*jsize3] * buf[i+1*jsize3];
-               buf[i+0*jsize3] = cuf[i] + buf[i+2*jsize3] * buf[i+2*jsize3] + 
+               buf[i+0*jsize3] = cuf[i] + buf[i+2*jsize3] * buf[i+2*jsize3] +
                        buf[i+3*jsize3] * buf[i+3*jsize3] ;
                q[i] = 0.5*(buf[i+1*jsize3]*ue[i+1*jsize3] + buf[i+2*jsize3]*ue[i+2*jsize3] +
                        buf[i+3*jsize3]*ue[i+3*jsize3]);
 
             }
-               
+
             for(i=1;i<=grid_points[0]-2;i++){
                im1 = i-1;
                ip1 = i+1;
@@ -703,7 +703,7 @@ public class BT extends BTBase{
                        ue[ip1+2*jsize3]*buf[ip1+1*jsize3]-ue[im1+2*jsize3]*buf[im1+1*jsize3])+
                        xxcon2*(buf[ip1+2*jsize3]-2.0*buf[i+2*jsize3]+buf[im1+2*jsize3])+
                        dx3tx1*( ue[ip1+2*jsize3]-2.0*ue[i+2*jsize3] +ue[im1+2*jsize3]);
-                  
+
                forcing[3+i*isize2+j*jsize2+k*ksize2] = forcing[3+i*isize2+j*jsize2+k*ksize2] - tx2*(
                        ue[ip1+3*jsize3]*buf[ip1+1*jsize3]-ue[im1+3*jsize3]*buf[im1+1*jsize3])+
                        xxcon2*(buf[ip1+3*jsize3]-2.0*buf[i+3*jsize3]+buf[im1+3*jsize3])+
@@ -718,9 +718,9 @@ public class BT extends BTBase{
                        xxcon5*(buf[ip1+4*jsize3]-2.0*buf[i+4*jsize3]+buf[im1+4*jsize3])+
                        dx5tx1*( ue[ip1+4*jsize3]-2.0* ue[i+4*jsize3]+ ue[im1+4*jsize3]);
             }
-	    
+	
 //---------------------------------------------------------------------
-//     Fourth-order dissipation                         
+//     Fourth-order dissipation
 //---------------------------------------------------------------------
 
             for(m=0;m<=4;m++){
@@ -753,9 +753,9 @@ public class BT extends BTBase{
 
          }
       }
-      
+
 //---------------------------------------------------------------------
-//     eta-direction flux differences             
+//     eta-direction flux differences
 //---------------------------------------------------------------------
       for(k=1;k<=grid_points[2]-2;k++){
          zeta = k * dnzm1;
@@ -769,7 +769,7 @@ public class BT extends BTBase{
                for(m=0;m<=4 ;m++){
                   ue[j+m*jsize3] = dtemp[m];
                }
-                  
+
                dtpp = 1.0/dtemp[0];
 
                for(m=1;m<=4;m++){
@@ -777,16 +777,16 @@ public class BT extends BTBase{
                }
 
                cuf[j]   = buf[j+2*jsize3] * buf[j+2*jsize3];
-               buf[j+0*jsize3] = cuf[j] + buf[j+1*jsize3] * buf[j+1*jsize3] + 
+               buf[j+0*jsize3] = cuf[j] + buf[j+1*jsize3] * buf[j+1*jsize3] +
                        buf[j+3*jsize3] * buf[j+3*jsize3];
                q[j] = 0.5*(buf[j+1*jsize3]*ue[j+1*jsize3] + buf[j+2*jsize3]*ue[j+2*jsize3] +
                        buf[j+3*jsize3]*ue[j+3*jsize3]);
             }
-            
+
 	    for(j=1;j<=grid_points[1]-2;j++){
                jm1 = j-1;
                jp1 = j+1;
-                  
+
                forcing[0+i*isize2+j*jsize2+k*ksize2] = forcing[0+i*isize2+j*jsize2+k*ksize2] -
                        ty2*( ue[jp1+2*jsize3]-ue[jm1+2*jsize3] )+
                        dy1ty1*(ue[jp1+0*jsize3]-2.0*ue[j+0*jsize3]+ue[jm1+0*jsize3]);
@@ -816,9 +816,9 @@ public class BT extends BTBase{
                        yycon5*(buf[jp1+4*jsize3]-2.0*buf[j+4*jsize3]+buf[jm1+4*jsize3])+
                        dy5ty1*(ue[jp1+4*jsize3]-2.0*ue[j+4*jsize3]+ue[jm1+4*jsize3]);
             }
-	    
+	
 //---------------------------------------------------------------------
-//     Fourth-order dissipation                      
+//     Fourth-order dissipation
 //---------------------------------------------------------------------
             for(m=0;m<=4;m++){
                j = 1;
@@ -852,7 +852,7 @@ public class BT extends BTBase{
       }
 
 //---------------------------------------------------------------------
-//     zeta-direction flux differences                      
+//     zeta-direction flux differences
 //---------------------------------------------------------------------
       for(j=1;j<=grid_points[1]-2;j++){
          eta = j * dnym1;
@@ -874,25 +874,25 @@ public class BT extends BTBase{
                }
 
                cuf[k]   = buf[k+3*jsize3] * buf[k+3*jsize3];
-               buf[k+0*jsize3] = cuf[k] + buf[k+1*jsize3] * buf[k+1*jsize3] + 
+               buf[k+0*jsize3] = cuf[k] + buf[k+1*jsize3] * buf[k+1*jsize3] +
                        buf[k+2*jsize3] * buf[k+2*jsize3];
                q[k] = 0.5*(buf[k+1*jsize3]*ue[k+1*jsize3] + buf[k+2*jsize3]*ue[k+2*jsize3] +
                        buf[k+3*jsize3]*ue[k+3*jsize3]);
             }
-	    
+	
             for(k=1;k<=grid_points[2]-2;k++){
                km1 = k-1;
                kp1 = k+1;
-               
+
 	       forcing[0+i*isize2+j*jsize2+k*ksize2] = forcing[0+i*isize2+j*jsize2+k*ksize2] -
                        tz2*( ue[kp1+3*jsize3]-ue[km1+3*jsize3] )+
                        dz1tz1*(ue[kp1+0*jsize3]-2.0*ue[k+0*jsize3]+ue[km1+0*jsize3]);
-	       
+	
                forcing[1+i*isize2+j*jsize2+k*ksize2] = forcing[1+i*isize2+j*jsize2+k*ksize2] - tz2 * (
                        ue[kp1+1*jsize3]*buf[kp1+3*jsize3]-ue[km1+1*jsize3]*buf[km1+3*jsize3])+
                        zzcon2*(buf[kp1+1*jsize3]-2.0*buf[k+1*jsize3]+buf[km1+1*jsize3])+
                        dz2tz1*( ue[kp1+1*jsize3]-2.0* ue[k+1*jsize3]+ ue[km1+1*jsize3]);
-	       
+	
                forcing[2+i*isize2+j*jsize2+k*ksize2] = forcing[2+i*isize2+j*jsize2+k*ksize2] - tz2 * (
                        ue[kp1+2*jsize3]*buf[kp1+3*jsize3]-ue[km1+2*jsize3]*buf[km1+3*jsize3])+
                        zzcon2*(buf[kp1+2*jsize3]-2.0*buf[k+2*jsize3]+buf[km1+2*jsize3])+
@@ -913,9 +913,9 @@ public class BT extends BTBase{
                        zzcon5*(buf[kp1+4*jsize3]-2.0*buf[k+4*jsize3]+buf[km1+4*jsize3])+
                        dz5tz1*( ue[kp1+4*jsize3]-2.0*ue[k+4*jsize3]+ ue[km1+4*jsize3]);
             }
-	    
+	
 //---------------------------------------------------------------------
-//     Fourth-order dissipation                        
+//     Fourth-order dissipation
 //---------------------------------------------------------------------
             for(m=0;m<=4;m++){
                k = 1;
@@ -948,7 +948,7 @@ public class BT extends BTBase{
       }
 
 //---------------------------------------------------------------------
-//     now change the sign of the forcing function, 
+//     now change the sign of the forcing function,
 //---------------------------------------------------------------------
       for(k=1;k<=grid_points[2]-2;k++){
          for(j=1;j<=grid_points[1]-2;j++){
@@ -960,7 +960,7 @@ public class BT extends BTBase{
          }
       }
   }
-  
+
    public void x_solve(){
      int i,j,k,m,n,isize;
 
@@ -989,7 +989,7 @@ public class BT extends BTBase{
                fjac[0+3*isize4+i*jsize4] = 0.0;
                fjac[0+4*isize4+i*jsize4] = 0.0;
 
-               fjac[1+0*isize4+i*jsize4] = -(u[1+i*isize2+j*jsize2+k*ksize2]) * tmp2 * 
+               fjac[1+0*isize4+i*jsize4] = -(u[1+i*isize2+j*jsize2+k*ksize2]) * tmp2 *
                     u[1+i*isize2+j*jsize2+k*ksize2]
                     + c2 * qs[i+j*jsize1+k*ksize1];
                fjac[1+1*isize4+i*jsize4] = ( 2.0 - c2 )
@@ -1013,7 +1013,7 @@ public class BT extends BTBase{
                fjac[4+0*isize4+i*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1]
                     - c1 * u[4+i*isize2+j*jsize2+k*ksize2] )
                     * ( u[1+i*isize2+j*jsize2+k*ksize2] * tmp2 );
-               fjac[4+1*isize4+i*jsize4] = c1 *  u[4+i*isize2+j*jsize2+k*ksize2] * tmp1 
+               fjac[4+1*isize4+i*jsize4] = c1 *  u[4+i*isize2+j*jsize2+k*ksize2] * tmp1
                     - c2
                     * ( u[1+i*isize2+j*jsize2+k*ksize2]*u[1+i*isize2+j*jsize2+k*ksize2] * tmp2
                     + qs[i+j*jsize1+k*ksize1]);
@@ -1064,7 +1064,7 @@ public class BT extends BTBase{
 //     now jacobians set, so form left hand side in x direction
 //---------------------------------------------------------------------
             lhsinit(lhs, isize);
-	    
+	
             for(i=1;i<=isize-1;i++){
 
                tmp1 = dt * tx1;
@@ -1129,7 +1129,7 @@ public class BT extends BTBase{
                lhs[4+4*isize4+aa*jsize4+i*ksize4] = - tmp2 * fjac[4+4*isize4+(i-1)*jsize4]
                     - tmp1 * njac[4+4*isize4+(i-1)*jsize4]
                     - tmp1 * dx5;
-		    
+		
                lhs[0+0*isize4+bb*jsize4+i*ksize4] = 1.0
                     + tmp1 * 2.0 * njac[0+0*isize4+i*jsize4]
                     + tmp1 * 2.0 * dx1;
@@ -1137,9 +1137,9 @@ public class BT extends BTBase{
                lhs[0+2*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+2*isize4+i*jsize4];
                lhs[0+3*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+3*isize4+i*jsize4];
                lhs[0+4*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[0+4*isize4+i*jsize4];
-	      
-	       
-              
+	
+	
+
 	       lhs[1+0*isize4+bb*jsize4+i*ksize4] = tmp1 * 2.0 * njac[1+0*isize4+i*jsize4];
                lhs[1+1*isize4+bb*jsize4+i*ksize4] = 1.0
                     + tmp1 * 2.0 * njac[1+1*isize4+i*jsize4]
@@ -1171,8 +1171,8 @@ public class BT extends BTBase{
                lhs[4+4*isize4+bb*jsize4+i*ksize4] = 1.0
                     + tmp1 * 2.0 * njac[4+4*isize4+i*jsize4]
                     + tmp1 * 2.0 * dx5;
-	       
-               
+	
+
 	       lhs[0+0*isize4+cc*jsize4+i*ksize4] =  tmp2 * fjac[0+0*isize4+(i+1)*jsize4]
                     - tmp1 * njac[0+0*isize4+(i+1)*jsize4]
                     - tmp1 * dx1;
@@ -1236,10 +1236,10 @@ public class BT extends BTBase{
             }
 //---------------------------------------------------------------------
 //     performs guaussian elimination on this cell.
-//     
-//     assumes that unpacking routines for non-first cells 
+//
+//     assumes that unpacking routines for non-first cells
 //     preload C' and rhs' from previous cell.
-//     
+//
 //     assumed send happens outside this routine, but that
 //     c'(IMAX) and rhs'(IMAX) will be sent to next cell
 //---------------------------------------------------------------------
@@ -1247,7 +1247,7 @@ public class BT extends BTBase{
 //---------------------------------------------------------------------
 //     outer most do loops - sweeping in i direction
 //---------------------------------------------------------------------
-	    
+	
 //---------------------------------------------------------------------
 //     multiply c(0,j,k) by b_inverse and copy back to c
 //     multiply rhs(0) by b_inverse(0) and copy to rhs
@@ -1255,10 +1255,10 @@ public class BT extends BTBase{
              binvcrhs( lhs,0+0*isize4+bb*jsize4+0*ksize4,
                               lhs,0+0*isize4+cc*jsize4+0*ksize4,
                               rhs, 0+0*isize2+j*jsize2+k*ksize2);
-	     
+	
 //---------------------------------------------------------------------
 //     begin inner most do loop
-//     do all the elements of the cell unless last 
+//     do all the elements of the cell unless last
 //---------------------------------------------------------------------
             for(i=1;i<=isize-1;i++){
 
@@ -1305,7 +1305,7 @@ public class BT extends BTBase{
 //---------------------------------------------------------------------
              binvrhs( lhs,0+0*isize4+bb*jsize4+isize*ksize4,
                              rhs,0+isize*isize2+j*jsize2+k*ksize2);
-			     
+			
 //---------------------------------------------------------------------
 //     back solve: if last cell, then generate U(isize)=rhs(isize)
 //     else assume U(isize) is loaded in un pack backsub_info
@@ -1316,7 +1316,7 @@ public class BT extends BTBase{
             for(i=isize-1;i>=0;i--){
                for(m=0;m<=BLOCK_SIZE-1;m++){
                   for(n=0;n<=BLOCK_SIZE-1;n++){
-                     rhs[m+i*isize2+j*jsize2+k*ksize2] = rhs[m+i*isize2+j*jsize2+k*ksize2] 
+                     rhs[m+i*isize2+j*jsize2+k*ksize2] = rhs[m+i*isize2+j*jsize2+k*ksize2]
                           - lhs[m+n*isize4+cc*jsize4+i*ksize4]*rhs[n+(i+1)*isize2+j*jsize2+k*ksize2];
                   }
                }
@@ -1325,7 +1325,7 @@ public class BT extends BTBase{
       }
       if(timeron)timer.stop(t_xsolve);
   }
- 
+
     public void compute_rhs(){
     int i, j, k, m;
     double rho_inv, uijk, up1, um1, vijk, vp1, vm1,
@@ -1694,7 +1694,7 @@ public class BT extends BTBase{
       }
       if (timeron) timer.stop(t_rhs);
   }
-  
+
   public void print_lhs(){
     double count1=0,count2=0,count3=0;
     for(int i=0;i<5;i++){
@@ -1722,7 +1722,7 @@ public class BT extends BTBase{
     if (timeron)   timer.start(t_ysolve);
 
 //---------------------------------------------------------------------
-//     This function computes the left hand side for the three y-factors   
+//     This function computes the left hand side for the three y-factors
 //---------------------------------------------------------------------
 
       jsize = grid_points[1]-1;
@@ -1770,10 +1770,10 @@ public class BT extends BTBase{
                fjac[4+0*isize4+j*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1]
                     - c1 * u[4+i*isize2+j*jsize2+k*ksize2] )
                     * u[2+i*isize2+j*jsize2+k*ksize2] * tmp2;
-               fjac[4+1*isize4+j*jsize4] = - c2 * u[1+i*isize2+j*jsize2+k*ksize2]*u[2+i*isize2+j*jsize2+k*ksize2] 
+               fjac[4+1*isize4+j*jsize4] = - c2 * u[1+i*isize2+j*jsize2+k*ksize2]*u[2+i*isize2+j*jsize2+k*ksize2]
                     * tmp2;
-               fjac[4+2*isize4+j*jsize4] = c1 * u[4+i*isize2+j*jsize2+k*ksize2] * tmp1 
-                    - c2 
+               fjac[4+2*isize4+j*jsize4] = c1 * u[4+i*isize2+j*jsize2+k*ksize2] * tmp1
+                    - c2
                     * ( qs[i+j*jsize1+k*ksize1]
                     + u[2+i*isize2+j*jsize2+k*ksize2]*u[2+i*isize2+j*jsize2+k*ksize2] * tmp2 );
                fjac[4+3*isize4+j*jsize4] = - c2 * ( u[2+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
@@ -1826,7 +1826,7 @@ public class BT extends BTBase{
 
                tmp1 = dt * ty1;
                tmp2 = dt * ty2;
-	        
+	
 
                lhs[0+0*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[0+0*isize4+(j-1)*jsize4]
                     - tmp1 * njac[0+0*isize4+(j-1)*jsize4]
@@ -1839,7 +1839,7 @@ public class BT extends BTBase{
                     - tmp1 * njac[0+3*isize4+(j-1)*jsize4];
                lhs[0+4*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[0+4*isize4+(j-1)*jsize4]
                     - tmp1 * njac[0+4*isize4+(j-1)*jsize4];
-	       
+	
                lhs[1+0*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[1+0*isize4+(j-1)*jsize4]
                     - tmp1 * njac[1+0*isize4+(j-1)*jsize4];
                lhs[1+1*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[1+1*isize4+(j-1)*jsize4]
@@ -1851,7 +1851,7 @@ public class BT extends BTBase{
                     - tmp1 * njac[1+3*isize4+(j-1)*jsize4];
                lhs[1+4*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[1+4*isize4+(j-1)*jsize4]
                     - tmp1 * njac[1+4*isize4+(j-1)*jsize4];
-	        
+	
 
                lhs[2+0*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[2+0*isize4+(j-1)*jsize4]
                     - tmp1 * njac[2+0*isize4+(j-1)*jsize4];
@@ -1864,8 +1864,8 @@ public class BT extends BTBase{
                     - tmp1 * njac[2+3*isize4+(j-1)*jsize4];
                lhs[2+4*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[2+4*isize4+(j-1)*jsize4]
                     - tmp1 * njac[2+4*isize4+(j-1)*jsize4];
-	       
-	       
+	
+	
                lhs[3+0*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[3+0*isize4+(j-1)*jsize4]
                     - tmp1 * njac[3+0*isize4+(j-1)*jsize4];
                lhs[3+1*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[3+1*isize4+(j-1)*jsize4]
@@ -1877,7 +1877,7 @@ public class BT extends BTBase{
                     - tmp1 * dy4;
                lhs[3+4*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[3+4*isize4+(j-1)*jsize4]
                     - tmp1 * njac[3+4*isize4+(j-1)*jsize4];
-	        
+	
 
 
                lhs[4+0*isize4+aa*jsize4+j*ksize4] = - tmp2 * fjac[4+0*isize4+(j-1)*jsize4]
@@ -1929,7 +1929,7 @@ public class BT extends BTBase{
                lhs[4+2*isize4+bb*jsize4+j*ksize4] = tmp1 * 2.0 * njac[4+2*isize4+j*jsize4];
                lhs[4+3*isize4+bb*jsize4+j*ksize4] = tmp1 * 2.0 * njac[4+3*isize4+j*jsize4];
                lhs[4+4*isize4+bb*jsize4+j*ksize4] = 1.0
-                    + tmp1 * 2.0 * njac[4+4*isize4+j*jsize4] 
+                    + tmp1 * 2.0 * njac[4+4*isize4+j*jsize4]
                     + tmp1 * 2.0 * dy5;
 
                lhs[0+0*isize4+cc*jsize4+j*ksize4] =  tmp2 * fjac[0+0*isize4+(j+1)*jsize4]
@@ -1994,14 +1994,14 @@ public class BT extends BTBase{
             }
 //---------------------------------------------------------------------
 //     performs guaussian elimination on this cell.
-//     
-//     assumes that unpacking routines for non-first cells 
+//
+//     assumes that unpacking routines for non-first cells
 //     preload C' and rhs' from previous cell.
-//     
+//
 //     assumed send happens outside this routine, but that
 //     c'(JMAX) and rhs'(JMAX) will be sent to next cell
 //---------------------------------------------------------------------
-	      
+	
 //---------------------------------------------------------------------
 //     multiply c(i,0,k) by b_inverse and copy back to c
 //     multiply rhs(0) by b_inverse(0) and copy to rhs
@@ -2012,13 +2012,13 @@ public class BT extends BTBase{
 
 //---------------------------------------------------------------------
 //     begin inner most do loop
-//     do all the elements of the cell unless last 
+//     do all the elements of the cell unless last
 //---------------------------------------------------------------------
             for(j=1;j<=jsize-1;j++){
 
 //---------------------------------------------------------------------
 //     subtract A*lhs_vector(j-1) from lhs_vector(j)
-//     
+//
 //     rhs(j) = rhs(j) - A*rhs(j-1)
 //---------------------------------------------------------------------
                  matvec_sub(lhs,0+0*isize4+aa*jsize4+j*ksize4,
@@ -2031,7 +2031,7 @@ public class BT extends BTBase{
                  matmul_sub(lhs,0+0*isize4+aa*jsize4+j*ksize4,
 			    lhs,0+0*isize4+cc*jsize4+(j-1)*ksize4,
 			    lhs,0+0*isize4+bb*jsize4+j*ksize4);
-		 
+		
 //---------------------------------------------------------------------
 //     multiply c(i,j,k) by b_inverse and copy back to c
 //     multiply rhs(i,1,k) by b_inverse(i,1,k) and copy to rhs
@@ -2047,7 +2047,7 @@ public class BT extends BTBase{
               matvec_sub(lhs,0+0*isize4+aa*jsize4+jsize*ksize4,
 			    rhs,0+i*isize2+(jsize-1)*jsize2+k*ksize2,
 			    rhs,0+i*isize2+jsize*jsize2+k*ksize2);
-	      
+	
 //---------------------------------------------------------------------
 //     B(jsize) = B(jsize) - C(jsize-1)*A(jsize)
 //       matmul_sub(aa,i,jsize,k,c,
@@ -2073,14 +2073,14 @@ public class BT extends BTBase{
 	    for(j=jsize-1;j>=0;j--){
                for(m=0;m<=BLOCK_SIZE-1;m++){
                   for(n=0;n<=BLOCK_SIZE-1;n++){
-                     rhs[m+i*isize2+j*jsize2+k*ksize2] = rhs[m+i*isize2+j*jsize2+k*ksize2] 
+                     rhs[m+i*isize2+j*jsize2+k*ksize2] = rhs[m+i*isize2+j*jsize2+k*ksize2]
                           - lhs[m+n*isize4+cc*jsize4+j*ksize4]*rhs[n+i*isize2+(j+1)*jsize2+k*ksize2];
                   }
                }
             }
          }
       }
-      if (timeron)   timer.stop(t_ysolve); 
+      if (timeron)   timer.stop(t_ysolve);
   }
 
   public void z_solve(){
@@ -2089,7 +2089,7 @@ public class BT extends BTBase{
     if (timeron)   timer.start(t_zsolve);
 
 //---------------------------------------------------------------------
-//     This function computes the left hand side for the three z-factors   
+//     This function computes the left hand side for the three z-factors
 //---------------------------------------------------------------------
 
       ksize = grid_points[2]-1;
@@ -2101,7 +2101,7 @@ public class BT extends BTBase{
       for(j=1;j<=grid_points[1]-2;j++){
          for(i=1;i<=grid_points[0]-2;i++){
       	    for(k=0;k<=ksize;k++){
-	       
+	
                tmp1 = 1.0 / u[0+i*isize2+j*jsize2+k*ksize2];
                tmp2 = tmp1 * tmp1;
                tmp3 = tmp1 * tmp2;
@@ -2112,13 +2112,13 @@ public class BT extends BTBase{
                fjac[0+3*isize4+k*jsize4] = 1.0;
                fjac[0+4*isize4+k*jsize4] = 0.0;
 
-               fjac[1+0*isize4+k*jsize4] = - ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] ) 
+               fjac[1+0*isize4+k*jsize4] = - ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
                     * tmp2 ;
                fjac[1+1*isize4+k*jsize4] = u[3+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[1+2*isize4+k*jsize4] = 0.0;
                fjac[1+3*isize4+k*jsize4] = u[1+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[1+4*isize4+k*jsize4] = 0.0;
-	       
+	
                fjac[2+0*isize4+k*jsize4] = - ( u[2+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
                     * tmp2 ;
                fjac[2+1*isize4+k*jsize4] = 0.0;
@@ -2126,15 +2126,15 @@ public class BT extends BTBase{
                fjac[2+3*isize4+k*jsize4] = u[2+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[2+4*isize4+k*jsize4] = 0.0;
 
-               fjac[3+0*isize4+k*jsize4] = - (u[3+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] * tmp2 ) 
+               fjac[3+0*isize4+k*jsize4] = - (u[3+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] * tmp2 )
                     + c2 * qs[i+j*jsize1+k*ksize1];
                fjac[3+1*isize4+k*jsize4] = - c2 *  u[1+i*isize2+j*jsize2+k*ksize2] * tmp1 ;
                fjac[3+2*isize4+k*jsize4] = - c2 *  u[2+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[3+3*isize4+k*jsize4] = ( 2.0 - c2 )
                     *  u[3+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[3+4*isize4+k*jsize4] = c2;
-	       
-	       fjac[4+0*isize4+k*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1] 
+	
+	       fjac[4+0*isize4+k*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1]
                     - c1 * u[4+i*isize2+j*jsize2+k*ksize2] )
                     * u[3+i*isize2+j*jsize2+k*ksize2] * tmp2;
                fjac[4+1*isize4+k*jsize4] = - c2 * ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
@@ -2190,10 +2190,10 @@ public class BT extends BTBase{
 //---------------------------------------------------------------------
             lhsinit(lhs, ksize);
       	    for(k=1;k<=ksize-1;k++){
-	      
+	
                tmp1 = dt * tz1;
                tmp2 = dt * tz2;
-               
+
 	       lhs[0+0*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[0+0*isize4+(k-1)*jsize4]
                     - tmp1 * njac[0+0*isize4+(k-1)*jsize4]
                     - tmp1 * dz1 ;
@@ -2205,7 +2205,7 @@ public class BT extends BTBase{
                     - tmp1 * njac[0+3*isize4+(k-1)*jsize4];
                lhs[0+4*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[0+4*isize4+(k-1)*jsize4]
                     - tmp1 * njac[0+4*isize4+(k-1)*jsize4];
-		    
+		
                lhs[1+0*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[1+0*isize4+(k-1)*jsize4]
                     - tmp1 * njac[1+0*isize4+(k-1)*jsize4];
                lhs[1+1*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[1+1*isize4+(k-1)*jsize4]
@@ -2291,7 +2291,7 @@ public class BT extends BTBase{
                lhs[4+2*isize4+bb*jsize4+k*ksize4] = tmp1 * 2.0 * njac[4+2*isize4+k*jsize4];
                lhs[4+3*isize4+bb*jsize4+k*ksize4] = tmp1 * 2.0 * njac[4+3*isize4+k*jsize4];
                lhs[4+4*isize4+bb*jsize4+k*ksize4] = 1.0
-                    + tmp1 * 2.0 * njac[4+4*isize4+k*jsize4] 
+                    + tmp1 * 2.0 * njac[4+4*isize4+k*jsize4]
                     + tmp1 * 2.0 * dz5;
 
                lhs[0+0*isize4+cc*jsize4+k*ksize4] =  tmp2 * fjac[0+0*isize4+(k+1)*jsize4]
@@ -2357,10 +2357,10 @@ public class BT extends BTBase{
 
 //---------------------------------------------------------------------
 //     performs guaussian elimination on this cell.
-//     
-//     assumes that unpacking routines for non-first cells 
+//
+//     assumes that unpacking routines for non-first cells
 //     preload C' and rhs' from previous cell.
-//     
+//
 //     assumed send happens outside this routine, but that
 //     c'(KMAX) and rhs'(KMAX) will be sent to next cell.
 //---------------------------------------------------------------------
@@ -2379,13 +2379,13 @@ public class BT extends BTBase{
 
 //---------------------------------------------------------------------
 //     begin inner most do loop
-//     do all the elements of the cell unless last 
+//     do all the elements of the cell unless last
 //---------------------------------------------------------------------
       	    for(k=1;k<=ksize-1;k++){
 
 //---------------------------------------------------------------------
 //     subtract A*lhs_vector(k-1) from lhs_vector(k)
-//     
+//
 //     rhs(k) = rhs(k) - A*rhs(k-1)
 //---------------------------------------------------------------------
                  matvec_sub(lhs,0+0*isize4+aa*jsize4+k*ksize4,
@@ -2445,7 +2445,7 @@ public class BT extends BTBase{
 	     for(k=ksize-1;k>=0;k--){
                for(m=0;m<=BLOCK_SIZE-1;m++){
                   for(n=0;n<=BLOCK_SIZE-1;n++){
-                     rhs[m+i*isize2+j*jsize2+k*ksize2] 
+                     rhs[m+i*isize2+j*jsize2+k*ksize2]
 		        += -lhs[m+n*isize4+cc*jsize4+k*ksize4]
 			   *rhs[n+i*isize2+j*jsize2+(k+1)*ksize2];
                   }
@@ -2453,7 +2453,7 @@ public class BT extends BTBase{
             }
          }
       }
-      if(timeron) timer.stop(t_zsolve);   
+      if(timeron) timer.stop(t_zsolve);
   }
   public double checkSum(double arr[]){
     double csum=0.0;
@@ -2469,9 +2469,9 @@ public class BT extends BTBase{
       }
     }
     return csum;
-  }  
+  }
 
-  public double getTime(){return timer.readTimer(1);}  
+  public double getTime(){return timer.readTimer(1);}
   public void finalize() throws Throwable{
     System.out.println("BT: is about to be garbage collected");
     super.finalize();

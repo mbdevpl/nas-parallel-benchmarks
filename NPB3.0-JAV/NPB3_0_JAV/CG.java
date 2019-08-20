@@ -51,36 +51,36 @@ import java.text.*;
 
 public class CG extends CGBase{
   public int bid=-1;
-  public BMResults results;  
+  public BMResults results;
   public boolean serial=true;
-  
-  Random rng;	       
+
+  Random rng;	
   public static final double amult = 1220703125.0;
-  
+
   public CG(char CLSS,int np,boolean ser){
     super(CLSS,np,ser);
     serial=ser;
     rng=new Random();
   }
-    
+
   public static void main(String argv[]){
     CG cg = null;
-    
+
     BMArgs.ParseCmdLineArgs(argv,BMName);
     char CLSS=BMArgs.CLASS;
     int np=BMArgs.num_threads;
     boolean serial=BMArgs.serial;
-    try{ 
+    try{
       cg = new CG(CLSS,np,serial);
     }catch(OutOfMemoryError e){
       BMArgs.outOfMemoryMessage();
       System.exit(0);
-    }	   
+    }	
     cg.runBenchMark();
   }
 
   public void run(){ runBenchMark();}
-   
+
    public void runBenchMark(){
 	int i, j, k, it;
 	double zeta;
@@ -116,7 +116,7 @@ public class CG extends CGBase{
 //        values of j used in indexing rowstr go from 1 --> lastrow-firstrow+1
 //        values of colidx which are col indexes go from firstcol --> lastcol
 //        So:
-//        Shift the col index vals from actual (firstcol --> lastcol ) 
+//        Shift the col index vals from actual (firstcol --> lastcol )
 //        to local, i.e., (1 --> lastcol-firstcol+1)
 //---------------------------------------------------------------------
 	for(j=1;j<=lastrow-firstrow+1;j++){
@@ -133,9 +133,9 @@ public class CG extends CGBase{
 //  Do one iteration untimed to init all code and data page tables
 //---->                    (then reinit, start timing, to niter its)
 //---------------------------------------------------------------------
-	    rnorm = conj_grad( colidx, rowstr, x, z, a, 
-			       p, q, r, rnorm );	    
-	    
+	    rnorm = conj_grad( colidx, rowstr, x, z, a,
+			       p, q, r, rnorm );	
+	
 //---------------------------------------------------------------------
 //  zeta = shift + 1/(x.z)
 //  So, first: (x.z)
@@ -147,15 +147,15 @@ public class CG extends CGBase{
 	    for(j=1;j<=lastcol-firstcol+1;j++){
 		tnorm1 += x[j]*z[j];
 		tnorm2 += z[j]*z[j];
-	    }	    
+	    }	
 	    tnorm2 = 1.0/ Math.sqrt(tnorm2);
-	    
+	
 //---------------------------------------------------------------------
 //  Normalize z to obtain x
 //---------------------------------------------------------------------
-	    for(j=1; j<=lastcol-firstcol+1;j++){      
+	    for(j=1; j<=lastcol-firstcol+1;j++){
 		x[j] = tnorm1*z[j];
-	    }                         
+	    }
 //---------------------------------------------------------------------
 //  set starting vector to (1, 1, .... 1)
 //---------------------------------------------------------------------
@@ -175,7 +175,7 @@ public class CG extends CGBase{
     	    ExecuteTask(3);
     	    double rho = 0.0;
     	    for(int m=0;m<num_threads;m++) rho+=rhomaster[m];
- 
+
     	    for(int ii=0;ii<cgitmax;ii++){
     	      ExecuteTask(0);
     	      double dcff = 0.0;
@@ -206,15 +206,15 @@ public class CG extends CGBase{
 	  for(j=1;j<=lastcol-firstcol+1;j++){
 	    tnorm1 += x[j]*z[j];
 	    tnorm2 += z[j]*z[j];
-	  }	  
+	  }	
 	  tnorm2 = 1.0 / Math.sqrt(tnorm2);
 	  zeta = shift + 1.0 /tnorm1;
 	  System.out.println( "    "+ it + "       " + rnorm +" " + zeta );	//---------------------------------------------------------------------
 //  Normalize z to obtain x
 //---------------------------------------------------------------------
-	  for(j=1;j<=lastcol-firstcol+1;j++){	   
-	    x[j] = tnorm2*z[j];    
-	  }			 
+	  for(j=1;j<=lastcol-firstcol+1;j++){	
+	    x[j] = tnorm2*z[j];
+	  }			
 	}
 	timer.stop(t_bench);
 
@@ -250,7 +250,7 @@ public class CG extends CGBase{
     }else{
       timeron = false;
     }
-  }    
+  }
   public double getMFLOPS(double total_time,int niter){
     double mflops = 0.0;
     if( total_time != 0.0 ){
@@ -263,7 +263,7 @@ public class CG extends CGBase{
   }
   public int verify(double zeta){
     int verified=0;
-    double epsilon = 1.0E-10;	     
+    double epsilon = 1.0E-10;	
     if(CLASS != 'U'){
       System.out.println(" Zeta is   " + zeta );
       if( Math.abs( zeta - zeta_verify_value ) <= epsilon ){
@@ -276,12 +276,12 @@ public class CG extends CGBase{
     }else{
     	verified = -1;
     }
-    BMResults.printVerificationStatus(CLASS,verified,BMName); 
+    BMResults.printVerificationStatus(CLASS,verified,BMName);
     return verified;
   }
-     
-  public void makea(int n, int nz, double[] a, int[] colidx, int[] rowstr, 
-	  int nonzer, double rcond, int[] arow, int[] acol, 
+
+  public void makea(int n, int nz, double[] a, int[] colidx, int[] rowstr,
+	  int nonzer, double rcond, int[] arow, int[] acol,
 	  double[] aelt, double[] v, int[] iv, double shift){
 
 
@@ -335,7 +335,7 @@ public class CG extends CGBase{
 	    nzv = nonzer;
 	    sprnvc( n, nzv, v, iv, colidx, 0, colidx, n);
 	    nzv = vecset( n, v, iv, nzv, iouter, .5 );
-	    
+	
 	    for(ivelt=1;ivelt<=nzv;ivelt++){
 		jcol = iv[ivelt];
 		if (jcol>=firstcol && jcol<=lastcol) {
@@ -359,7 +359,7 @@ public class CG extends CGBase{
 	    }
 	    size = size * ratio;
 	}	
-	    
+	
 //---------------------------------------------------------------------
 //       ... add the identity * rcond to the generated matrix to bound
 //           the smallest eigenvalue from below by rcond
@@ -391,16 +391,16 @@ public class CG extends CGBase{
 	return;
   }
 
-  public void sprnvc(int n, int nz, double v[], int iv[], int nzloc[], 
+  public void sprnvc(int n, int nz, double v[], int iv[], int nzloc[],
 		       int nzloc_offst, int mark[], int mark_offst){
     int nzrow=0,nzv=0,idx;	
     int nn1 = 1;
-    
+
     while(true){
       nn1 = 2 * nn1;
       if (nn1 >= n ) break;
-    } 
-    
+    }
+
     while(true){
       if(nzv >= nz){
         for(int ii = 1;ii<=nzrow;ii++){
@@ -424,10 +424,10 @@ public class CG extends CGBase{
       }
     }
   }
-    
-  public int vecset(int n, double v[], int iv[], 
+
+  public int vecset(int n, double v[], int iv[],
                     int nzv,int ival,double val){
-    boolean set = false; 
+    boolean set = false;
     for(int k=1; k<=nzv;k++){
       if (iv[k] == ival){
         v[k]=val;
@@ -439,14 +439,14 @@ public class CG extends CGBase{
       v[nzv]  = val;
       iv[nzv] = ival;
     }
-    return nzv;    
+    return nzv;
   }
 
-  public void sparse(double a[], int colidx[], int rowstr[], 
-                     int n, int arow[], int acol[], 
-		     double aelt[],  
-		     double x[], int mark[], 
-		     int mark_offst, int nzloc[], int nzloc_offst, 
+  public void sparse(double a[], int colidx[], int rowstr[],
+                     int n, int arow[], int acol[],
+		     double aelt[],
+		     double x[], int mark[],
+		     int mark_offst, int nzloc[], int nzloc_offst,
 		     int nnza){
 //---------------------------------------------------------------------
 //       rows range from firstrow to lastrow
@@ -456,7 +456,7 @@ public class CG extends CGBase{
 //---------------------------------------------------
 //       generate a sparse matrix from a list of
 //       [col, row, element] tri
-//---------------------------------------------------  
+//---------------------------------------------------
     int i, j, jajp1, nza, k, nzrow;
     double xi;	
 //---------------------------------------------------------------------
@@ -477,7 +477,7 @@ public class CG extends CGBase{
 	j = (arow[nza] - firstrow + 1)+1;
 	rowstr[j] = rowstr[j] + 1;
     }
-    
+
     rowstr[1] = 1;
     for(j=2;j<=nrows+1;j++){
 	rowstr[j] = rowstr[j] + rowstr[j-1];
@@ -497,7 +497,7 @@ public class CG extends CGBase{
 	colidx[k] = acol[nza];
 	rowstr[j] = rowstr[j] + 1;
 
-    }    
+    }
 
 //---------------------------------------------------------------------
 //       ... rowstr(j) now points to the first element of row j+1
@@ -514,7 +514,7 @@ public class CG extends CGBase{
 	x[i]    = 0.0;
 	mark[i+mark_offst] = 0;
     }
-    
+
     jajp1 = rowstr[1];
 
     for(j=1;j<=nrows;j++){
@@ -549,16 +549,16 @@ public class CG extends CGBase{
 	}
 	jajp1 = rowstr[j+1];
 	rowstr[j+1] = nza + rowstr[1];
-    }   
+    }
     return;
   }
-    
+
   public double conj_grad( int colidx[], int rowstr[],
 			    double x[],double z[],double a[],
 			    double p[],double q[],double r[],
 			    double rnorm ){
 //---------------------------------------------------------------------
-//  Floating point arrays here are named as in NPB1 spec discussion of 
+//  Floating point arrays here are named as in NPB1 spec discussion of
 //  CG algorithm
 //---------------------------------------------------------------------
 
@@ -590,10 +590,10 @@ public class CG extends CGBase{
 //  The partition submatrix-vector multiply: use workspace w
 //---------------------------------------------------------------------
 //
-//  NOTE: this version of the multiply is actually (slightly: maybe %5) 
-//        faster on the sp2 on 16 nodes than is the unrolled-by-2 version 
-//        below.   On the Cray t3d, the reverse is true, i.e., the 
-//        unrolled-by-two version is some 10% faster.  
+//  NOTE: this version of the multiply is actually (slightly: maybe %5)
+//        faster on the sp2 on 16 nodes than is the unrolled-by-2 version
+//        below.   On the Cray t3d, the reverse is true, i.e., the
+//        unrolled-by-two version is some 10% faster.
 //        The unrolled-by-8 version below is significantly faster
 //        on the Cray t3d - overall speed of code is 1.5 times faster.
 //
@@ -635,7 +635,7 @@ public class CG extends CGBase{
 	for(j=1;j<=lastcol-firstcol+1;j++){
 	    p[j] = r[j] + beta*p[j];
 	}
-   }                            
+   }
 //---------------------------------------------------------------------
 //  Compute residual norm explicitly:  ||r|| = ||x - A.z||
 //  First, form A.z
@@ -652,10 +652,10 @@ public class CG extends CGBase{
 //  At this point, r contains A.z
 //---------------------------------------------------------------------
     sum = 0.0;
-    for(j=1;j<=lastcol-firstcol+1;j++) sum +=(x[j]-r[j])*(x[j]-r[j]);      
+    for(j=1;j<=lastcol-firstcol+1;j++) sum +=(x[j]-r[j])*(x[j]-r[j]);
     return Math.sqrt( sum );
   }
-    
+
   public double endWork(){
     double sum;
 //---------------------------------------------------------------------
@@ -687,12 +687,12 @@ public class CG extends CGBase{
       double tm = timer.readTimer(i);
       if(i==t_init){
         System.out.println("  "+t_names[i]+":"+fmt.format(tm));
-      }else{	  
-        System.out.println("  "+t_names[i]+":"+fmt.format(tm) 
+      }else{	
+        System.out.println("  "+t_names[i]+":"+fmt.format(tm)
                 	  +"  ("+fmt.format(tm*100.0/ttot)+"%)");
         if (i==t_conj_grad){
             tm = ttot - tm;
-            System.out.println("    --> total rest :" + fmt.format(tm) 
+            System.out.println("    --> total rest :" + fmt.format(tm)
                 	      +"  ("+fmt.format(tm*100.0/ttot)+"%)");
         }
       }
@@ -710,15 +710,15 @@ public class CG extends CGBase{
     }
     for(int m=0;m<num_threads;m++){
       while(!worker[m].done){
-     	try{wait();}catch(InterruptedException e){} 
+     	try{wait();}catch(InterruptedException e){}
   	notifyAll();
       }
     }
   }
-    
+
   public double getTime(){return timer.readTimer(t_bench);}
   public void finalize() throws Throwable{
-    System.out.println("CG: is about to be garbage collected"); 
+    System.out.println("CG: is about to be garbage collected");
     super.finalize();
   }
 }

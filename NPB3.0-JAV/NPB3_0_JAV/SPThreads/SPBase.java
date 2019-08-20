@@ -49,44 +49,44 @@ public class SPBase extends Thread{
   public static final String BMName="SP";
   public char CLASS = 'S';
 
-  protected int IMAX=0, JMAX=0, KMAX=0, 
+  protected int IMAX=0, JMAX=0, KMAX=0,
                 problem_size=0, nx2=0, ny2=0, nz2=0;
   protected int grid_points[] = {0,0,0};
   protected int niter_default=0;
   protected double dt_default=0.0;
-  
+
   protected double u[], rhs[], forcing[];
   protected int isize1, jsize1, ksize1;
 
-  protected double us[], vs[], ws[], qs[], 
+  protected double us[], vs[], ws[], qs[],
                    rho_i[], speed[], square[];
   protected int jsize2, ksize2;
-  
+
   protected double ue[], buf[];
   protected int jsize3;
 
   protected double lhs[], lhsp[], lhsm[];
   protected int jsize4;
 
-  protected double cv[], rhon[], rhos[], 
-                   rhoq[], cuf[], q[]; 
- 
-  protected static double  tx1, tx2, tx3, ty1, 
-          ty2, ty3, tz1, tz2, tz3, 
-          dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4, 
-          dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt, 
-          dxmax, dymax, dzmax, xxcon1, xxcon2, 
+  protected double cv[], rhon[], rhos[],
+                   rhoq[], cuf[], q[];
+
+  protected static double  tx1, tx2, tx3, ty1,
+          ty2, ty3, tz1, tz2, tz3,
+          dx1, dx2, dx3, dx4, dx5, dy1, dy2, dy3, dy4,
+          dy5, dz1, dz2, dz3, dz4, dz5, dssp, dt,
+          dxmax, dymax, dzmax, xxcon1, xxcon2,
           xxcon3, xxcon4, xxcon5, dx1tx1, dx2tx1, dx3tx1,
           dx4tx1, dx5tx1, yycon1, yycon2, yycon3, yycon4,
           yycon5, dy1ty1, dy2ty1, dy3ty1, dy4ty1, dy5ty1,
-          zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1, 
-          dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1, 
-          dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2, 
+          zzcon1, zzcon2, zzcon3, zzcon4, zzcon5, dz1tz1,
+          dz2tz1, dz3tz1, dz4tz1, dz5tz1, dnxm1, dnym1,
+          dnzm1, c1c2, c1c5, c3c4, c1345, conz1, c1, c2,
           c3, c4, c5, c4dssp, c5dssp, dtdssp, dttx1, bt,
-          dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1, 
-          c2dtty1, c2dttz1, comz1, comz4, comz5, comz6, 
+          dttx2, dtty1, dtty2, dttz1, dttz2, c2dttx1,
+          c2dtty1, c2dttz1, comz1, comz4, comz5, comz6,
           c3c4tx3, c3c4ty3, c3c4tz3, c2iv, con43, con16;
-  
+
   protected double ce[] ={
                 2.0,1.0,2.0,2.0,5.0,
 		0.0,0.0,2.0,2.0,4.0,
@@ -106,55 +106,55 @@ public class SPBase extends Thread{
   public Timer timer = new Timer();
   public static final int t_total = 1, t_rhsx = 2,
                    t_rhsy = 3,t_rhsz = 4, t_rhs = 5,
-                   t_xsolve = 6, t_ysolve = 7, t_zsolve = 8, t_rdis1 = 9, 
+                   t_xsolve = 6, t_ysolve = 7, t_zsolve = 8, t_rdis1 = 9,
                    t_rdis2 = 10, t_txinvr = 11, t_pinvr = 12, t_ninvr = 13,
                    t_tzetar = 14, t_add = 15, t_last = 15;
 
   public SPBase(){}
 
-  public SPBase(char clss, int np){ 
+  public SPBase(char clss, int np){
     CLASS = clss;
     num_threads = np;
     switch(clss){
     case 'S':
       IMAX=JMAX=KMAX=problem_size
-          =grid_points[0]=grid_points[1]=grid_points[2]=12; 
+          =grid_points[0]=grid_points[1]=grid_points[2]=12;
       dt_default = .015;
       niter_default = 100;
-      break;    
+      break;
     case 'W':
       IMAX=JMAX=KMAX=problem_size
-          =grid_points[0]=grid_points[1]=grid_points[2]=36; 
+          =grid_points[0]=grid_points[1]=grid_points[2]=36;
       dt_default = .0015;
       niter_default = 400;
       break;
     case 'A':
       IMAX=JMAX=KMAX=problem_size=grid_points[0]=
-                     grid_points[1]=grid_points[2]=64; 
+                     grid_points[1]=grid_points[2]=64;
       dt_default = .0015;
       niter_default = 400;
       break;
     case 'B':
       IMAX=JMAX=KMAX=problem_size=grid_points[0]=
-                     grid_points[1]=grid_points[2]=102; 
+                     grid_points[1]=grid_points[2]=102;
       dt_default = .001;
       niter_default = 400;
       break;
     case 'C':
       IMAX=JMAX=KMAX=problem_size=grid_points[0]=
-                     grid_points[1]=grid_points[2]=162; 
+                     grid_points[1]=grid_points[2]=162;
       dt_default = .00067;
       niter_default = 400;
       break;
     }
-    
+
     isize1 = 5;
     jsize1 = 5*(IMAX+1);
     ksize1 = 5*(IMAX+1)*(JMAX+1);
     u = new double[5*(IMAX+1)*(JMAX+1)*KMAX];
     rhs = new double[5*(IMAX+1)*(JMAX+1)*KMAX];
     forcing = new double[5*(IMAX+1)*(JMAX+1)*KMAX];
-    
+
     jsize2 = (IMAX+1);
     ksize2 = (IMAX+1)*(JMAX+1);
     us =  new double[(IMAX+1)*(JMAX+1)*KMAX];
@@ -164,17 +164,17 @@ public class SPBase extends Thread{
     rho_i =  new double[(IMAX+1)*(JMAX+1)*KMAX];
     speed =  new double[(IMAX+1)*(JMAX+1)*KMAX];
     square =  new double[(IMAX+1)*(JMAX+1)*KMAX];
-    
+
     jsize3 = problem_size;
     ue = new double[problem_size*5];
     buf = new double[problem_size*5];
-    
+
     jsize4 = 5;
 
     lhs = new double[5*(problem_size+1)];
     lhsp = new double[5*(problem_size+1)];
-    lhsm = new double[5*(problem_size+1)];    
-    
+    lhsm = new double[5*(problem_size+1)];
+
     cv = new double[problem_size];
     rhon = new double[problem_size];
     rhos = new double[problem_size];
@@ -182,10 +182,10 @@ public class SPBase extends Thread{
     cuf  = new double[problem_size];
     q = new double[problem_size];
   }
-  
+
   protected Thread master=null;
   protected int num_threads;
-  
+
   protected RHSCompute rhscomputer[];
   protected TXInverse txinverse[];
   protected XSolver xsolver[];
@@ -199,14 +199,14 @@ public class SPBase extends Thread{
       num_threads=problem_size-2;
 
     int interval1[]=new int[num_threads];
-    int interval2[]=new int[num_threads];    
+    int interval2[]=new int[num_threads];
     set_interval(problem_size, interval1);
     set_interval(problem_size-2, interval2);
     int partition1[][] = new int[interval1.length][2];
     int partition2[][] = new int[interval2.length][2];
     set_partition(0,interval1,partition1);
     set_partition(1,interval2,partition2);
-  
+
     rhscomputer = new RHSCompute[num_threads];
     txinverse = new TXInverse[num_threads];
     xsolver = new XSolver[num_threads];
@@ -214,7 +214,7 @@ public class SPBase extends Thread{
     zsolver = new ZSolver[num_threads];
     rhsadder = new RHSAdder[num_threads];
 
-  // create and start threads   
+  // create and start threads
     for(int ii=0;ii<num_threads;ii++){
       rhscomputer[ii] =  new RHSCompute(sp,partition1[ii][0],partition1[ii][1],
                                         partition2[ii][0],partition2[ii][1]);
@@ -240,21 +240,21 @@ public class SPBase extends Thread{
       rhsadder[ii] = new RHSAdder(sp,partition2[ii][0],partition2[ii][1]);
       rhsadder[ii].id=ii;
       rhsadder[ii].start();
-    }    
+    }
   }
-  
+
   public void set_interval(int problem_size, int interval[] ){
     interval[0]= problem_size/num_threads;
     for(int i=1;i<num_threads;i++) interval[i]=interval[0];
     int remainder = problem_size%num_threads;
     for(int i=0;i<remainder;i++) interval[i]++;
   }
-  
+
   public void set_partition(int start, int interval[], int prtn[][]){
     prtn[0][0]=start;
     if(start==0) prtn[0][1]=interval[0]-1;
     else prtn[0][1]=interval[0];
-    
+
     for(int i=1;i<interval.length;i++){
       prtn[i][0]=prtn[i-1][1]+1;
       prtn[i][1]=prtn[i-1][1]+interval[i];
@@ -269,7 +269,7 @@ public class SPBase extends Thread{
     return dmax1(dmax1(a,b), dmax1(c,d) );
   }
 
-  public void checksum(double array[], int size, String arrayname, 
+  public void checksum(double array[], int size, String arrayname,
                        boolean stop){
     double sum = 0;
     for(int i=0; i<size; i++) sum += array[i];
@@ -277,17 +277,17 @@ public class SPBase extends Thread{
     if(stop) System.exit(0);
   }
 
-  public void exact_solution(double xi, double eta, double zeta, 
+  public void exact_solution(double xi, double eta, double zeta,
                              double dtemp[], int offset ){
     for(int m=0;m<=4;m++){
        dtemp[m + offset] =  ce[m+0*5] +
        xi*(ce[m+1*5] + xi*(ce[m+4*5] + xi*(ce[m+7*5] + xi*ce[m+10*5]))) +
        eta*(ce[m+2*5] + eta*(ce[m+5*5] + eta*(ce[m+8*5] + eta*ce[m+11*5])))+
-       zeta*(ce[m+3*5] + zeta*(ce[m+6*5] + zeta*(ce[m+9*5] + 
+       zeta*(ce[m+3*5] + zeta*(ce[m+6*5] + zeta*(ce[m+9*5] +
        zeta*ce[m+12*5])));
-    }			   
+    }			
   }
- 
+
   public void lhsinit(int size){
 //---------------------------------------------------------------------
 //     zap the whole left hand side for starters
@@ -300,7 +300,7 @@ public class SPBase extends Thread{
        }
     }
 //---------------------------------------------------------------------
-//      next, set all diagonal values to 1. This is overkill, but 
+//      next, set all diagonal values to 1. This is overkill, but
 //      convenient
 //---------------------------------------------------------------------
     for(int i=0;i<=size;i+=size){
@@ -309,17 +309,17 @@ public class SPBase extends Thread{
        lhsm[2+i*jsize4] = 1.0;
     }
   }
-  
+
   public void initialize(){
     int i, j, k, m, ix, iy, iz;
-    double  xi, eta, zeta, Pface[]=new double[5*3*2], Pxi, Peta, 
+    double  xi, eta, zeta, Pface[]=new double[5*3*2], Pxi, Peta,
       Pzeta, temp[] = new double[5];
-    
+
 //---------------------------------------------------------------------
-//  Later (in compute_rhs) we compute 1/u for every element. A few of 
-//  the corner elements are not used, but it convenient (and faster) 
-//  to compute the whole thing with a simple loop. Make sure those 
-//  values are nonzero by initializing the whole thing here. 
+//  Later (in compute_rhs) we compute 1/u for every element. A few of
+//  the corner elements are not used, but it convenient (and faster)
+//  to compute the whole thing with a simple loop. Make sure those
+//  values are nonzero by initializing the whole thing here.
 //---------------------------------------------------------------------
       for(k=0;k<grid_points[2];k++){
          for(j=0;j<grid_points[1];j++){
@@ -334,7 +334,7 @@ public class SPBase extends Thread{
       }
 
 //---------------------------------------------------------------------
-// first store the "interpolated" values everywhere on the grid    
+// first store the "interpolated" values everywhere on the grid
 //---------------------------------------------------------------------
           for(k=0;k<grid_points[2];k++){
              zeta = k * dnzm1;
@@ -342,35 +342,35 @@ public class SPBase extends Thread{
                 eta = j * dnym1;
                 for(i=0;i<grid_points[0];i++){
                    xi = i * dnxm1;
-                 
+
                    for(ix=0;ix<=1;ix++){
                       Pxi = ix;
-                      exact_solution(Pxi, eta, zeta, 
+                      exact_solution(Pxi, eta, zeta,
                                           Pface, 0+0*5+ix*15 );
                    }
                    for(iy=0;iy<=1;iy++){
                       Peta = iy;
-                      exact_solution(xi, Peta, zeta, 
+                      exact_solution(xi, Peta, zeta,
                                           Pface, 0+1*5+iy*15);
                    }
 
                    for(iz=0;iz<=1;iz++){
                       Pzeta = iz;
-                       exact_solution(xi, eta, Pzeta,   
+                       exact_solution(xi, eta, Pzeta,
                                           Pface, 0+2*5+iz*15);
                    }
 
                    for(m=0;m<=4;m++){
-                      Pxi   = xi   * Pface[m+0*5+1*15] + 
+                      Pxi   = xi   * Pface[m+0*5+1*15] +
                               (1.0-xi)   * Pface[m+0*5+0*15];
-                      Peta  = eta  * Pface[m+1*5+1*15] + 
+                      Peta  = eta  * Pface[m+1*5+1*15] +
                               (1.0-eta)  * Pface[m+1*5+0*15];
-                      Pzeta = zeta * Pface[m+2*5+1*15] + 
+                      Pzeta = zeta * Pface[m+2*5+1*15] +
                               (1.0-zeta) * Pface[m+2*5+0*15];
 
-                      u[m+i*isize1+j*jsize1+k*ksize1] = 
-		                Pxi + Peta + Pzeta - 
-                                Pxi*Peta - Pxi*Pzeta - Peta*Pzeta + 
+                      u[m+i*isize1+j*jsize1+k*ksize1] =
+		                Pxi + Peta + Pzeta -
+                                Pxi*Peta - Pxi*Pzeta - Peta*Pzeta +
                                 Pxi*Peta*Pzeta;
 
                    }
@@ -379,11 +379,11 @@ public class SPBase extends Thread{
           }
 
 //---------------------------------------------------------------------
-// now store the exact values on the boundaries        
+// now store the exact values on the boundaries
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-// west face                                                  
+// west face
 //---------------------------------------------------------------------
 
        xi = 0.0;
@@ -400,7 +400,7 @@ public class SPBase extends Thread{
        }
 
 //---------------------------------------------------------------------
-// east face                                                      
+// east face
 //---------------------------------------------------------------------
 
        xi = 1.0;
@@ -417,7 +417,7 @@ public class SPBase extends Thread{
        }
 
 //---------------------------------------------------------------------
-// south face                                                 
+// south face
 //---------------------------------------------------------------------
 
        eta = 0.0;
@@ -434,7 +434,7 @@ public class SPBase extends Thread{
        }
 
 //---------------------------------------------------------------------
-// north face                                    
+// north face
 //---------------------------------------------------------------------
 
        eta = 1.0;
@@ -451,7 +451,7 @@ public class SPBase extends Thread{
        }
 
 //---------------------------------------------------------------------
-// bottom face                                       
+// bottom face
 //---------------------------------------------------------------------
 
        zeta = 0.0;
@@ -468,7 +468,7 @@ public class SPBase extends Thread{
        }
 
 //---------------------------------------------------------------------
-// top face     
+// top face
 //---------------------------------------------------------------------
 
        zeta = 1.0;
@@ -487,7 +487,7 @@ public class SPBase extends Thread{
   public void set_constants(int ndid){
     ce[0]=2.0*(1.0+((double)ndid)*0.01);
 //    ce[0]=2.0;
-    
+
     c1 = 1.4;
     c2 = 0.4;
     c3 = 0.1;
@@ -514,7 +514,7 @@ public class SPBase extends Thread{
     ty1 = 1.0 / (dnym1 * dnym1);
     ty2 = 1.0 / (2.0 * dnym1);
     ty3 = 1.0 / dnym1;
- 
+
     tz1 = 1.0 / (dnzm1 * dnzm1);
     tz2 = 1.0 / (2.0 * dnzm1);
     tz3 = 1.0 / dnzm1;
@@ -573,13 +573,13 @@ public class SPBase extends Thread{
     dx3tx1 = dx3*tx1;
     dx4tx1 = dx4*tx1;
     dx5tx1 = dx5*tx1;
-     
+
     dy1ty1 = dy1*ty1;
     dy2ty1 = dy2*ty1;
     dy3ty1 = dy3*ty1;
     dy4ty1 = dy4*ty1;
     dy5ty1 = dy5*ty1;
-     
+
     dz1tz1 = dz1*tz1;
     dz2tz1 = dz2*tz1;
     dz3tz1 = dz3*tz1;
@@ -589,7 +589,7 @@ public class SPBase extends Thread{
     c2iv  = 2.5;
     con43 = 4.0/3.0;
     con16 = 1.0/6.0;
-     
+
     xxcon1 = c3c4tx3*con43*tx3;
     xxcon2 = c3c4tx3*tx3;
     xxcon3 = c3c4tx3*conz1*tx3;

@@ -8,12 +8,12 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c  verification routine                         
+c  verification routine
 c---------------------------------------------------------------------
 
         include 'header.h'
 
-        double precision xcrref(5),xceref(5),xcrdif(5),xcedif(5), 
+        double precision xcrref(5),xceref(5),xcrdif(5),xcedif(5),
      >                   epsilon, xce(5), xcr(5), dtref
         integer m, no_time_steps
         character class
@@ -48,7 +48,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c    reference data for 12X12X12 grids after 100 time steps, with DT = 1.50d-02
 c---------------------------------------------------------------------
-        if ( (grid_points(1)  .eq. 12     ) .and. 
+        if ( (grid_points(1)  .eq. 12     ) .and.
      >       (grid_points(2)  .eq. 12     ) .and.
      >       (grid_points(3)  .eq. 12     ) .and.
      >       (no_time_steps   .eq. 100    ))  then
@@ -78,7 +78,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c    reference data for 36X36X36 grids after 400 time steps, with DT = 1.5d-03
 c---------------------------------------------------------------------
-        elseif ( (grid_points(1) .eq. 36) .and. 
+        elseif ( (grid_points(1) .eq. 36) .and.
      >           (grid_points(2) .eq. 36) .and.
      >           (grid_points(3) .eq. 36) .and.
      >           (no_time_steps . eq. 400) ) then
@@ -107,7 +107,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c    reference data for 64X64X64 grids after 400 time steps, with DT = 1.5d-03
 c---------------------------------------------------------------------
-        elseif ( (grid_points(1) .eq. 64) .and. 
+        elseif ( (grid_points(1) .eq. 64) .and.
      >           (grid_points(2) .eq. 64) .and.
      >           (grid_points(3) .eq. 64) .and.
      >           (no_time_steps . eq. 400) ) then
@@ -137,7 +137,7 @@ c---------------------------------------------------------------------
 c    reference data for 102X102X102 grids after 400 time steps,
 c    with DT = 1.0d-03
 c---------------------------------------------------------------------
-        elseif ( (grid_points(1) .eq. 102) .and. 
+        elseif ( (grid_points(1) .eq. 102) .and.
      >           (grid_points(2) .eq. 102) .and.
      >           (grid_points(3) .eq. 102) .and.
      >           (no_time_steps . eq. 400) ) then
@@ -168,7 +168,7 @@ c---------------------------------------------------------------------
 c    reference data for 162X162X162 grids after 400 time steps,
 c    with DT = 0.67d-03
 c---------------------------------------------------------------------
-        elseif ( (grid_points(1) .eq. 162) .and. 
+        elseif ( (grid_points(1) .eq. 162) .and.
      >           (grid_points(2) .eq. 162) .and.
      >           (grid_points(3) .eq. 162) .and.
      >           (no_time_steps . eq. 400) ) then
@@ -200,7 +200,7 @@ c---------------------------------------------------------------------
         endif
 
 c---------------------------------------------------------------------
-c    verification test for residuals if gridsize is either 12X12X12 or 
+c    verification test for residuals if gridsize is either 12X12X12 or
 c    64X64X64 or 102X102X102 or 162X162X162
 c---------------------------------------------------------------------
 
@@ -208,10 +208,10 @@ c---------------------------------------------------------------------
 c    Compute the difference of solution values and the known reference values.
 c---------------------------------------------------------------------
         do m = 1, 5
-           
-           xcrdif(m) = dabs((xcr(m)-xcrref(m))/xcrref(m)) 
+
+           xcrdif(m) = dabs((xcr(m)-xcrref(m))/xcrref(m))
            xcedif(m) = dabs((xce(m)-xceref(m))/xceref(m))
-           
+
         enddo
 
 c---------------------------------------------------------------------
@@ -223,21 +223,21 @@ c---------------------------------------------------------------------
  1990      format(' Verification being performed for class ', a)
            write (*,2000) epsilon
  2000      format(' accuracy setting for epsilon = ', E20.13)
-           if (dabs(dt-dtref) .gt. epsilon) then  
+           if (dabs(dt-dtref) .gt. epsilon) then
               verified = .false.
               class = 'U'
               write (*,1000) dtref
- 1000         format(' DT does not match the reference value of ', 
+ 1000         format(' DT does not match the reference value of ',
      >                 E15.8)
            endif
-        else 
+        else
            write(*, 1995)
  1995      format(' Unknown class')
         endif
 
 
         if (class .ne. 'U') then
-           write (*,2001) 
+           write (*,2001)
         else
            write (*, 2005)
         endif
@@ -249,7 +249,7 @@ c---------------------------------------------------------------------
               write(*, 2015) m, xcr(m)
            else if (xcrdif(m) .le. epsilon) then
               write (*,2011) m,xcr(m),xcrref(m),xcrdif(m)
-           else 
+           else
               verified = .false.
               write (*,2010) m,xcr(m),xcrref(m),xcrdif(m)
            endif
@@ -262,7 +262,7 @@ c---------------------------------------------------------------------
         endif
  2002   format(' Comparison of RMS-norms of solution error')
  2006   format(' RMS-norms of solution error')
-        
+
         do m = 1, 5
            if (class .eq. 'U') then
               write(*, 2015) m, xce(m)
@@ -273,11 +273,11 @@ c---------------------------------------------------------------------
               write (*,2010) m,xce(m),xceref(m),xcedif(m)
            endif
         enddo
-        
+
  2010   format(' FAILURE: ', i2, E20.13, E20.13, E20.13)
  2011   format('          ', i2, E20.13, E20.13, E20.13)
  2015   format('          ', i2, E20.13)
-        
+
         if (class .eq. 'U') then
            write(*, 2022)
            write(*, 2023)

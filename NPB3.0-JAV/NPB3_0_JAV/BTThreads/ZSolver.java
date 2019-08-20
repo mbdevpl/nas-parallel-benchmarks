@@ -48,7 +48,7 @@ public class ZSolver extends BTBase{
   public int id;
   public boolean done=true;
   //private arrays and data
-  double fjac[] = null;  
+  double fjac[] = null;
   double njac[] = null;
   double lhs[] = null;
   double tmp1;
@@ -61,7 +61,7 @@ public class ZSolver extends BTBase{
     Init(bt);
     lower_bound=low;
     upper_bound=high;
-    fjac =  new double[5*5*(problem_size+1)]; 
+    fjac =  new double[5*5*(problem_size+1)];
     njac =  new double[5*5*(problem_size+1)];
     lhs =  new double[5*5*3*(problem_size+1)];
     setPriority(Thread.MAX_PRIORITY);
@@ -71,13 +71,13 @@ public class ZSolver extends BTBase{
   void Init(BT bt){
     //initialize shared data
     IMAX=bt.IMAX;
-    JMAX=bt.JMAX; 
-    KMAX=bt.KMAX; 
-    problem_size=bt.problem_size; 
+    JMAX=bt.JMAX;
+    KMAX=bt.KMAX;
+    problem_size=bt.problem_size;
     grid_points=bt.grid_points;
     niter_default=bt.niter_default;
     dt_default=bt.dt_default;
-    
+
     u=bt.u;
     rhs=bt.rhs;
     forcing=bt.forcing;
@@ -87,7 +87,7 @@ public class ZSolver extends BTBase{
     isize2=bt.isize2;
     jsize2=bt.jsize2;
     ksize2=bt.ksize2;
-    
+
     us=bt.us;
     vs=bt.vs;
     ws=bt.ws;
@@ -96,15 +96,15 @@ public class ZSolver extends BTBase{
     square=bt.square;
     jsize1=bt.jsize1;
     ksize1=bt.ksize1;
-    
+
     ue=bt.ue;
     buf=bt.buf;
     jsize3=bt.jsize3;
   }
 
   public void run(){
-    for(;;){  
-      synchronized(this){ 
+    for(;;){
+      synchronized(this){
       while(done==true){
         try{
 	  wait();
@@ -116,12 +116,12 @@ public class ZSolver extends BTBase{
       }
     }
   }
-  
+
   public void step(){
-    int i, j, k, m, n, ksize;    
+    int i, j, k, m, n, ksize;
 
 //---------------------------------------------------------------------
-//     This function computes the left hand side for the three z-factors   
+//     This function computes the left hand side for the three z-factors
 //---------------------------------------------------------------------
 
       ksize = grid_points[2]-1;
@@ -133,7 +133,7 @@ public class ZSolver extends BTBase{
       for(j=lower_bound;j<=upper_bound;j++){
          for(i=1;i<=grid_points[0]-2;i++){
       	    for(k=0;k<=ksize;k++){
-	       
+	
                tmp1 = 1.0 / u[0+i*isize2+j*jsize2+k*ksize2];
                tmp2 = tmp1 * tmp1;
                tmp3 = tmp1 * tmp2;
@@ -144,7 +144,7 @@ public class ZSolver extends BTBase{
                fjac[0+3*isize4+k*jsize4] = 1.0;
                fjac[0+4*isize4+k*jsize4] = 0.0;
 
-               fjac[1+0*isize4+k*jsize4] = - ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] ) 
+               fjac[1+0*isize4+k*jsize4] = - ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
                     * tmp2 ;
                fjac[1+1*isize4+k*jsize4] = u[3+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[1+2*isize4+k*jsize4] = 0.0;
@@ -158,15 +158,15 @@ public class ZSolver extends BTBase{
                fjac[2+3*isize4+k*jsize4] = u[2+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[2+4*isize4+k*jsize4] = 0.0;
 
-               fjac[3+0*isize4+k*jsize4] = - (u[3+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] * tmp2 ) 
+               fjac[3+0*isize4+k*jsize4] = - (u[3+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] * tmp2 )
                     + c2 * qs[i+j*jsize1+k*ksize1];
                fjac[3+1*isize4+k*jsize4] = - c2 *  u[1+i*isize2+j*jsize2+k*ksize2] * tmp1 ;
                fjac[3+2*isize4+k*jsize4] = - c2 *  u[2+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[3+3*isize4+k*jsize4] = ( 2.0 - c2 )
                     *  u[3+i*isize2+j*jsize2+k*ksize2] * tmp1;
                fjac[3+4*isize4+k*jsize4] = c2;
-               
-	       fjac[4+0*isize4+k*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1] 
+
+	       fjac[4+0*isize4+k*jsize4] = ( c2 * 2.0 * square[i+j*jsize1+k*ksize1]
                     - c1 * u[4+i*isize2+j*jsize2+k*ksize2] )
                     * u[3+i*isize2+j*jsize2+k*ksize2] * tmp2;
                fjac[4+1*isize4+k*jsize4] = - c2 * ( u[1+i*isize2+j*jsize2+k*ksize2]*u[3+i*isize2+j*jsize2+k*ksize2] )
@@ -222,10 +222,10 @@ public class ZSolver extends BTBase{
 //---------------------------------------------------------------------
               lhsinit(lhs, ksize);
       	    for(k=1;k<=ksize-1;k++){
-	      
+	
                tmp1 = dt * tz1;
                tmp2 = dt * tz2;
-               
+
 	       lhs[0+0*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[0+0*isize4+(k-1)*jsize4]
                     - tmp1 * njac[0+0*isize4+(k-1)*jsize4]
                     - tmp1 * dz1 ;
@@ -237,7 +237,7 @@ public class ZSolver extends BTBase{
                     - tmp1 * njac[0+3*isize4+(k-1)*jsize4];
                lhs[0+4*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[0+4*isize4+(k-1)*jsize4]
                     - tmp1 * njac[0+4*isize4+(k-1)*jsize4];
-		    
+		
                lhs[1+0*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[1+0*isize4+(k-1)*jsize4]
                     - tmp1 * njac[1+0*isize4+(k-1)*jsize4];
                lhs[1+1*isize4+aa*jsize4+k*ksize4] = - tmp2 * fjac[1+1*isize4+(k-1)*jsize4]
@@ -323,7 +323,7 @@ public class ZSolver extends BTBase{
                lhs[4+2*isize4+bb*jsize4+k*ksize4] = tmp1 * 2.0 * njac[4+2*isize4+k*jsize4];
                lhs[4+3*isize4+bb*jsize4+k*ksize4] = tmp1 * 2.0 * njac[4+3*isize4+k*jsize4];
                lhs[4+4*isize4+bb*jsize4+k*ksize4] = 1.0
-                    + tmp1 * 2.0 * njac[4+4*isize4+k*jsize4] 
+                    + tmp1 * 2.0 * njac[4+4*isize4+k*jsize4]
                     + tmp1 * 2.0 * dz5;
 
                lhs[0+0*isize4+cc*jsize4+k*ksize4] =  tmp2 * fjac[0+0*isize4+(k+1)*jsize4]
@@ -390,10 +390,10 @@ public class ZSolver extends BTBase{
 
 //---------------------------------------------------------------------
 //     performs guaussian elimination on this cell.
-//     
-//     assumes that unpacking routines for non-first cells 
+//
+//     assumes that unpacking routines for non-first cells
 //     preload C' and rhs' from previous cell.
-//     
+//
 //     assumed send happens outside this routine, but that
 //     c'(KMAX) and rhs'(KMAX) will be sent to next cell.
 //---------------------------------------------------------------------
@@ -412,13 +412,13 @@ public class ZSolver extends BTBase{
 
 //---------------------------------------------------------------------
 //     begin inner most do loop
-//     do all the elements of the cell unless last 
+//     do all the elements of the cell unless last
 //---------------------------------------------------------------------
       	    for(k=1;k<=ksize-1;k++){
 
 //---------------------------------------------------------------------
 //     subtract A*lhs_vector(k-1) from lhs_vector(k)
-//     
+//
 //     rhs(k) = rhs(k) - A*rhs(k-1)
 //---------------------------------------------------------------------
                  matvec_sub(lhs,0+0*isize4+aa*jsize4+k*ksize4,
@@ -483,6 +483,6 @@ public class ZSolver extends BTBase{
             }
          }
       }
-   }  
+   }
 };
 

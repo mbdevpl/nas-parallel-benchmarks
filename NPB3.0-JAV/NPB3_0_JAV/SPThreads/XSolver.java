@@ -52,8 +52,8 @@ public class XSolver extends SPBase{
   int lower_bound;
   int upper_bound;
   int state= 1;
-  double lhs[],lhsm[],lhsp[],cv[],rhon[]; 
-    
+  double lhs[],lhsm[],lhsp[],cv[],rhon[];
+
   public XSolver(SP sp,int low, int high){
     Init(sp);
     lower_bound=low;
@@ -63,22 +63,22 @@ public class XSolver extends SPBase{
     master=sp;
     lhs = new double[5*(problem_size+1)];
     lhsp = new double[5*(problem_size+1)];
-    lhsm = new double[5*(problem_size+1)];    
+    lhsm = new double[5*(problem_size+1)];
     cv = new double[problem_size];
     rhon = new double[problem_size];
   }
   void Init(SP sp){
     //initialize shared data
     IMAX=sp.IMAX;
-    JMAX=sp.JMAX; 
-    KMAX=sp.KMAX; 
-    problem_size=sp.problem_size; 
+    JMAX=sp.JMAX;
+    KMAX=sp.KMAX;
+    problem_size=sp.problem_size;
     nx2=sp.nx2;
     ny2=sp.ny2;
     nz2=sp.nz2;
     grid_points=sp.grid_points;
     niter_default=sp.niter_default;
-    dt_default=sp.dt_default;    
+    dt_default=sp.dt_default;
     u=sp.u;
     rhs=sp.rhs;
     forcing=sp.forcing;
@@ -111,7 +111,7 @@ public class XSolver extends SPBase{
   }
   public void run(){
     for(;;){
-      synchronized(this){ 
+      synchronized(this){
       while(done==true){
 	try{
 	  wait();
@@ -122,8 +122,8 @@ public class XSolver extends SPBase{
       synchronized(master){done=true;master.notify();}
       }
     }
-  }    
-  
+  }
+
   public void step(){
     int i, j, k, n, i1, i2, m;
     double  ru1, fac1, fac2, r1, r2, r3, r4, r5, t1, t2;
@@ -137,16 +137,16 @@ public class XSolver extends SPBase{
           for(j=1;j<=ny2;j++){
 
 //---------------------------------------------------------------------
-// Computes the left hand side for the three x-factors  
+// Computes the left hand side for the three x-factors
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-//      first fill the lhs for the u-eigenvalue                   
+//      first fill the lhs for the u-eigenvalue
 //---------------------------------------------------------------------
              for(i=0;i<=grid_points[0]-1;i++){
                 ru1 = c3c4*rho_i[i+j*jsize2+k*ksize2];
                 cv[i] = us[i+j*jsize2+k*ksize2];
-                rhon[i] = dmax1(dx2+con43*ru1, 
+                rhon[i] = dmax1(dx2+con43*ru1,
                                 dx5+c1c5*ru1,
                                 dxmax+ru1,
                                 dx1);
@@ -162,14 +162,14 @@ public class XSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      add fourth order dissipation                             
+//      add fourth order dissipation
 //---------------------------------------------------------------------
 
              i = 1;
              lhs[2+i*jsize4] = lhs[2+i*jsize4] + comz5;
              lhs[3+i*jsize4] = lhs[3+i*jsize4] - comz4;
              lhs[4+i*jsize4] = lhs[4+i*jsize4] + comz1;
-  
+
              lhs[1+(i+1)*jsize4] = lhs[1+(i+1)*jsize4] - comz4;
              lhs[2+(i+1)*jsize4] = lhs[2+(i+1)*jsize4] + comz6;
              lhs[3+(i+1)*jsize4] = lhs[3+(i+1)*jsize4] - comz4;
@@ -194,32 +194,32 @@ public class XSolver extends SPBase{
              lhs[2+(i+1)*jsize4] = lhs[2+(i+1)*jsize4] + comz5;
 
 //---------------------------------------------------------------------
-//      subsequently, fill the other factors (u+c), (u-c) by adding to 
-//      the first  
+//      subsequently, fill the other factors (u+c), (u-c) by adding to
+//      the first
 //---------------------------------------------------------------------
              for(i=1;i<=nx2;i++){
                 lhsp[0+i*jsize4] = lhs[0+i*jsize4];
-                lhsp[1+i*jsize4] = lhs[1+i*jsize4] - 
+                lhsp[1+i*jsize4] = lhs[1+i*jsize4] -
                                   dttx2 * speed[(i-1)+j*jsize2+k*ksize2];
                 lhsp[2+i*jsize4] = lhs[2+i*jsize4];
-                lhsp[3+i*jsize4] = lhs[3+i*jsize4] + 
+                lhsp[3+i*jsize4] = lhs[3+i*jsize4] +
                                   dttx2 * speed[i+1+j*jsize2+k*ksize2];
                 lhsp[4+i*jsize4] = lhs[4+i*jsize4];
                 lhsm[0+i*jsize4] = lhs[0+i*jsize4];
-                lhsm[1+i*jsize4] = lhs[1+i*jsize4] + 
+                lhsm[1+i*jsize4] = lhs[1+i*jsize4] +
                                   dttx2 * speed[i-1+j*jsize2+k*ksize2];
                 lhsm[2+i*jsize4] = lhs[2+i*jsize4];
-                lhsm[3+i*jsize4] = lhs[3+i*jsize4] - 
+                lhsm[3+i*jsize4] = lhs[3+i*jsize4] -
                                   dttx2 * speed[i+1+j*jsize2+k*ksize2];
                 lhsm[4+i*jsize4] = lhs[4+i*jsize4];
              }
 
 //---------------------------------------------------------------------
-//                          FORWARD ELIMINATION  
+//                          FORWARD ELIMINATION
 //---------------------------------------------------------------------
 
 //---------------------------------------------------------------------
-//      perform the Thomas algorithm; first, FORWARD ELIMINATION     
+//      perform the Thomas algorithm; first, FORWARD ELIMINATION
 //---------------------------------------------------------------------
 
              for(i=0;i<=grid_points[0]-3;i++){
@@ -250,7 +250,7 @@ public class XSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      The last two rows in this grid block are a bit different, 
+//      The last two rows in this grid block are a bit different,
 //      since they do not have two more rows available for the
 //      elimination of off-diagonal entries
 //---------------------------------------------------------------------
@@ -272,7 +272,7 @@ public class XSolver extends SPBase{
                             lhs[1+i1*jsize4]*rhs[m+i*isize1+j*jsize1+k*ksize1];
              }
 //---------------------------------------------------------------------
-//            scale the last row immediately 
+//            scale the last row immediately
 //---------------------------------------------------------------------
              fac2             = 1./lhs[2+i1*jsize4];
              for(m=0;m<=2;m++){
@@ -280,7 +280,7 @@ public class XSolver extends SPBase{
              }
 
 //---------------------------------------------------------------------
-//      do the u+c and the u-c factors                 
+//      do the u+c and the u-c factors
 //---------------------------------------------------------------------
 
              for(i=0;i<=grid_points[0]-3;i++){
@@ -356,7 +356,7 @@ public class XSolver extends SPBase{
              rhs[4+i1*isize1+j*jsize1+k*ksize1] = rhs[4+i1*isize1+j*jsize1+k*ksize1]/lhsm[2+i1*jsize4];
 
 //---------------------------------------------------------------------
-//                         BACKSUBSTITUTION 
+//                         BACKSUBSTITUTION
 //---------------------------------------------------------------------
 
              i  = grid_points[0]-2;
@@ -379,17 +379,17 @@ public class XSolver extends SPBase{
                 i2 = i  + 2;
 
                 for(m=0;m<=2;m++){
-                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] - 
+                   rhs[m+i*isize1+j*jsize1+k*ksize1] = rhs[m+i*isize1+j*jsize1+k*ksize1] -
                                 lhs[3+i*jsize4]*rhs[m+i1*isize1+j*jsize1+k*ksize1] -
                                 lhs[4+i*jsize4]*rhs[m+i2*isize1+j*jsize1+k*ksize1];
                 }
 //---------------------------------------------------------------------
 //      And the remaining two
 //---------------------------------------------------------------------
-                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] - 
+                rhs[3+i*isize1+j*jsize1+k*ksize1] = rhs[3+i*isize1+j*jsize1+k*ksize1] -
                                 lhsp[3+i*jsize4]*rhs[3+i1*isize1+j*jsize1+k*ksize1] -
                                 lhsp[4+i*jsize4]*rhs[3+i2*isize1+j*jsize1+k*ksize1];
-                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] - 
+                rhs[4+i*isize1+j*jsize1+k*ksize1] = rhs[4+i*isize1+j*jsize1+k*ksize1] -
                                 lhsm[3+i*jsize4]*rhs[4+i1*isize1+j*jsize1+k*ksize1] -
                                 lhsm[4+i*jsize4]*rhs[4+i2*isize1+j*jsize1+k*ksize1];
              }
@@ -408,7 +408,7 @@ public class XSolver extends SPBase{
                 r3 = rhs[2+i*isize1+j*jsize1+k*ksize1];
                 r4 = rhs[3+i*isize1+j*jsize1+k*ksize1];
                 r5 = rhs[4+i*isize1+j*jsize1+k*ksize1];
-               
+
                 t1 = bt * r3;
                 t2 = 0.5 * ( r4 + r5 );
 
@@ -417,10 +417,10 @@ public class XSolver extends SPBase{
                 rhs[2+i*isize1+j*jsize1+k*ksize1] = bt * ( r4 - r5 );
                 rhs[3+i*isize1+j*jsize1+k*ksize1] = -t1 + t2;
                 rhs[4+i*isize1+j*jsize1+k*ksize1] =  t1 + t2;
-             }    
+             }
           }
        }
-      break;      
+      break;
     }
     state++;
     if(state==3)state=1;
@@ -441,7 +441,7 @@ public class XSolver extends SPBase{
        }
 
 //---------------------------------------------------------------------
-//      next, set all diagonal values to 1. This is overkill, but 
+//      next, set all diagonal values to 1. This is overkill, but
 //      convenient
 //---------------------------------------------------------------------
        for(i=0;i<=size;i+=size){

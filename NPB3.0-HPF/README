@@ -7,7 +7,7 @@ This implementation contains six of the eight benchmarks:
 BT, SP, LU-hp, FT, CG, and MG.  EP and IS are not included.
 
 This version has been tested on the SGI Origin2000 with the
-pghpf compiler.  For problem reports and suggestions on the 
+pghpf compiler.  For problem reports and suggestions on the
 implementation, please contact
 
    NAS Parallel Benchmark Team
@@ -19,13 +19,13 @@ implementation, please contact
    To make a benchmark of some class the user should
 
       - go to the config directory,
-      - modify make.def by setting the options: 
-         F77,  FLINK, FFLAGS and FLINKFLAGS, 
+      - modify make.def by setting the options:
+         F77,  FLINK, FFLAGS and FLINKFLAGS,
       - go to the appropriate directory (say BT),
       - type "make CLASS=A", for example, for a class A problem.
 
-   The executable will be made in the bin directory. Before making 
-   an executable with different options of F77 or FLINK 
+   The executable will be made in the bin directory. Before making
+   an executable with different options of F77 or FLINK
    user should run "make clean" from the top directory.
 
 2. Run
@@ -51,20 +51,20 @@ implementation, please contact
 
    - analyze affinity relation between arrays
    - analyze dependencies in each loop nest
-   - align arrays 
+   - align arrays
    - define and distribute templates
 
   2) Technical steps required by the compiler
 
-   - write subroutine interfaces (for subroutines having distributed arrays 
+   - write subroutine interfaces (for subroutines having distributed arrays
      as arguments and (pure) subroutines called inside of independent loops)
    - insert independent clause before parallel loops
-   - insert new clause before independent loops and list privatizable 
+   - insert new clause before independent loops and list privatizable
      variables
    - inline subroutines and unroll loops for improving performance
    - replace calls with arrays passed by the address of the first element
      by the calls passing the array sections
-   - interchange loops to make the loop over the distributed dimension to be 
+   - interchange loops to make the loop over the distributed dimension to be
      the outmost loop
    - modify files included in hpf_local subroutines to avoid declaration of
      distributed arrays
@@ -82,28 +82,28 @@ implementation, please contact
     - convert z_solve to work with arrays with z-distributed arrays
     - split loops updating separate planes of rhs (in rhsz)
     - add arrays with a distributed dimension for calculation of control sums
-   SP 
+   SP
     - first 4 steps are the same as in BT
     - the same as the last step in BT
-   LU 
+   LU
     - change algorithm to hyperplane (this involves computation of two
       arrays for loop bounds and replacement the loop headers in jacld, blts,
       jacu and buts)
     - create an auxiliary array holding a copy of a triangular section of the
-      main array 
-   FT 
+      main array
+   FT
     Most changes in FT are concerned to the serial code modification it
     includes:
     - The algorithm structure was simplified and unnecessary copy operations
       were removed
     - Performance improved by 17%
     - Conditional compilation flags allow to compile f77/hpf program
-    - Random number generator is parallelized (taking advantage the specific 
-      structure of the code)      
+    - Random number generator is parallelized (taking advantage the specific
+      structure of the code)
     - 15% smaller source code size
-    - all modifications from serial to HPF form are of general type 
+    - all modifications from serial to HPF form are of general type
    CG
-    - the parameter rowmaxnz (maximum nozero elements in a row) was introduced. 
+    - the parameter rowmaxnz (maximum nozero elements in a row) was introduced.
       This parameter is automatically set by setparams.
     - a distributed (blockwise by rows) rectangular matrix and a distributed
       index matrix were added
@@ -115,4 +115,4 @@ implementation, please contact
       grids were allocated at 1D global array and were redimensioned at
       subroutine calls)
     - Dissemination templates were introduced to parallelize intergrid
-      operators proj and interpolate  
+      operators proj and interpolate

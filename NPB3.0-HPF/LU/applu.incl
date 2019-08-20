@@ -1,12 +1,12 @@
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-c---  applu.incl   
+c---  applu.incl
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c   npbparams.h defines parameters that depend on the class and 
+c   npbparams.h defines parameters that depend on the class and
 c   number of nodes
 c---------------------------------------------------------------------
 
@@ -23,10 +23,10 @@ c---------------------------------------------------------------------
       parameter (ipr_default = 1)
       double precision omega_default
       parameter (omega_default = 1.2d0)
-      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def, 
+      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def,
      >                 tolrsd4_def, tolrsd5_def
-      parameter (tolrsd1_def=1.0e-08, 
-     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08, 
+      parameter (tolrsd1_def=1.0e-08,
+     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08,
      >          tolrsd4_def=1.0e-08, tolrsd5_def=1.0e-08)
 
       double precision c1, c2, c3, c4, c5
@@ -53,12 +53,12 @@ c---------------------------------------------------------------------
      >              tx1, tx2, tx3,
      >              ty1, ty2, ty3,
      >              tz1, tz2, tz3,
-     >              nx, ny, nz, 
+     >              nx, ny, nz,
      >              nx0, ny0, nz0,
      >              ist, iend,
      >              jst, jend,
-     >              ii1, ii2, 
-     >              ji1, ji2, 
+     >              ii1, ii2,
+     >              ji1, ji2,
      >              ki1, ki2
 
 c---------------------------------------------------------------------
@@ -76,9 +76,9 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c   field variables and residuals
-c   to improve cache performance, second two dimensions padded by 1 
+c   to improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.
-c   Note: corresponding array (called "v") in routines blts, buts, 
+c   Note: corresponding array (called "v") in routines blts, buts,
 c   and l2norm are similarly padded
 c---------------------------------------------------------------------
       double precision u(5,isiz1/2*2+1,
@@ -100,7 +100,7 @@ c---------------------------------------------------------------------
       common/cvar/ u, rsd, frct, flux,
      >             qs, rho_i
 
-      include 'projarea.h' 
+      include 'projarea.h'
 !hpf$    align(*,:,:,*) with ProjArea :: u,rsd,frct
 !hpf$    align(*,:,:,*) with ProjArea :: flux3
 !hpf$    align(:,:,*) with ProjArea :: qs,rho_i

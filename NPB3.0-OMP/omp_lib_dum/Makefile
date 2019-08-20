@@ -1,4 +1,4 @@
-# Makefile for OMP dummy library routine. 
+# Makefile for OMP dummy library routine.
 
 OMP_LIB_DUM = omp_lib_dumf.o omp_lib_dumc.o
 

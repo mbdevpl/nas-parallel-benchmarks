@@ -1,9 +1,9 @@
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      subroutine l2norm ( ldx, ldy, ldz, 
+      subroutine l2norm ( ldx, ldy, ldz,
      >                    nx0, ny0, nz0,
-     >                    ist, iend, 
+     >                    ist, iend,
      >                    jst, jend,
      >                    v, sum )
 c---------------------------------------------------------------------
@@ -24,7 +24,7 @@ c---------------------------------------------------------------------
       integer ist, iend
       integer jst, jend
 c---------------------------------------------------------------------
-c   To improve cache performance, second two dimensions padded by 1 
+c   To improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.  Only needed in v.
 c---------------------------------------------------------------------
       double precision  v(5,ldx/2*2+1,ldy/2*2+1,*), sum(5)

@@ -59,7 +59,7 @@ public class IS extends ISBase{
     serial=ser;
     rng=new Random();
   }
-    
+
   public static void main(String argv[] ){
     IS is = null;
 
@@ -68,41 +68,41 @@ public class IS extends ISBase{
     int np=BMArgs.num_threads;
     boolean serial=BMArgs.serial;
 
-    try{ 
+    try{
       is = new IS(CLSS,np,serial);
     }catch(OutOfMemoryError e){
       BMArgs.outOfMemoryMessage();
       System.exit(0);
-    }	 
+    }	
     is.runBenchMark();
   }
-  
+
   public void run(){runBenchMark();}
 
   public void runBenchMark(){
       BMArgs.Banner(BMName,CLASS,serial,num_threads);
 
-      System.out.println(" Size:  "+ TOTAL_KEYS 
+      System.out.println(" Size:  "+ TOTAL_KEYS
   			+" Iterations:   " + MAX_ITERATIONS);
 
-//Initialize timer	    
+//Initialize timer	
       timer = new Timer();
       timer.resetTimer( 0 );
 
-//Generate random number sequence and subsequent keys on all procs 
-     initKeys(amult); // Random number gen seed 
-        			// Random number gen mult 
+//Generate random number sequence and subsequent keys on all procs
+     initKeys(amult); // Random number gen seed
+        			// Random number gen mult
 
-/* Do one interation for free (i.e., untimed) to guarantee initialization of  
+/* Do one interation for free (i.e., untimed) to guarantee initialization of
    all data and code pages and respective tables */
       if(serial){
         rank( 1 );
-      }else{  
+      }else{
         setupThreads(this);
-        RankThread.iteration=1;       
+        RankThread.iteration=1;
         doSort();
         for(int i=0; i<MAX_KEY; i++ ){
-          master_hist[i] = 0;	 
+          master_hist[i] = 0;	
         }
 
         doSort();
@@ -118,16 +118,16 @@ public class IS extends ISBase{
           if( CLASS != 'S' ) System.out.println( "	  " + it);
         if(serial){
           rank(it);
-        }else{  
-          RankThread.iteration=it;    
+        }else{
+          RankThread.iteration=it;
           doSort();
           for(int i=0; i<MAX_KEY; i++ ){
-            master_hist[i] = 0;    
+            master_hist[i] = 0;
           }
           doSort();
           partial_verify(it);
   	}
-      }       
+      }
       timer.stop( 0 );
 
 /*This tests that keys are in sequence: sorting of last ranked key seq
@@ -136,7 +136,7 @@ public class IS extends ISBase{
       int verified=0;
       if( passed_verification == 5*MAX_ITERATIONS + 1 ) verified = 1;
 
-      BMResults.printVerificationStatus(CLASS,verified,BMName); 
+      BMResults.printVerificationStatus(CLASS,verified,BMName);
       double tm = timer.readTimer( 0 );
       BMResults res=new BMResults(BMName,
         			  CLASS,
@@ -151,9 +151,9 @@ public class IS extends ISBase{
         			  serial,
         			  num_threads,
         			  bid);
-      res.print();				  
-  }  
-      
+      res.print();				
+  }
+
   public double getMOPS(double total_time,int niter,int num_keys){
     double mops = 0.0;
     if( total_time > 0 ){
@@ -163,33 +163,33 @@ public class IS extends ISBase{
     return mops;
   }
 
-  void rank( int iteration ){ 
+  void rank( int iteration ){
     key_array[iteration] = iteration;
     key_array[iteration+MAX_ITERATIONS] = MAX_KEY - iteration;
-    	    
+    	
     for(int  i=0; i<TEST_ARRAY_SIZE; i++ ){
-    	partial_verify_vals[i] = key_array[ test_index_array[i] ]; 
+    	partial_verify_vals[i] = key_array[ test_index_array[i] ];
     }
     	
     /*  Clear the work array */
     for(int i=0;i<MAX_KEY;i++) master_hist[i] = 0;
 
-    /*  In this section, the keys themselves are used as their 
+    /*  In this section, the keys themselves are used as their
     	own indexes to determine how many of each there are: their
     	individual population  */
 
-    for(int i=0;i<NUM_KEYS;i++) master_hist[key_array[i]]++;  
+    for(int i=0;i<NUM_KEYS;i++) master_hist[key_array[i]]++;
     /* Now they have individual key   */
     /* population		      */
 
     /*  Density to Distribution conversion */
     for(int i=0; i<MAX_KEY-1; i++ ){
-    	master_hist[i+1] += master_hist[i];  
+    	master_hist[i+1] += master_hist[i];
     }
     partial_verify(iteration);
   }
-    
-  public void partial_verify(int iteration){  
+
+  public void partial_verify(int iteration){
     for( int i=0; i<TEST_ARRAY_SIZE; i++ ){						
       int k = partial_verify_vals[i];	       /* test vals were put here */
       int offset=iteration;
@@ -221,7 +221,7 @@ public class IS extends ISBase{
         		     "iteration" + iteration + ", test key "+ i );
         }else
           passed_verification++;
-      }	 
+      }	
     }
   }
 
@@ -237,18 +237,18 @@ public class IS extends ISBase{
         idx++;
       }
 
-//Confirm keys correctly sorted: count incorrectly sorted keys, if any 
+//Confirm keys correctly sorted: count incorrectly sorted keys, if any
       int count = 0;
       for(int i=1; i<NUM_KEYS; i++ )
         if( key_array[i-1] > key_array[i] ) count++;
-    
+
       if( count != 0 ){
         System.out.println( "Full_verify: number of keys out of sort: " + count);
       }else
         passed_verification++;
      return passed_verification;
   }
-  
+
   void initKeys( double a ){
     double x;
     int k = MAX_KEY/4;
@@ -272,13 +272,13 @@ public class IS extends ISBase{
   	while(!rankthreads[m].done){
           try{wait();}catch(InterruptedException e){}
           notifyAll();
-        }    
+        }
   }
-      
+
   public double getTime(){return timer.readTimer(0);}
-  
+
   public void finalize() throws Throwable{
-    System.out.println("IS: is about to be garbage collected"); 
+    System.out.println("IS: is about to be garbage collected");
     super.finalize();
   }
 

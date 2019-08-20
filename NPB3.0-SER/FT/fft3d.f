@@ -1,22 +1,22 @@
-c---------------------------------------------------------------------   
+c---------------------------------------------------------------------
       subroutine Swarztrauber(is,m,vlen,n,x,xd1,exponent)
 
       implicit none
       include 'global.h'
 c---------------------------------------------------------------------
 c   Computes NY N-point complex-to-complex FFTs of X using an algorithm due
-c   to Swarztrauber.  X is both the input and the output array, while Y is a 
-c   scratch array.  It is assumed that N = 2^M.  Before calling 
-c   Swarztrauber to 
+c   to Swarztrauber.  X is both the input and the output array, while Y is a
+c   scratch array.  It is assumed that N = 2^M.  Before calling
+c   Swarztrauber to
 c   perform FFTs
 c---------------------------------------------------------------------
       integer is,m,vlen,n,xd1
-      double complex x(xd1,n), exponent(n)      
+      double complex x(xd1,n), exponent(n)
 
       integer i,j,l
       double complex u1,x11,x21
       integer k, n1,li,lj,lk,ku,i11,i12,i21,i22
-      
+
       if (timers_enabled) call timer_start(4)
 c---------------------------------------------------------------------
 c   Perform one variant of the Stockham FFT.
@@ -35,7 +35,7 @@ c---------------------------------------------------------------------
           i12 = i11 + n1
           i21 = i * lj + 1
           i22 = i21 + lk
-        
+
           if (is .ge. 1) then
             u1 = exponent(ku+i)
           else
@@ -68,7 +68,7 @@ c---------------------------------------------------------------------
             i12 = i11 + n1
             i21 = i * lj + 1
             i22 = i21 + lk
-        
+
             if (is .ge. 1) then
               u1 = exponent(ku+i)
             else
@@ -102,13 +102,13 @@ c---------------------------------------------------------------------
 	integer len
         integer blkp
 
-        if (timers_enabled) call timer_start(3)	   
+        if (timers_enabled) call timer_start(3)	
 
         fftblock=CacheSize/n1
 	if(fftblock.ge.BlockMax) fftblock=BlockMax
 	blkp=fftblock+1
 	log = ilog2( n1)
-        if (timers_enabled) call timer_start(7) 
+        if (timers_enabled) call timer_start(7)
         do k = 1, n3
           do bls = 1, n2, fftblock
 	    ble = bls + fftblock - 1
@@ -119,7 +119,7 @@ c---------------------------------------------------------------------
               plane(j-bls+1+blkp*(i-1)) = x(i,j,k)
             end do
             end do
-            call Swarztrauber(sign,log,len,n1,plane,blkp,exp1)     
+            call Swarztrauber(sign,log,len,n1,plane,blkp,exp1)
             do j = bls, ble
             do i = 1, n1
               x(i,j,k)=plane(j-bls+1+blkp*(i-1))
@@ -133,7 +133,7 @@ c---------------------------------------------------------------------
 	if(fftblock.ge.BlockMax) fftblock=BlockMax
 	blkp=fftblock+1
 	log = ilog2( n2 )
-        if (timers_enabled) call timer_start(8)	   
+        if (timers_enabled) call timer_start(8)	
         do k = 1, n3
           do bls = 1, n1, fftblock
 	    ble = bls + fftblock - 1
@@ -163,10 +163,10 @@ c---------------------------------------------------------------------
             do i = 0,n3-1
             do j = bls, ble
               xout(j+(n1+1)*(k-1+n2*i)) = plane(j-bls+1+blkp*i)
-            end do		   
+            end do		
             end do
           end do
-        end do  	       
+        end do  	
         if (timers_enabled) call timer_stop(9)
         if (timers_enabled) call timer_stop(3)
         return
