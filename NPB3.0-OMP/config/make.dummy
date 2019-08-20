@@ -1,0 +1,9 @@
+F_LIB  = -L../omp_lib_dum -lomp_lib_dum
+C_LIB  = -L../omp_lib_dum -lomp_lib_dum
+C_INC  = -I../omp_lib_dum
+SMAKE  = "F77=$(F77)" "CC=$(CC)" "FFLAGS=$(FFLAGS)" "CFLAGS=$(CFLAGS)"
+
+default:: ${PROGRAM} libomp_lib_dum.a
+
+libomp_lib_dum.a: 
+	cd ../omp_lib_dum; $(MAKE) $(SMAKE)

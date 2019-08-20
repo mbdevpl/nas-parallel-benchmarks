@@ -1,0 +1,96 @@
+!-------------------------------------------------------------------------!
+!									  !
+!	 N  A  S     P A R A L L E L	 B E N C H M A R K S  3.0	  !
+!									  !
+!			J A V A 	V E R S I O N			  !
+!									  !
+!                            R E A D M E                                  !
+!									  !
+!-------------------------------------------------------------------------!
+!									  !
+!    NPB3.0-JAV package contains translation of the Fortran version of    !
+!    NPB3.0-SER to Java language. 					  !
+!									  !
+!    Permission to use, copy, distribute and modify this software	  !
+!    for any purpose with or without fee is hereby granted.  We 	  !
+!    request, however, that all derived work reference the NAS  	  !
+!    Parallel Benchmarks 3.0. This software is provided "as is" 	  !
+!    without express or implied warranty.				  !
+!									  !
+!    Information on NPB 3.0, including the Technical Report NAS-02-008	  !
+!    "Implementation of the NAS Parallel Benchmarks in Java",		  !
+!    original specifications, source code, results and information	  !
+!    on how to submit new results, is available at:			  !
+!									  !
+!	    http://www.nas.nasa.gov/Software/NPB/			  !
+!									  !
+!    Send comments or suggestions to  npb@nas.nasa.gov  		  !
+!									  !
+!	   NAS Parallel Benchmarks Group				  !
+!	   NASA Ames Research Center					  !
+!	   Mail Stop: T27A-1						  !
+!	   Moffett Field, CA   94035-1000				  !
+!									  !
+!	   E-mail:  npb@nas.nasa.gov					  !
+!	   Fax:     (650) 604-3957					  !
+!									  !
+!-------------------------------------------------------------------------!
+!     Translation to Java and to MultiThreaded Code:			  !
+!     Michael A. Frumkin					          !
+!     Mathew Schultz	   					          !
+!-------------------------------------------------------------------------!
+
+The package NPB3.0-JAV contains serial and multithreaded versions of the 
+NPB3.0-SER of the NAS Parallel Benchmarks (except EP).
+
+The current directory contains the Makefile and testAllS and testAllW used 
+to test  NPB3.0-JAV on the following platforms:
+
+MACHINE              	   OS       	JAVA          # CPU
+--------------------------------------------------------------------------
+SGI Octane 		IRIX 6.5	1.3.1	   	 1 
+SGI Origin2000 		IRIX64 6.5	1.1.8	   	32 
+SUN Ultra-60		SunOS 5.6 	1.1.3		 2
+SUN Ultra-60		SunOS 5.6 	1.4.0		 2
+SUN Enterprise-10000	SunOS 5.7	1.1.7 	 	16
+IBM A20p Laptop		WINDOWS-2000	1.1.8		 1
+IBM POWER4		AIX 5.1		1.3.0		32
+PC			Linux 2.4.18-6  1.1.8		 2
+APPLE xServer		Darwin-6.1	1.3.1		 2
+--------------------------------------------------------------------------
+
+The file testAllW contains examples of using -mx flag to instruct the JVM
+to use a heap of the specified size.
+
+Instructions for installing and running NPB3.0-JAV:
+
+- cd NPB3.0-JAV
+- set the environment variable CLASSPATH to 
+  the directory where the NPB3.0-JAV directory is located,
+  for example in c-shell use command "setenv CLASSPATH `pwd`"
+
+- modify make.def in this directory to reflect your Java compiler 
+  location and the compiler options
+
+- type "make bt"
+
+- to run BT benchmark type: java -mx300M NPB3_0_JAV.BT -np8 CLASS=A
+  where -mx flags instructs JVM to use 300MB as heap size,
+        -np8 specifies to use 8 threads 
+        CLASS specifies BT benchmark class
+  For comparison purposes we also supply purely sequential Java
+  versions of the NPB. These can be run by replacing the flag
+  specifying  the number of threads with "-serial". Because many
+  classes and methods are shared between the serial and
+  multi-threaded versions, no separate serial Java package is
+  being released.
+	
+- to test all benchmarks, CLASS=S type
+  "make all"
+  ./testAllS
+	
+For Windows users:
+
+- use testAllS.bat to test the benchmarks
+
+

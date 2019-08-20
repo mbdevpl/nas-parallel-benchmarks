@@ -1,0 +1,74 @@
+Some explanations on the OpenMP implementation of NPB 3.0 (NPB3.0-OMP)
+----------------------------------------------------------------------
+
+NPB-OMP is a sample OpenMP implementation based on NPB3.0-SER,
+the serial version previously known as the Programming Baseline for NPB.
+This implementation contains all eight benchmarks:
+seven in Fortran: BT, SP, LU, FT, CG, MG, and EP; one in C: IS.
+
+This version has been tested on the SGI Origin2000.  For problem
+reports and suggestions on the implementation, please contact
+
+   NAS Parallel Benchmark Team
+   npb@nas.nasa.gov
+
+
+1. Compilation
+
+   NPB3.0-OMP uses the same directory tree as NPB3.0-SER (and NPB2.3) does.
+   Before compilation, one needs to check the configuration file
+   'make.def' in the config directory and modify the file if necessary.  
+   Check also the 'suite.def' file if one wants to make a suite.  Then
+
+      make benchmark CLASS=class
+   or
+      make suite
+
+   'benchmark' is one of (BT, SP, LU, FT, CG, MG, EP, IS) and 'class'
+   is one of (S, W, A, B, C).
+
+   To make an executable without OpenMP directives, one needs to
+   include 'omp_lib_dum/omp_lib_dum.a' in the compilation.  This can
+   be done by simply uncommenting an 'include' in config/make.def.
+
+2. Run
+
+   NPB-OMP assumes the static scheduling at run-time.  To ensure the
+   correctness of the results, one can set the environment variable
+   'OMP_SCHEDULE' to "static".
+   For example in a csh:
+
+      setenv OMP_SCHEDULE "static"
+      setenv OMP_NUM_THREADS 4
+      bin/BT.A > BT.A_out.4
+
+   It runs BT Class A problem on 4 threads and the output is stored
+   to BT.A_out.4.
+
+   If one likes to profile a benchmark, the built-in timer can be used,
+   which produces timing for selected code blocks.  The timer can be
+   turned on by creating a dummy file 'timer.flag' in the current working
+   directory (not necessary where the executable is located).
+
+   The printed number of threads is the activated threads during the run,
+   which may not be the same as what's requested.
+
+   For larger problem sizes, the default stack size for slave threads
+   may need to be increased on certain platforms.  For example on SGI
+   Origin 2000, the following command can be used:
+      setenv MP_SLAVE_STACKSIZE 100000000 (to about 100MB)
+
+3. Notes on the implementation
+
+   - Based on NPB3.0-SER, except for FT which was maintained to be closer to
+     the original version in NPB2.3-serial.
+
+   - OpenMP directives were added to the outer-most parallel loops.  No
+     nested parallelism was considered.
+
+   - Extra loops were added in the beginning of most of the benchmarks
+     to touch data pages.  This is to set up a data layout based on the
+     'first touch' policy.
+
+   - For LU, the pipeline algorithm is used, which seems to perform better 
+     than the hyperplane algorithm.

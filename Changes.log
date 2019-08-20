@@ -1,0 +1,106 @@
+Changes in non-MPI versions of NPB (previously PBN3.0)
+      (NPB3.0-SER, NPB3.0-HPF, NPB3.0-OMP, NPB3.0-JAV)
+------------------------------------------------------
+
+[01-Mar-99] Initial Beta Release.
+
+[06-Apr-99] Based on report from Charles Grassl and Ramesh Menon (SGI).
+
+   1. NPB-SER, FT: file auxfnct.f -
+      lines 74 and 75 were interchanged:
+
+      double complex u0(d1+1,d2,d3), tmp(maxdim)
+      integer d1,d2,d3
+
+   2. NPB-OMP: The OpenMP standards requires reduction variable be scalars,
+      thus, changes made to remove the use of array variable for reduction.
+      Relevant modifications in EP, CG, LU, SP, and BT
+
+   3. NPB-OMP: Remove compiler warnings of "Referenced scalar variables 
+      use defaults" by declaring explicitly as shared.
+      Relevant modifications in FT, LU, and BT
+
+   4. NPB-OMP, README.openmp: Explicitly spell out the requirement of
+      the static scheduling (setenv OMP_SCHEDULE "static").
+
+
+[05-Oct-99] NPB3.0-non-MPI Beta Release (02)
+
+General change to all (NPB-SER, NPB-HPF, NPB-OMP) -
+   1. Update header information for all benchmarks.
+
+   2. Allow continuation lines in 'make.def' (modification done
+      in sys/setparams.c).
+
+Change made in NPB-OMP -
+   1. 'print_results' now prints Number-Of-Threads and Mflops/s/thread.
+      The printed number is the activated threads during the run, which
+      may not be the same as what's requested.
+
+   2. A initial data touch loop for array A is added in CG.
+
+   3. 'CRITICAL' section is used for reduction with array.
+      Relevant changes in EP, CG, LU, SP, and BT.
+
+   4. Reconfigure 'make.def' such that 'omp_lib_dum' can be activated
+      from the file for no directive compilation.
+
+   5. The "!$OMP END DO" seems needed before "!$OMP MASTER" in rhs.f
+      for both BT and SP for some f90 compilers.
+
+   6. "SCHEDULE(STATIC)" are used for the pipeline in LU to ensure
+      compliance with the OMP standard.
+
+Change made in NPB-HPF -
+   1. 'print_results' now prints Number-Of-Processes and Mflops/s/process.
+
+   2. Use more consistent output format (via print_results).
+
+   3. More consistent makefiles (via config/make.def).
+
+
+[04-Apr-00] NPB3.0-non-MPI Beta Release (03)
+
+Change made in NPB-OMP -
+   1. The OpenMP-C version of IS has been added, including more timers.
+
+   2. 'cprint_results' includes Number-Of-Threads and Mflops/s/thread.
+
+Change made in NPB-SER -
+   1. More timers included in IS.
+
+NPB-JAV has been included in NPB3.0-non-MPI.
+
+
+[31-May-01] NPB3.0-non-MPI Beta Release (04)
+
+Change made in NPB-OMP -
+   1. NPB-OMP/LU: Failure in verification for number of threads greater 
+      than the problem size is now fixed.
+
+   2. If OMP_NUM_THREADS is unset, the printout will report as "unset"
+      instead of "1"
+
+   3. NPB-OMP/IS: Allocating work_buff on the stack seems to cause problem
+      for large problem size (CLASS C).  "work_buff" is now allocated
+      by "malloc" on the heap for CLASS C.
+
+   4. NPB-OMP/IS: Reported by <RaeLyn.Crowell@compaq.com> - potential
+      synchronization problem could arise due to the use of "static"
+      variables inside "randlc()".  Declaration of these static variables
+      are moved out of randlc() and put in the threadprivate directive.
+
+General change to all (NPB-SER, NPB-HPF, NPB-OMP) -
+   1. Cleanup in makefiles
+
+
+[28-Aug-02] The Official NPB3.0 Release
+
+Change made in all -
+   1. Fixed a bogus verification for "NaN".
+
+   2. Name change from "PBN3.0" to "NPB3.0". Updated all the banners.
+
+   3. NPB-SER/FT: use a derived version from NPB2.3-serial.
+
+   4. NPB-HPF/FT: use a consistent printing format.

@@ -1,0 +1,23 @@
+#! /usr/bin/csh
+setenv CLASSPATH `pwd`
+
+java NPB3_0_JAV.MG -serial CLASS=S
+java NPB3_0_JAV.MG -np2 CLASS=S
+
+java NPB3_0_JAV.CG -serial CLASS=S
+java NPB3_0_JAV.CG -np2 CLASS=S
+
+java NPB3_0_JAV.BT -serial CLASS=S
+java NPB3_0_JAV.BT -np2 CLASS=S
+
+java NPB3_0_JAV.SP -serial CLASS=S
+java NPB3_0_JAV.SP -np2 CLASS=S
+
+java NPB3_0_JAV.LU -serial CLASS=S
+java NPB3_0_JAV.LU -np2 CLASS=S
+
+java NPB3_0_JAV.FT -serial CLASS=S
+java NPB3_0_JAV.FT -np2 CLASS=S
+
+java NPB3_0_JAV.IS -serial CLASS=S
+java NPB3_0_JAV.IS -np2 CLASS=S

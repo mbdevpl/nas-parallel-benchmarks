@@ -1,0 +1,118 @@
+Some explanations on the HPF implementation of NPB 3.0 (NPB3.0-HPF)
+-------------------------------------------------------------------
+
+NPB-HPF is a sample HPF implementation based on NPB3.0-SER,
+the serial version of the NAS Parallel Benchmarks 3.0.
+This implementation contains six of the eight benchmarks:
+BT, SP, LU-hp, FT, CG, and MG.  EP and IS are not included.
+
+This version has been tested on the SGI Origin2000 with the
+pghpf compiler.  For problem reports and suggestions on the 
+implementation, please contact
+
+   NAS Parallel Benchmark Team
+   npb@nas.nasa.gov
+
+
+1. Compilation
+
+   To make a benchmark of some class the user should
+
+      - go to the config directory,
+      - modify make.def by setting the options: 
+         F77,  FLINK, FFLAGS and FLINKFLAGS, 
+      - go to the appropriate directory (say BT),
+      - type "make CLASS=A", for example, for a class A problem.
+
+   The executable will be made in the bin directory. Before making 
+   an executable with different options of F77 or FLINK 
+   user should run "make clean" from the top directory.
+
+2. Run
+
+   Since there is no "standard" way to run an HPF program, we only
+   mention two cases for executing a program from the pghpf compiler.
+
+   If the program is linked with the MPI library (via -Mmpi), it can
+   be run as a regular MPI program, for example:
+      mpirun -np 4 bin/bt.A
+
+   If the program is linked with the SMP library (via -Msmp), it should
+   be run as a regular executable with additional options, for example:
+      bin/bt.A -pghpf -np 4 -heapz 600mb
+
+3. Notes on the implementation
+
+   Steps to convert NPB-SER to HPF form are briefly described here.
+
+3.1 General Steps Common to all Benchmarks
+
+  1) Steps requiring the program knowledge
+
+   - analyze affinity relation between arrays
+   - analyze dependencies in each loop nest
+   - align arrays 
+   - define and distribute templates
+
+  2) Technical steps required by the compiler
+
+   - write subroutine interfaces (for subroutines having distributed arrays 
+     as arguments and (pure) subroutines called inside of independent loops)
+   - insert independent clause before parallel loops
+   - insert new clause before independent loops and list privatizable 
+     variables
+   - inline subroutines and unroll loops for improving performance
+   - replace calls with arrays passed by the address of the first element
+     by the calls passing the array sections
+   - interchange loops to make the loop over the distributed dimension to be 
+     the outmost loop
+   - modify files included in hpf_local subroutines to avoid declaration of
+     distributed arrays
+   - use HPF intrinsic function sum for calculation of global sums (reduction
+     type operation)
+   - use array syntax to perform explicit operators in the direction of the
+     distributed dimension
+
+3.2 Benchmark specific changes
+
+   BT
+    - generate a template for z-distribution
+    - introduce z-distributed arrays
+    - insert redistributions before and after z_solve
+    - convert z_solve to work with arrays with z-distributed arrays
+    - split loops updating separate planes of rhs (in rhsz)
+    - add arrays with a distributed dimension for calculation of control sums
+   SP 
+    - first 4 steps are the same as in BT
+    - the same as the last step in BT
+   LU 
+    - change algorithm to hyperplane (this involves computation of two
+      arrays for loop bounds and replacement the loop headers in jacld, blts,
+      jacu and buts)
+    - create an auxiliary array holding a copy of a triangular section of the
+      main array 
+   FT 
+    Most changes in FT are concerned to the serial code modification it
+    includes:
+    - The algorithm structure was simplified and unnecessary copy operations
+      were removed
+    - Performance improved by 17%
+    - Conditional compilation flags allow to compile f77/hpf program
+    - Random number generator is parallelized (taking advantage the specific 
+      structure of the code)      
+    - 15% smaller source code size
+    - all modifications from serial to HPF form are of general type 
+   CG
+    - the parameter rowmaxnz (maximum nozero elements in a row) was introduced. 
+      This parameter is automatically set by setparams.
+    - a distributed (blockwise by rows) rectangular matrix and a distributed
+      index matrix were added
+    - array syntax is used in HPF version for improving performance and
+      conciseness of the program
+    - a few small (unnecessary) initialization statements were removed
+   MG
+    - Grids are embedded into sections of 4D array (in the serial version the
+      grids were allocated at 1D global array and were redimensioned at
+      subroutine calls)
+    - Dissemination templates were introduced to parallelize intergrid
+      operators proj and interpolate  

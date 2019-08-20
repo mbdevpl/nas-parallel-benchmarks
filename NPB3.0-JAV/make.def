@@ -1,0 +1,3 @@
+JROOT=/usr/java1.1
+JAVAFLAGS=-O 
+
