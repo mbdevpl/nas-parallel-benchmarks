@@ -1,11 +1,11 @@
 c---------------------------------------------------------------------
-c  Parameter lm (declared and set in "npbparams.h") is the log-base2 of 
-c  the edge size max for the partition on a given node, so must be changed 
-c  either to save space (if running a small case) or made bigger for larger 
-c  cases, for example, 512^3. Thus lm=7 means that the largest dimension 
-c  of a partition that can be solved on a node is 2^7 = 128. lm is set 
+c  Parameter lm (declared and set in "npbparams.h") is the log-base2 of
+c  the edge size max for the partition on a given node, so must be changed
+c  either to save space (if running a small case) or made bigger for larger
+c  cases, for example, 512^3. Thus lm=7 means that the largest dimension
+c  of a partition that can be solved on a node is 2^7 = 128. lm is set
 c  automatically in npbparams.h
-c  Parameters ndim1, ndim2, ndim3 are the local problem dimensions. 
+c  Parameters ndim1, ndim2, ndim3 are the local problem dimensions.
 c---------------------------------------------------------------------
 
       include 'npbparams.h'
@@ -20,7 +20,7 @@ c---------------------------------------------------------------------
       parameter( nm2=2*nm*nm, maxlevel=(lt_default+1) )
       parameter( nr = (8*(nv+nm**2+5*nm+14*lt_default-7*lm))/7 )
       integer maxprocs
-      parameter( maxprocs = 131072 )  ! this is the upper proc limit that 
+      parameter( maxprocs = 131072 )  ! this is the upper proc limit that
                                       ! the current "nr" parameter can handle
 c---------------------------------------------------------------------
       integer nbr(3,-1:1,maxlevel), msg_type(3,-1:1)
@@ -51,10 +51,10 @@ c      parameter( m=1037 )
       common /buffer/ buff
 
 c---------------------------------------------------------------------
-      integer t_bench, t_init, t_psinv, t_resid, t_rprj3, t_interp, 
+      integer t_bench, t_init, t_psinv, t_resid, t_rprj3, t_interp,
      >        t_norm2u3, t_comm3, t_rcomm, t_last
-      parameter (t_bench=1, t_init=2, t_psinv=3, t_resid=4, t_rprj3=5,  
-     >        t_interp=6, t_norm2u3=7, t_comm3=8, 
+      parameter (t_bench=1, t_init=2, t_psinv=3, t_resid=4, t_rprj3=5,
+     >        t_interp=6, t_norm2u3=7, t_comm3=8,
      >        t_rcomm=9, t_last=9)
 
       logical timeron

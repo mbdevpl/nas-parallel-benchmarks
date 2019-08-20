@@ -38,7 +38,7 @@
 
 c---------------------------------------------------------------------
 c
-c Author: P. O. Frederickson 
+c Author: P. O. Frederickson
 c         D. H. Bailey
 c         A. C. Woo
 c         H. Jin
@@ -61,11 +61,11 @@ c   not affect the results.
 
       include 'npbparams.h'
 
-      double precision Mops, epsilon, a, s, t1, t2, t3, t4, x, x1, 
+      double precision Mops, epsilon, a, s, t1, t2, t3, t4, x, x1,
      >                 x2, q, sx, sy, tm, an, tt, gc, dum(3), qq
       double precision sx_verify_value, sy_verify_value, sx_err, sy_err
-      integer          mk, mm, nn, nk, nq, np, 
-     >                 i, ik, kk, l, k, nit, 
+      integer          mk, mm, nn, nk, nq, np,
+     >                 i, ik, kk, l, k, nit,
      >                 k_offset, j, fstatus
       logical          verified, timers_enabled
       external         randlc, timer_read
@@ -113,11 +113,11 @@ c   point print statement (internal file)
 
       verified = .false.
 
-c   Compute the number of "batches" of random number pairs generated 
-c   per processor. Adjust if the number of processors does not evenly 
+c   Compute the number of "batches" of random number pairs generated
+c   per processor. Adjust if the number of processors does not evenly
 c   divide the total number
 
-      np = nn 
+      np = nn
 
 
 c   Call the random number generator functions and initialize
@@ -177,7 +177,7 @@ c   have more numbers to generate than others
 
 !$omp do reduction(+:sx,sy)
       do 150 k = 1, np
-         kk = k_offset + k 
+         kk = k_offset + k
          t1 = s
          t2 = an
 
@@ -198,9 +198,9 @@ c        Compute uniform pseudorandom numbers.
          call vranlc(2 * nk, t1, a, x)
          if (timers_enabled) call timer_stop(3)
 
-c        Compute Gaussian deviates by acceptance-rejection method and 
-c        tally counts in concentric square annuli.  This loop is not 
-c        vectorizable. 
+c        Compute Gaussian deviates by acceptance-rejection method and
+c        tally counts in concentric square annuli.  This loop is not
+c        vectorizable.
 
          if (timers_enabled) call timer_start(2)
 
@@ -276,8 +276,8 @@ c        vectorizable.
      >        'Counts:'/(i3,0p,f15.0))
 
       call print_results('EP', class, m+1, 0, 0, nit,
-     >                   tm, Mops, 
-     >                   'Random numbers generated', 
+     >                   tm, Mops,
+     >                   'Random numbers generated',
      >                   verified, npbversion, compiletime, cs1,
      >                   cs2, cs3, cs4, cs5, cs6, cs7)
 

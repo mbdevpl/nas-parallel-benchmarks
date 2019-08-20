@@ -30,13 +30,13 @@ c---------------------------------------------------------------------
 
       integer IERROR
 
- 
+
       ROOT = 0
- 
+
 c---------------------------------------------------------------------
 c   begin pseudo-time stepping iterations
 c---------------------------------------------------------------------
-      tmp = 1.0d+00 / ( omega * ( 2.0d+00 - omega ) ) 
+      tmp = 1.0d+00 / ( omega * ( 2.0d+00 - omega ) )
 
 c---------------------------------------------------------------------
 c   initialize a,b,c,d to zero (guarantees that page tables have been
@@ -59,20 +59,20 @@ c---------------------------------------------------------------------
 c   compute the steady-state residuals
 c---------------------------------------------------------------------
       call rhs
- 
+
 c---------------------------------------------------------------------
 c   compute the L2 norms of newton iteration residuals
 c---------------------------------------------------------------------
       call l2norm( isiz1, isiz2, isiz3, nx0, ny0, nz0,
      >             ist, iend, jst, jend,
      >             rsd, rsdnm )
-  
+
       do i = 1, t_last
          call timer_clear(i)
       end do
 
       call MPI_BARRIER( MPI_COMM_WORLD, IERROR )
- 
+
       call timer_clear(1)
       call timer_start(1)
 
@@ -89,7 +89,7 @@ c---------------------------------------------------------------------
  200           format(' Time step ', i4)
             endif
          endif
- 
+
 c---------------------------------------------------------------------
 c   perform SSOR iteration
 c---------------------------------------------------------------------
@@ -102,13 +102,13 @@ c---------------------------------------------------------------------
                end do
             end do
          end do
- 
-         DO k = 2, nz -1 
+
+         DO k = 2, nz -1
 c---------------------------------------------------------------------
 c   form the lower triangular part of the jacobian matrix
 c---------------------------------------------------------------------
             call jacld(k)
- 
+
 c---------------------------------------------------------------------
 c   perform the lower triangular solution
 c---------------------------------------------------------------------
@@ -117,10 +117,10 @@ c---------------------------------------------------------------------
      >                 omega,
      >                 rsd,
      >                 a, b, c, d,
-     >                 ist, iend, jst, jend, 
+     >                 ist, iend, jst, jend,
      >                 nx0, ny0, ipt, jpt)
           END DO
- 
+
           DO k = nz - 1, 2, -1
 c---------------------------------------------------------------------
 c   form the strictly upper triangular part of the jacobian matrix
@@ -138,11 +138,11 @@ c---------------------------------------------------------------------
      >                 ist, iend, jst, jend,
      >                 nx0, ny0, ipt, jpt)
           END DO
- 
+
 c---------------------------------------------------------------------
 c   update the variables
 c---------------------------------------------------------------------
- 
+
          do k = 2, nz-1
             do j = jst, jend
                do i = ist, iend
@@ -153,7 +153,7 @@ c---------------------------------------------------------------------
                end do
             end do
          end do
- 
+
 c---------------------------------------------------------------------
 c   compute the max-norms of newton iteration corrections
 c---------------------------------------------------------------------
@@ -167,12 +167,12 @@ c            else if ( ipr .eq. 2 .and. id .eq. 0 ) then
 c                write (*,'(i5,f15.6)') istep,delunm(5)
 c            end if
          end if
- 
+
 c---------------------------------------------------------------------
 c   compute the steady-state residuals
 c---------------------------------------------------------------------
          call rhs
- 
+
 c---------------------------------------------------------------------
 c   compute the max-norms of newton iteration residuals
 c---------------------------------------------------------------------
@@ -199,26 +199,26 @@ c---------------------------------------------------------------------
             end if
             go to 900
          end if
- 
+
       end do
   900 continue
- 
+
       call timer_stop(1)
       wtime = timer_read(1)
- 
 
-      call MPI_ALLREDUCE( wtime, 
-     >                    maxtime, 
-     >                    1, 
-     >                    MPI_DOUBLE_PRECISION, 
-     >                    MPI_MAX, 
+
+      call MPI_ALLREDUCE( wtime,
+     >                    maxtime,
+     >                    1,
+     >                    MPI_DOUBLE_PRECISION,
+     >                    MPI_MAX,
      >                    MPI_COMM_WORLD,
      >                    IERROR )
- 
+
 
 
       return
-      
+
  1001 format (1x/5x,'pseudo-time SSOR iteration no.=',i4/)
  1004 format (1x/1x,'convergence was achieved after ',i4,
      >   ' pseudo-time steps' )
@@ -242,5 +242,5 @@ c---------------------------------------------------------------------
      > 'fourth pde = ',1pe12.5/,
      > 1x,'RMS-norm of steady-state residual for ',
      > 'fifth pde  = ',1pe12.5)
- 
+
       end

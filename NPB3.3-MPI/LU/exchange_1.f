@@ -104,18 +104,18 @@ c---------------------------------------------------------------------
 
           if( south .ne. -1 ) then
               do j=jst,jend
-                  dum(1,j) = g(1,nx,j,k) 
-                  dum(2,j) = g(2,nx,j,k) 
-                  dum(3,j) = g(3,nx,j,k) 
-                  dum(4,j) = g(4,nx,j,k) 
-                  dum(5,j) = g(5,nx,j,k) 
+                  dum(1,j) = g(1,nx,j,k)
+                  dum(2,j) = g(2,nx,j,k)
+                  dum(3,j) = g(3,nx,j,k)
+                  dum(4,j) = g(4,nx,j,k)
+                  dum(5,j) = g(5,nx,j,k)
               enddo
-              call MPI_SEND( dum(1,jst), 
-     >                       5*(jend-jst+1), 
-     >                       dp_type, 
-     >                       south, 
-     >                       from_n, 
-     >                       MPI_COMM_WORLD, 
+              call MPI_SEND( dum(1,jst),
+     >                       5*(jend-jst+1),
+     >                       dp_type,
+     >                       south,
+     >                       from_n,
+     >                       MPI_COMM_WORLD,
      >                       IERROR )
           endif
 
@@ -127,12 +127,12 @@ c---------------------------------------------------------------------
                   dum(4,i) = g(4,i,ny,k)
                   dum(5,i) = g(5,i,ny,k)
               enddo
-              call MPI_SEND( dum(1,ist), 
-     >                       5*(iend-ist+1), 
-     >                       dp_type, 
-     >                       east, 
-     >                       from_w, 
-     >                       MPI_COMM_WORLD, 
+              call MPI_SEND( dum(1,ist),
+     >                       5*(iend-ist+1),
+     >                       dp_type,
+     >                       east,
+     >                       from_w,
+     >                       MPI_COMM_WORLD,
      >                       IERROR )
           endif
 
@@ -146,12 +146,12 @@ c---------------------------------------------------------------------
                   dum(4,j) = g(4,1,j,k)
                   dum(5,j) = g(5,1,j,k)
               enddo
-              call MPI_SEND( dum(1,jst), 
-     >                       5*(jend-jst+1), 
-     >                       dp_type, 
-     >                       north, 
-     >                       from_s, 
-     >                       MPI_COMM_WORLD, 
+              call MPI_SEND( dum(1,jst),
+     >                       5*(jend-jst+1),
+     >                       dp_type,
+     >                       north,
+     >                       from_s,
+     >                       MPI_COMM_WORLD,
      >                       IERROR )
           endif
 
@@ -163,12 +163,12 @@ c---------------------------------------------------------------------
                   dum(4,i) = g(4,i,1,k)
                   dum(5,i) = g(5,i,1,k)
               enddo
-              call MPI_SEND( dum(1,ist), 
-     >                       5*(iend-ist+1), 
-     >                       dp_type, 
-     >                       west, 
-     >                       from_e, 
-     >                       MPI_COMM_WORLD, 
+              call MPI_SEND( dum(1,ist),
+     >                       5*(iend-ist+1),
+     >                       dp_type,
+     >                       west,
+     >                       from_e,
+     >                       MPI_COMM_WORLD,
      >                       IERROR )
           endif
 

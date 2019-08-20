@@ -14,16 +14,16 @@ c---------------------------------------------------------------------
        include 'header.h'
 
        double precision dtemp(5), xi, eta, zeta, dtpp
-       integer          c, m, i, j, k, ip1, im1, jp1, 
+       integer          c, m, i, j, k, ip1, im1, jp1,
      >                  jm1, km1, kp1
 
 c---------------------------------------------------------------------
-c loop over all cells owned by this node                   
+c loop over all cells owned by this node
 c---------------------------------------------------------------------
        do   c = 1, ncells
 
 c---------------------------------------------------------------------
-c         initialize                                  
+c         initialize
 c---------------------------------------------------------------------
           do   m = 1, 5
              do   k= 0, cell_size(3,c)-1
@@ -36,7 +36,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c xi-direction flux differences                      
+c xi-direction flux differences
 c---------------------------------------------------------------------
           do   k = start(3,c), cell_size(3,c)-end(3,c)-1
              zeta = dble(k+cell_low(3,c)) * dnzm1
@@ -58,13 +58,13 @@ c---------------------------------------------------------------------
                    end do
 
                    cuf(i)   = buf(i,2) * buf(i,2)
-                   buf(i,1) = cuf(i) + buf(i,3) * buf(i,3) + 
-     >                        buf(i,4) * buf(i,4) 
+                   buf(i,1) = cuf(i) + buf(i,3) * buf(i,3) +
+     >                        buf(i,4) * buf(i,4)
                    q(i) = 0.5d0*(buf(i,2)*ue(i,2) + buf(i,3)*ue(i,3) +
      >                           buf(i,4)*ue(i,4))
 
                 end do
- 
+
                 do  i = start(1,c), cell_size(1,c)-end(1,c)-1
                    im1 = i-1
                    ip1 = i+1
@@ -83,7 +83,7 @@ c---------------------------------------------------------------------
      >                 ue(ip1,3)*buf(ip1,2)-ue(im1,3)*buf(im1,2))+
      >                 xxcon2*(buf(ip1,3)-2.0d0*buf(i,3)+buf(im1,3))+
      >                 dx3tx1*( ue(ip1,3)-2.0d0*ue(i,3) +ue(im1,3))
-                  
+
                    forcing(i,j,k,4,c) = forcing(i,j,k,4,c) - tx2*(
      >                 ue(ip1,4)*buf(ip1,2)-ue(im1,4)*buf(im1,2))+
      >                 xxcon2*(buf(ip1,4)-2.0d0*buf(i,4)+buf(im1,4))+
@@ -100,7 +100,7 @@ c---------------------------------------------------------------------
                 end do
 
 c---------------------------------------------------------------------
-c Fourth-order dissipation                         
+c Fourth-order dissipation
 c---------------------------------------------------------------------
                 if (start(1,c) .gt. 0) then
                    do   m = 1, 5
@@ -137,9 +137,9 @@ c---------------------------------------------------------------------
              end do
           end do
 c---------------------------------------------------------------------
-c  eta-direction flux differences             
+c  eta-direction flux differences
 c---------------------------------------------------------------------
-          do   k = start(3,c), cell_size(3,c)-end(3,c)-1          
+          do   k = start(3,c), cell_size(3,c)-end(3,c)-1
              zeta = dble(k+cell_low(3,c)) * dnzm1
              do   i=start(1,c), cell_size(1,c)-end(1,c)-1
                 xi = dble(i+cell_low(1,c)) * dnxm1
@@ -148,7 +148,7 @@ c---------------------------------------------------------------------
                    eta = dble(j+cell_low(2,c)) * dnym1
 
                    call exact_solution(xi, eta, zeta, dtemp)
-                   do   m = 1, 5 
+                   do   m = 1, 5
                       ue(j,m) = dtemp(m)
                    end do
                    dtpp = 1.0d0/dtemp(1)
@@ -158,7 +158,7 @@ c---------------------------------------------------------------------
                    end do
 
                    cuf(j)   = buf(j,3) * buf(j,3)
-                   buf(j,1) = cuf(j) + buf(j,2) * buf(j,2) + 
+                   buf(j,1) = cuf(j) + buf(j,2) * buf(j,2) +
      >                        buf(j,4) * buf(j,4)
                    q(j) = 0.5d0*(buf(j,2)*ue(j,2) + buf(j,3)*ue(j,3) +
      >                           buf(j,4)*ue(j,4))
@@ -167,7 +167,7 @@ c---------------------------------------------------------------------
                 do  j = start(2,c), cell_size(2,c)-end(2,c)-1
                    jm1 = j-1
                    jp1 = j+1
-                  
+
                    forcing(i,j,k,1,c) = forcing(i,j,k,1,c) -
      >                ty2*( ue(jp1,3)-ue(jm1,3) )+
      >                dy1ty1*(ue(jp1,1)-2.0d0*ue(j,1)+ue(jm1,1))
@@ -199,7 +199,7 @@ c---------------------------------------------------------------------
                 end do
 
 c---------------------------------------------------------------------
-c Fourth-order dissipation                      
+c Fourth-order dissipation
 c---------------------------------------------------------------------
                 if (start(2,c) .gt. 0) then
                    do   m = 1, 5
@@ -237,7 +237,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c zeta-direction flux differences                      
+c zeta-direction flux differences
 c---------------------------------------------------------------------
           do  j=start(2,c), cell_size(2,c)-end(2,c)-1
              eta = dble(j+cell_low(2,c)) * dnym1
@@ -259,7 +259,7 @@ c---------------------------------------------------------------------
                    end do
 
                    cuf(k)   = buf(k,4) * buf(k,4)
-                   buf(k,1) = cuf(k) + buf(k,2) * buf(k,2) + 
+                   buf(k,1) = cuf(k) + buf(k,2) * buf(k,2) +
      >                        buf(k,3) * buf(k,3)
                    q(k) = 0.5d0*(buf(k,2)*ue(k,2) + buf(k,3)*ue(k,3) +
      >                           buf(k,4)*ue(k,4))
@@ -268,7 +268,7 @@ c---------------------------------------------------------------------
                 do    k=start(3,c), cell_size(3,c)-end(3,c)-1
                    km1 = k-1
                    kp1 = k+1
-                  
+
                    forcing(i,j,k,1,c) = forcing(i,j,k,1,c) -
      >                 tz2*( ue(kp1,4)-ue(km1,4) )+
      >                 dz1tz1*(ue(kp1,1)-2.0d0*ue(k,1)+ue(km1,1))
@@ -300,7 +300,7 @@ c---------------------------------------------------------------------
                 end do
 
 c---------------------------------------------------------------------
-c Fourth-order dissipation                        
+c Fourth-order dissipation
 c---------------------------------------------------------------------
                 if (start(3,c) .gt. 0) then
                    do   m = 1, 5
@@ -337,7 +337,7 @@ c---------------------------------------------------------------------
              end do
           end do
 c---------------------------------------------------------------------
-c now change the sign of the forcing function, 
+c now change the sign of the forcing function,
 c---------------------------------------------------------------------
           do   m = 1, 5
              do   k = start(3,c), cell_size(3,c)-end(3,c)-1

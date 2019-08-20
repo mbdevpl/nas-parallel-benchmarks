@@ -8,10 +8,10 @@
      >                  mpi_double_precision,  mpi_complex,
      >                  mpi_double_complex
       parameter (mpi_double_precision = 1,
-     $           mpi_integer = 2, 
-     $           mpi_byte = 3, 
-     $           mpi_real= 4, 
-     $           mpi_logical = 5, 
+     $           mpi_integer = 2,
+     $           mpi_byte = 3,
+     $           mpi_real= 4,
+     $           mpi_logical = 5,
      $           mpi_complex = 6,
      $           mpi_double_complex = 7)
 

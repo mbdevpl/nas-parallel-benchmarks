@@ -8,7 +8,7 @@
 #ifdef WINNT
 #define FSEEK(stream,offset,whence)  fseek(stream, (long)offset,whence);
 #else
-#define FSEEK(stream,offset,whence)  fseek(stream,offset,whence); 
+#define FSEEK(stream,offset,whence)  fseek(stream,offset,whence);
 #endif
 
 #define GetRecSize(nd,nm) (DIM_FSZ*nd+MSR_FSZ*nm)

@@ -38,7 +38,7 @@ c---------------------------------------------------------------------
 
        if (timeron) call timer_start(t_xsolve)
 c---------------------------------------------------------------------
-c                          FORWARD ELIMINATION  
+c                          FORWARD ELIMINATION
 c---------------------------------------------------------------------
        do    stage = 1, ncells
           c         = slice(1,stage)
@@ -51,26 +51,26 @@ c---------------------------------------------------------------------
           jp        = cell_coord(2,c)-1
           kp        = cell_coord(3,c)-1
 
-          buffer_size = (jsize-start(2,c)-end(2,c)) * 
+          buffer_size = (jsize-start(2,c)-end(2,c)) *
      >                  (ksize-start(3,c)-end(3,c))
 
           if ( stage .ne. 1) then
 
 c---------------------------------------------------------------------
-c            if this is not the first processor in this row of cells, 
+c            if this is not the first processor in this row of cells,
 c            receive data from predecessor containing the right hand
 c            sides and the upper diagonal elements of the previous two rows
 c---------------------------------------------------------------------
              if (timeron) call timer_start(t_xcomm)
-             call mpi_irecv(in_buffer, 22*buffer_size, 
-     >                      dp_type, predecessor(1), 
-     >                      DEFAULT_TAG,  comm_solve, 
+             call mpi_irecv(in_buffer, 22*buffer_size,
+     >                      dp_type, predecessor(1),
+     >                      DEFAULT_TAG,  comm_solve,
      >                      requests(1), error)
              if (timeron) call timer_stop(t_xcomm)
 
 
 c---------------------------------------------------------------------
-c            communication has already been started. 
+c            communication has already been started.
 c            compute the left hand side while waiting for the msg
 c---------------------------------------------------------------------
              call lhsx(c)
@@ -78,7 +78,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c            wait for pending communication to complete
 c            This waits on the current receive and on the send
-c            from the previous stage. They always come in pairs. 
+c            from the previous stage. They always come in pairs.
 c---------------------------------------------------------------------
 
              if (timeron) call timer_start(t_xcomm)
@@ -86,7 +86,7 @@ c---------------------------------------------------------------------
              if (timeron) call timer_stop(t_xcomm)
 
 c---------------------------------------------------------------------
-c            unpack the buffer                                 
+c            unpack the buffer
 c---------------------------------------------------------------------
              i  = istart
              i1 = istart + 1
@@ -153,7 +153,7 @@ c---------------------------------------------------------------------
                 end do
              end do
 
-          else            
+          else
 
 c---------------------------------------------------------------------
 c            if this IS the first cell, we still compute the lhs
@@ -162,7 +162,7 @@ c---------------------------------------------------------------------
           endif
 
 c---------------------------------------------------------------------
-c         perform the Thomas algorithm; first, FORWARD ELIMINATION     
+c         perform the Thomas algorithm; first, FORWARD ELIMINATION
 c---------------------------------------------------------------------
           n = 0
 
@@ -198,7 +198,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c         The last two rows in this grid block are a bit different, 
+c         The last two rows in this grid block are a bit different,
 c         since they do not have two more rows available for the
 c         elimination of off-diagonal entries
 c---------------------------------------------------------------------
@@ -227,7 +227,7 @@ c               overkill in case this is the last cell)
 c---------------------------------------------------------------------
                 fac2               = 1.d0/lhs(i1,j,k,n+3,c)
                 lhs(i1,j,k,n+4,c) = fac2*lhs(i1,j,k,n+4,c)
-                lhs(i1,j,k,n+5,c) = fac2*lhs(i1,j,k,n+5,c)  
+                lhs(i1,j,k,n+5,c) = fac2*lhs(i1,j,k,n+5,c)
                 do    m = 1, 3
                    rhs(i1,j,k,m,c) = fac2*rhs(i1,j,k,m,c)
                 end do
@@ -235,7 +235,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c         do the u+c and the u-c factors                 
+c         do the u+c and the u-c factors
 c---------------------------------------------------------------------
 
           do    m = 4, 5
@@ -302,7 +302,7 @@ c---------------------------------------------------------------------
           if (stage .ne. ncells) then
 
 c---------------------------------------------------------------------
-c            create a running pointer for the send buffer  
+c            create a running pointer for the send buffer
 c---------------------------------------------------------------------
              p = 0
              n = 0
@@ -335,12 +335,12 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c send data to next phase
-c can't receive data yet because buffer size will be wrong 
+c can't receive data yet because buffer size will be wrong
 c---------------------------------------------------------------------
              if (timeron) call timer_start(t_xcomm)
-             call mpi_isend(out_buffer, 22*buffer_size, 
-     >                     dp_type, successor(1), 
-     >                     DEFAULT_TAG, comm_solve, 
+             call mpi_isend(out_buffer, 22*buffer_size,
+     >                     dp_type, successor(1),
+     >                     DEFAULT_TAG, comm_solve,
      >                     requests(2), error)
              if (timeron) call timer_stop(t_xcomm)
 
@@ -348,11 +348,11 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c      now go in the reverse direction                      
+c      now go in the reverse direction
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c                         BACKSUBSTITUTION 
+c                         BACKSUBSTITUTION
 c---------------------------------------------------------------------
        do    stage = ncells, 1, -1
           c = slice(1,stage)
@@ -365,28 +365,28 @@ c---------------------------------------------------------------------
           jp    = cell_coord(2,c)-1
           kp    = cell_coord(3,c)-1
 
-          buffer_size = (jsize-start(2,c)-end(2,c)) * 
+          buffer_size = (jsize-start(2,c)-end(2,c)) *
      >                  (ksize-start(3,c)-end(3,c))
 
           if (stage .ne. ncells) then
 
 c---------------------------------------------------------------------
-c            if this is not the starting cell in this row of cells, 
-c            wait for a message to be received, containing the 
-c            solution of the previous two stations     
+c            if this is not the starting cell in this row of cells,
+c            wait for a message to be received, containing the
+c            solution of the previous two stations
 c---------------------------------------------------------------------
              if (timeron) call timer_start(t_xcomm)
-             call mpi_irecv(in_buffer, 10*buffer_size, 
-     >                      dp_type, successor(1), 
-     >                      DEFAULT_TAG, comm_solve, 
+             call mpi_irecv(in_buffer, 10*buffer_size,
+     >                      dp_type, successor(1),
+     >                      DEFAULT_TAG, comm_solve,
      >                      requests(1), error)
              if (timeron) call timer_stop(t_xcomm)
 
 
 c---------------------------------------------------------------------
 c            communication has already been started
-c            while waiting, do the block-diagonal inversion for the 
-c            cell that was just finished                
+c            while waiting, do the block-diagonal inversion for the
+c            cell that was just finished
 c---------------------------------------------------------------------
 
              call ninvr(slice(1,stage+1))
@@ -399,7 +399,7 @@ c---------------------------------------------------------------------
              if (timeron) call timer_stop(t_xcomm)
 
 c---------------------------------------------------------------------
-c            unpack the buffer for the first three factors         
+c            unpack the buffer for the first three factors
 c---------------------------------------------------------------------
              n = 0
              p = 0
@@ -410,11 +410,11 @@ c---------------------------------------------------------------------
                    do   j = start(2,c), jsize-end(2,c)-1
                       sm1 = in_buffer(p+1)
                       sm2 = in_buffer(p+2)
-                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) - 
+                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) -
      >                        lhs(i,j,k,n+4,c)*sm1 -
      >                        lhs(i,j,k,n+5,c)*sm2
                       rhs(i1,j,k,m,c) = rhs(i1,j,k,m,c) -
-     >                        lhs(i1,j,k,n+4,c) * rhs(i,j,k,m,c) - 
+     >                        lhs(i1,j,k,n+4,c) * rhs(i,j,k,m,c) -
      >                        lhs(i1,j,k,n+5,c) * sm1
                       p = p + 2
                    end do
@@ -430,11 +430,11 @@ c---------------------------------------------------------------------
                    do   j = start(2,c), jsize-end(2,c)-1
                       sm1 = in_buffer(p+1)
                       sm2 = in_buffer(p+2)
-                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) - 
+                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) -
      >                        lhs(i,j,k,n+4,c)*sm1 -
      >                        lhs(i,j,k,n+5,c)*sm2
                       rhs(i1,j,k,m,c) = rhs(i1,j,k,m,c) -
-     >                        lhs(i1,j,k,n+4,c) * rhs(i,j,k,m,c) - 
+     >                        lhs(i1,j,k,n+4,c) * rhs(i,j,k,m,c) -
      >                        lhs(i1,j,k,n+5,c) * sm1
                       p = p + 2
                    end do
@@ -445,7 +445,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c            now we know this is the first grid block on the back sweep,
-c            so we don't need a message to start the substitution. 
+c            so we don't need a message to start the substitution.
 c---------------------------------------------------------------------
              i  = iend-1
              i1 = iend
@@ -472,7 +472,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c         Whether or not this is the last processor, we always have
-c         to complete the back-substitution 
+c         to complete the back-substitution
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -485,7 +485,7 @@ c---------------------------------------------------------------------
                    do    i = iend-2, istart, -1
                       i1 = i  + 1
                       i2 = i  + 2
-                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) - 
+                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) -
      >                          lhs(i,j,k,n+4,c)*rhs(i1,j,k,m,c) -
      >                          lhs(i,j,k,n+5,c)*rhs(i2,j,k,m,c)
                    end do
@@ -503,7 +503,7 @@ c---------------------------------------------------------------------
                    do    i = iend-2, istart, -1
                       i1 = i  + 1
                       i2 = i  + 2
-                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) - 
+                      rhs(i,j,k,m,c) = rhs(i,j,k,m,c) -
      >                          lhs(i,j,k,n+4,c)*rhs(i1,j,k,m,c) -
      >                          lhs(i,j,k,n+5,c)*rhs(i2,j,k,m,c)
                    end do
@@ -532,16 +532,16 @@ c---------------------------------------------------------------------
 c            pack and send the buffer
 c---------------------------------------------------------------------
              if (timeron) call timer_start(t_xcomm)
-             call mpi_isend(out_buffer, 10*buffer_size, 
-     >                     dp_type, predecessor(1), 
-     >                     DEFAULT_TAG, comm_solve, 
+             call mpi_isend(out_buffer, 10*buffer_size,
+     >                     dp_type, predecessor(1),
+     >                     DEFAULT_TAG, comm_solve,
      >                     requests(2), error)
              if (timeron) call timer_stop(t_xcomm)
 
           endif
 
 c---------------------------------------------------------------------
-c         If this was the last stage, do the block-diagonal inversion          
+c         If this was the last stage, do the block-diagonal inversion
 c---------------------------------------------------------------------
           if (stage .eq. 1) call ninvr(c)
 
@@ -551,7 +551,7 @@ c---------------------------------------------------------------------
 
        return
        end
-    
+
 
 
 

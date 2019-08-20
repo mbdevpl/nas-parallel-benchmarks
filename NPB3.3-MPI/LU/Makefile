@@ -17,10 +17,10 @@ include ../sys/make.common
 # npbparams.h is included by applu.incl
 # The following rule should do the trick but many make programs (not gmake)
 # will do the wrong thing and rebuild the world every time (because the
-# mod time on header.h is not changed. One solution would be to 
+# mod time on header.h is not changed. One solution would be to
 # touch header.h but this might cause confusion if someone has
 # accidentally deleted it. Instead, make the dependency on npbparams.h
-# explicit in all the lines below (even though dependence is indirect). 
+# explicit in all the lines below (even though dependence is indirect).
 
 # applu.incl: npbparams.h
 
@@ -51,7 +51,7 @@ exchange_3.o:	exchange_3.f applu.incl npbparams.h mpinpb.h
 exchange_4.o:	exchange_4.f applu.incl npbparams.h mpinpb.h
 exchange_5.o:	exchange_5.f applu.incl npbparams.h mpinpb.h
 exchange_6.o:	exchange_6.f applu.incl npbparams.h mpinpb.h
-init_comm.o:	init_comm.f applu.incl npbparams.h mpinpb.h 
+init_comm.o:	init_comm.f applu.incl npbparams.h mpinpb.h
 jacld.o:	jacld.f applu.incl npbparams.h
 jacu.o:		jacu.f applu.incl npbparams.h
 l2norm.o:	l2norm.f mpinpb.h timing.h

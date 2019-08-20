@@ -36,7 +36,7 @@
 
 c---------------------------------------------------------------------
 c
-c Authors: P. O. Frederickson 
+c Authors: P. O. Frederickson
 c          D. H. Bailey
 c          A. C. Woo
 c          R. F. Van der Wijngaart
@@ -60,11 +60,11 @@ c   not affect the results.
       include 'npbparams.h'
       include 'mpinpb.h'
 
-      double precision Mops, epsilon, a, s, t1, t2, t3, t4, x, x1, 
+      double precision Mops, epsilon, a, s, t1, t2, t3, t4, x, x1,
      >                 x2, q, sx, sy, tm, an, tt, gc, dum(3),
      >                 timer_read
       double precision sx_verify_value, sy_verify_value, sx_err, sy_err
-      integer          mk, mm, nn, nk, nq, np, ierr, node, no_nodes, 
+      integer          mk, mm, nn, nk, nq, np, ierr, node, no_nodes,
      >                 i, ik, kk, l, k, nit, ierrcode, no_large_nodes,
      >                 np_add, k_offset, j
       logical          verified, timers_enabled
@@ -128,13 +128,13 @@ c   point print statement (internal file)
           endif
       endif
 
-      call mpi_bcast(timers_enabled, 1, MPI_LOGICAL, root, 
+      call mpi_bcast(timers_enabled, 1, MPI_LOGICAL, root,
      >               MPI_COMM_WORLD, ierr)
 
       verified = .false.
 
-c   Compute the number of "batches" of random number pairs generated 
-c   per processor. Adjust if the number of processors does not evenly 
+c   Compute the number of "batches" of random number pairs generated
+c   per processor. Adjust if the number of processors does not evenly
 c   divide the total number
 
       np = nn / no_nodes
@@ -207,7 +207,7 @@ c   have more numbers to generate than others
       endif
 
       do 150 k = 1, np
-         kk = k_offset + k 
+         kk = k_offset + k
          t1 = s
          t2 = an
 
@@ -228,9 +228,9 @@ c        Compute uniform pseudorandom numbers.
          call vranlc(2 * nk, t1, a, x)
          if (timers_enabled) call timer_stop(t_randn)
 
-c        Compute Gaussian deviates by acceptance-rejection method and 
-c        tally counts in concentric square annuli.  This loop is not 
-c        vectorizable. 
+c        Compute Gaussian deviates by acceptance-rejection method and
+c        tally counts in concentric square annuli.  This loop is not
+c        vectorizable.
 
          if (timers_enabled) call timer_start(t_gpairs)
 
@@ -318,9 +318,9 @@ c        vectorizable.
      >           i5/'No. Gaussian Pairs =',f15.0/'Sums = ',1p,2d25.15/
      >           'Counts:'/(i3,0p,f15.0))
 
-         call print_results('EP', class, m+1, 0, 0, nit, npm, 
-     >                      no_nodes, tm, Mops, 
-     >                      'Random numbers generated', 
+         call print_results('EP', class, m+1, 0, 0, nit, npm,
+     >                      no_nodes, tm, Mops,
+     >                      'Random numbers generated',
      >                      verified, npbversion, compiletime, cs1,
      >                      cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -335,11 +335,11 @@ c        vectorizable.
       t1m(t_last+2) = t1m(t_rcomm)
       t1m(t_last+1) = t1m(t_total) - t1m(t_last+2)
 
-      call MPI_Reduce(t1m, tsum,  t_last+2, dp_type, MPI_SUM, 
+      call MPI_Reduce(t1m, tsum,  t_last+2, dp_type, MPI_SUM,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1m, tming, t_last+2, dp_type, MPI_MIN, 
+      call MPI_Reduce(t1m, tming, t_last+2, dp_type, MPI_MIN,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1m, tmaxg, t_last+2, dp_type, MPI_MAX, 
+      call MPI_Reduce(t1m, tmaxg, t_last+2, dp_type, MPI_MAX,
      >                0, MPI_COMM_WORLD, ierr)
 
       if (node .eq. 0) then
@@ -349,7 +349,7 @@ c        vectorizable.
             write(*, 810) i, t_recs(i), tming(i), tmaxg(i), tsum(i)
          end do
       endif
- 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum', 
+ 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum',
      >       5x, 'average')
  810  format(' timer ', i2, '(', A8, ') :', 3(2x,f10.4))
 

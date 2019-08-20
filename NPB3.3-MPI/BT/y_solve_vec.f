@@ -8,10 +8,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     Performs line solves in Y direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
 c---------------------------------------------------------------------
@@ -19,7 +19,7 @@ c---------------------------------------------------------------------
       include 'header.h'
       include 'mpinpb.h'
 
-      integer 
+      integer
      >     c, jstart, stage,
      >     first, last, recv_id, error, r_status(MPI_STATUS_SIZE),
      >     isize,jsize,ksize,send_id
@@ -111,10 +111,10 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      
+
       subroutine y_unpack_solve_info(c)
 
 c---------------------------------------------------------------------
@@ -127,7 +127,7 @@ c---------------------------------------------------------------------
 
       include 'header.h'
 
-      integer i,k,m,n,ptr,c,jstart 
+      integer i,k,m,n,ptr,c,jstart
 
       jstart = 0
       ptr = 0
@@ -151,7 +151,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      
+
       subroutine y_send_solve_info(send_id,c)
 
 c---------------------------------------------------------------------
@@ -166,7 +166,7 @@ c---------------------------------------------------------------------
       include 'mpinpb.h'
 
       integer i,k,m,n,jsize,ptr,c,ip,kp
-      integer error,send_id,buffer_size 
+      integer error,send_id,buffer_size
 
       jsize = cell_size(2,c)-1
       ip = cell_coord(1,c) - 1
@@ -194,7 +194,7 @@ c---------------------------------------------------------------------
       enddo
 
 c---------------------------------------------------------------------
-c     send buffer 
+c     send buffer
 c---------------------------------------------------------------------
       if (timeron) call timer_start(t_ycomm)
       call mpi_isend(in_buffer, buffer_size,
@@ -242,8 +242,8 @@ c---------------------------------------------------------------------
       enddo
       if (timeron) call timer_start(t_ycomm)
       call mpi_isend(in_buffer, buffer_size,
-     >     dp_type, predecessor(2), 
-     >     NORTH+ip+kp*NCELLS, comm_solve, 
+     >     dp_type, predecessor(2),
+     >     NORTH+ip+kp*NCELLS, comm_solve,
      >     send_id,error)
       if (timeron) call timer_stop(t_ycomm)
 
@@ -264,7 +264,7 @@ c---------------------------------------------------------------------
 
       include 'header.h'
 
-      integer i,k,n,ptr,c 
+      integer i,k,n,ptr,c
 
       ptr = 0
       do k=0,KMAX-1
@@ -299,8 +299,8 @@ c---------------------------------------------------------------------
       kp = cell_coord(3,c) - 1
       buffer_size=MAX_CELL_DIM*MAX_CELL_DIM*BLOCK_SIZE
       call mpi_irecv(out_buffer, buffer_size,
-     >     dp_type, successor(2), 
-     >     NORTH+ip+kp*NCELLS, comm_solve, 
+     >     dp_type, successor(2),
+     >     NORTH+ip+kp*NCELLS, comm_solve,
      >     recv_id, error)
       return
       end
@@ -314,7 +314,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     post mpi receives 
+c     post mpi receives
 c---------------------------------------------------------------------
 
       include 'header.h'
@@ -325,14 +325,14 @@ c---------------------------------------------------------------------
       kp = cell_coord(3,c) - 1
       buffer_size=MAX_CELL_DIM*MAX_CELL_DIM*
      >     (BLOCK_SIZE*BLOCK_SIZE + BLOCK_SIZE)
-      call mpi_irecv(out_buffer, buffer_size, 
-     >     dp_type, predecessor(2), 
-     >     SOUTH+ip+kp*NCELLS,  comm_solve, 
+      call mpi_irecv(out_buffer, buffer_size,
+     >     dp_type, predecessor(2),
+     >     SOUTH+ip+kp*NCELLS,  comm_solve,
      >     recv_id, error)
 
       return
       end
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -352,9 +352,9 @@ c---------------------------------------------------------------------
 
       integer first, last, c, i, k
       integer m,n,j,jsize,isize,ksize,jstart
-      
+
       jstart = 0
-      isize = cell_size(1,c)-end(1,c)-1      
+      isize = cell_size(1,c)-end(1,c)-1
       jsize = cell_size(2,c)-1
       ksize = cell_size(3,c)-end(3,c)-1
       if (last .eq. 0) then
@@ -365,7 +365,7 @@ c     U(jsize) uses info from previous cell if not last cell
 c---------------------------------------------------------------------
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,jsize,k,c) = rhs(m,i,jsize,k,c) 
+                     rhs(m,i,jsize,k,c) = rhs(m,i,jsize,k,c)
      >                    - lhsc(m,n,i,jsize,k,c)*
      >                    backsub_info(n,i,k,c)
                   enddo
@@ -378,7 +378,7 @@ c---------------------------------------------------------------------
             do i=start(1,c),isize
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,k,c) = rhs(m,i,j,k,c) 
+                     rhs(m,i,j,k,c) = rhs(m,i,j,k,c)
      >                    - lhsc(m,n,i,j,k,c)*rhs(n,i,j+1,k,c)
                   enddo
                enddo
@@ -399,10 +399,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(JMAX) and rhs'(JMAX) will be sent to next cell
 c---------------------------------------------------------------------
@@ -435,10 +435,10 @@ c---------------------------------------------------------------------
          enddo
       enddo
 
-      do k=start(3,c),ksize 
+      do k=start(3,c),ksize
 
 c---------------------------------------------------------------------
-c     This function computes the left hand side for the three y-factors 
+c     This function computes the left hand side for the three y-factors
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -470,8 +470,8 @@ c---------------------------------------------------------------------
      >              + c2 * qs(i,j,k,c)
                fjac(3,2,i,j) = - c2 *  u(2,i,j,k,c) * tmp1
                fjac(3,3,i,j) = ( 2.0d+00 - c2 )
-     >              *  u(3,i,j,k,c) * tmp1 
-               fjac(3,4,i,j) = - c2 * u(4,i,j,k,c) * tmp1 
+     >              *  u(3,i,j,k,c) * tmp1
+               fjac(3,4,i,j) = - c2 * u(4,i,j,k,c) * tmp1
                fjac(3,5,i,j) = c2
 
                fjac(4,1,i,j) = - ( u(3,i,j,k,c)*u(4,i,j,k,c) )
@@ -482,16 +482,16 @@ c---------------------------------------------------------------------
                fjac(4,5,i,j) = 0.0d+00
 
                fjac(5,1,i,j) = ( c2 * 2.0d0 * qs(i,j,k,c)
-     >              - c1 * u(5,i,j,k,c) * tmp1 ) 
-     >              * u(3,i,j,k,c) * tmp1 
-               fjac(5,2,i,j) = - c2 * u(2,i,j,k,c)*u(3,i,j,k,c) 
+     >              - c1 * u(5,i,j,k,c) * tmp1 )
+     >              * u(3,i,j,k,c) * tmp1
+               fjac(5,2,i,j) = - c2 * u(2,i,j,k,c)*u(3,i,j,k,c)
      >              * tmp2
-               fjac(5,3,i,j) = c1 * u(5,i,j,k,c) * tmp1 
+               fjac(5,3,i,j) = c1 * u(5,i,j,k,c) * tmp1
      >              - c2 * ( qs(i,j,k,c)
      >              + u(3,i,j,k,c)*u(3,i,j,k,c) * tmp2 )
                fjac(5,4,i,j) = - c2 * ( u(3,i,j,k,c)*u(4,i,j,k,c) )
      >              * tmp2
-               fjac(5,5,i,j) = c1 * u(3,i,j,k,c) * tmp1 
+               fjac(5,5,i,j) = c1 * u(3,i,j,k,c) * tmp1
 
                njac(1,1,i,j) = 0.0d+00
                njac(1,2,i,j) = 0.0d+00
@@ -544,7 +544,7 @@ c---------------------------------------------------------------------
 
                lhsa(1,1,i,j) = - tmp2 * fjac(1,1,i,j-1)
      >              - tmp1 * njac(1,1,i,j-1)
-     >              - tmp1 * dy1 
+     >              - tmp1 * dy1
                lhsa(1,2,i,j) = - tmp2 * fjac(1,2,i,j-1)
      >              - tmp1 * njac(1,2,i,j-1)
                lhsa(1,3,i,j) = - tmp2 * fjac(1,3,i,j-1)
@@ -572,7 +572,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(3,2,i,j-1)
                lhsa(3,3,i,j) = - tmp2 * fjac(3,3,i,j-1)
      >              - tmp1 * njac(3,3,i,j-1)
-     >              - tmp1 * dy3 
+     >              - tmp1 * dy3
                lhsa(3,4,i,j) = - tmp2 * fjac(3,4,i,j-1)
      >              - tmp1 * njac(3,4,i,j-1)
                lhsa(3,5,i,j) = - tmp2 * fjac(3,5,i,j-1)
@@ -639,7 +639,7 @@ c---------------------------------------------------------------------
                lhsb(5,3,i,j) = tmp1 * 2.0d+00 * njac(5,3,i,j)
                lhsb(5,4,i,j) = tmp1 * 2.0d+00 * njac(5,4,i,j)
                lhsb(5,5,i,j) = 1.0d+00
-     >              + tmp1 * 2.0d+00 * njac(5,5,i,j) 
+     >              + tmp1 * 2.0d+00 * njac(5,5,i,j)
      >              + tmp1 * 2.0d+00 * dy5
 
                lhsc(1,1,i,j,k,c) =  tmp2 * fjac(1,1,i,j+1)
@@ -709,7 +709,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     outer most do loops - sweeping in i direction
 c---------------------------------------------------------------------
-         if (first .eq. 1) then 
+         if (first .eq. 1) then
 
 c---------------------------------------------------------------------
 c     multiply c(i,jstart,k) by b_inverse and copy back to c
@@ -726,7 +726,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
          do j=jstart+first,jsize-last
 !dir$ ivdep
@@ -734,7 +734,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     subtract A*lhs_vector(j-1) from lhs_vector(j)
-c     
+c
 c     rhs(j) = rhs(j) - A*rhs(j-1)
 c---------------------------------------------------------------------
                call matvec_sub(lhsa(1,1,i,j),
@@ -793,6 +793,6 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 
 

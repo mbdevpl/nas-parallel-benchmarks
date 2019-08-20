@@ -17,14 +17,14 @@ For explanation of compilation and running of the benchmarks,
 please refer to README.install.
 
 
-This version (3.3) introduces a new problem size (class E) to seven 
-of the benchmarks (BT, SP, LU, CG, MG, FT, and EP). The version 
+This version (3.3) introduces a new problem size (class E) to seven
+of the benchmarks (BT, SP, LU, CG, MG, FT, and EP). The version
 also includes the class D problem size for the IS benchmark.
 
 The release is merged with the vector codes for the BT and
-LU benchmarks, which can be selected with the VERSION=VEC option 
-during compilation.  However, successful vectorization highly 
-depends on the compiler used.  Some changes to compiler directives 
+LU benchmarks, which can be selected with the VERSION=VEC option
+during compilation.  However, successful vectorization highly
+depends on the compiler used.  Some changes to compiler directives
 for vectorization in the current codes (see *_vec.f files)
 may be required.
 

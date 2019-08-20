@@ -57,11 +57,11 @@ c---------------------------------------------------------------------
             do j = 1,ny
               ipos1 = (k-1)*ny + j
               ipos2 = ipos1 + ny*nz
-              buf(1,ipos1) = g(1,nx-1,j,k) 
-              buf(2,ipos1) = g(2,nx-1,j,k) 
-              buf(3,ipos1) = g(3,nx-1,j,k) 
-              buf(4,ipos1) = g(4,nx-1,j,k) 
-              buf(5,ipos1) = g(5,nx-1,j,k) 
+              buf(1,ipos1) = g(1,nx-1,j,k)
+              buf(2,ipos1) = g(2,nx-1,j,k)
+              buf(3,ipos1) = g(3,nx-1,j,k)
+              buf(4,ipos1) = g(4,nx-1,j,k)
+              buf(5,ipos1) = g(5,nx-1,j,k)
               buf(1,ipos2) = g(1,nx,j,k)
               buf(2,ipos2) = g(2,nx,j,k)
               buf(3,ipos2) = g(3,nx,j,k)
@@ -309,4 +309,4 @@ c---------------------------------------------------------------------
       end if
 
       return
-      end     
+      end

@@ -33,7 +33,7 @@ c---------------------------------------------------------------------
          xdim = num/ydim
       end do
 
-      if (xdim .lt. xdim0 .or. ydim .lt. ydim0 .or. 
+      if (xdim .lt. xdim0 .or. ydim .lt. ydim0 .or.
      &    xdim*ydim .ne. num) then
          if (id .eq. 0) write(*,2000) num
 2000     format(' Error: couldn''t determine proper proc_grid',

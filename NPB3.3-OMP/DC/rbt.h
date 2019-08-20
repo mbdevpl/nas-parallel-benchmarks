@@ -14,10 +14,10 @@ typedef struct treeNode{
 typedef struct RBTree{
   treeNode root;	
   treeNode * mp;
-  uint32 count;       
+  uint32 count;
   uint32 treeNodeSize;
   uint32 nodeDataSize;
-  uint32 memoryLimit; 
+  uint32 memoryLimit;
   uint32 memaddr;
   uint32 memoryIsFull;
   uint32 freeNodeCounter;

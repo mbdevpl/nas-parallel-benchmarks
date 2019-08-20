@@ -19,13 +19,13 @@ typedef unsigned long address_t;
 
 
 
-void timer_init() 
+void timer_init()
 {
-  
+
   int fd;
   char *virt_addr;
   address_t phys_addr, page_offset, pagemask, pagebase_addr;
-  
+
   pagemask = getpagesize() - 1;
   errno = 0;
   phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cycleval);
@@ -42,15 +42,15 @@ void timer_init()
   virt_addr = virt_addr + page_offset;
   iotimer_addr = (iotimer_t *)virt_addr;
   /* cycleval in picoseconds to this gives resolution in seconds */
-  resolution = 1.0e-12*cycleval; 
+  resolution = 1.0e-12*cycleval;
   base_counter = *iotimer_addr;
 }
 
-void wtime_(double *time) 
+void wtime_(double *time)
 {
   static int initialized = 0;
   volatile iotimer_t counter_value;
-  if (!initialized) { 
+  if (!initialized) {
     timer_init();
     initialized = 1;
   }
@@ -59,11 +59,11 @@ void wtime_(double *time)
 }
 
 
-void wtime(double *time) 
+void wtime(double *time)
 {
   static int initialized = 0;
   volatile iotimer_t counter_value;
-  if (!initialized) { 
+  if (!initialized) {
     timer_init();
     initialized = 1;
   }

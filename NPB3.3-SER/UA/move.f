@@ -40,7 +40,7 @@ c---------------------------------------------------------------
             ijel_new(1,iside,iel)=ijel(1,iside,i)
             ijel_new(2,iside,iel)=ijel(2,iside,i)
             sje_new(1,1,iside,iel)=id_to_mt(ntemp)
-         
+
           else if(cb.eq.3) then
             do ii2=1,2
               do ii1=1,2
@@ -55,8 +55,8 @@ c---------------------------------------------------------------
             sje_new(1,1,iside,iel)=0
             sje_new(1,2,iside,iel)=0
             sje_new(2,1,iside,iel)=0
-            sje_new(2,2,iside,iel)=0       
-          end if 
+            sje_new(2,2,iside,iel)=0
+          end if
 
         end do
 
@@ -79,4 +79,4 @@ c---------------------------------------------------------------
       end do
 
       return
-      end 
+      end

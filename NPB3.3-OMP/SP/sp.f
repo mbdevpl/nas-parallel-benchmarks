@@ -47,7 +47,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
        include  'header.h'
-      
+
        integer          i, niter, step, fstatus, n3
        external         timer_read
        double precision mflops, t, tmax, timer_read, trecs(t_last)
@@ -61,7 +61,7 @@ c---------------------------------------------------------------------
 c      Read input file (if it exists), else take
 c      defaults from parameters
 c---------------------------------------------------------------------
-          
+
        open (unit=2,file='timer.flag',status='old', iostat=fstatus)
        if (fstatus .eq. 0) then
          timeron = .true.
@@ -89,14 +89,14 @@ c---------------------------------------------------------------------
        open (unit=2,file='inputsp.data',status='old', iostat=fstatus)
 
        if (fstatus .eq. 0) then
-         write(*,233) 
+         write(*,233)
  233     format(' Reading from input file inputsp.data')
          read (2,*) niter
          read (2,*) dt
          read (2,*) grid_points(1), grid_points(2), grid_points(3)
          close(2)
        else
-         write(*,234) 
+         write(*,234)
          niter = niter_default
          dt    = dt_default
          grid_points(1) = problem_size
@@ -161,7 +161,7 @@ c---------------------------------------------------------------------
 
        call timer_stop(1)
        tmax = timer_read(1)
-       
+
        call verify(niter, class, verified)
 
        if( tmax .ne. 0. ) then
@@ -175,10 +175,10 @@ c---------------------------------------------------------------------
           mflops = 0.0
        endif
 
-      call print_results('SP', class, grid_points(1), 
-     >     grid_points(2), grid_points(3), niter, 
-     >     tmax, mflops, '          floating point', 
-     >     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5, 
+      call print_results('SP', class, grid_points(1),
+     >     grid_points(2), grid_points(3), niter,
+     >     tmax, mflops, '          floating point',
+     >     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5,
      >     cs6, '(none)')
 
 c---------------------------------------------------------------------

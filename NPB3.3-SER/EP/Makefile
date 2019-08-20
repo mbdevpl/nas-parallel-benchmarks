@@ -17,7 +17,7 @@ ep.o:		ep.f npbparams.h
 	${FCOMPILE} ep.f
 
 clean:
-	- rm -f *.o *~ 
+	- rm -f *.o *~
 	- rm -f npbparams.h core
 
 

@@ -4,7 +4,7 @@
      & request,ierror
       call mpi_error()
       return
-      end  
+      end
 
       subroutine mpi_irecv(buf,count,datatype,source,
      & tag,comm,request,ierror)
@@ -19,7 +19,7 @@
       call mpi_error()
       return
       end
-      
+
       subroutine mpi_recv(buf,count,datatype,source,
      & tag,comm,status,ierror)
       integer buf(*), count,datatype,source,tag,comm,
@@ -50,14 +50,14 @@
       double precision function mpi_wtime()
       implicit none
       double precision t
-c This function must measure wall clock time, not CPU time. 
+c This function must measure wall clock time, not CPU time.
 c Since there is no portable timer in Fortran (77)
 c we call a routine compiled in C (though the C source may have
-c to be tweaked). 
+c to be tweaked).
       call wtime(t)
 c The following is not ok for "official" results because it reports
 c CPU time not wall clock time. It may be useful for developing/testing
-c on timeshared Crays, though. 
+c on timeshared Crays, though.
 c     call second(t)
 
       mpi_wtime = t
@@ -87,7 +87,7 @@ c may be valid to call this in single processor case
       subroutine mpi_error()
       print *, 'mpi_error called'
       stop
-      end 
+      end
 
       subroutine mpi_abort(comm, errcode, ierr)
       implicit none
@@ -105,8 +105,8 @@ c may be valid to call this in single processor case
       end
 
 
-c assume double precision, which is all SP uses 
-      subroutine mpi_reduce(inbuf, outbuf, nitems, 
+c assume double precision, which is all SP uses
+      subroutine mpi_reduce(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       include 'mpif.h'
@@ -114,28 +114,28 @@ c assume double precision, which is all SP uses
       double precision inbuf(*), outbuf(*)
 
       if (type .eq. mpi_double_precision) then
-         call mpi_reduce_dp(inbuf, outbuf, nitems, 
+         call mpi_reduce_dp(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       else if (type .eq.  mpi_double_complex) then
-         call mpi_reduce_dc(inbuf, outbuf, nitems, 
+         call mpi_reduce_dc(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       else if (type .eq.  mpi_complex) then
-         call mpi_reduce_complex(inbuf, outbuf, nitems, 
+         call mpi_reduce_complex(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       else if (type .eq.  mpi_real) then
-         call mpi_reduce_real(inbuf, outbuf, nitems, 
+         call mpi_reduce_real(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       else if (type .eq.  mpi_integer) then
-         call mpi_reduce_int(inbuf, outbuf, nitems, 
+         call mpi_reduce_int(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
-      else 
+      else
          print *, 'mpi_reduce: unknown type ', type
       end if
       return
       end
 
 
-      subroutine mpi_reduce_real(inbuf, outbuf, nitems, 
+      subroutine mpi_reduce_real(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       integer nitems, type, op, root, comm, ierr, i
@@ -143,11 +143,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_reduce_dp(inbuf, outbuf, nitems, 
+      subroutine mpi_reduce_dp(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       integer nitems, type, op, root, comm, ierr, i
@@ -155,11 +155,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_reduce_dc(inbuf, outbuf, nitems, 
+      subroutine mpi_reduce_dc(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       integer nitems, type, op, root, comm, ierr, i
@@ -167,12 +167,12 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
 
-      subroutine mpi_reduce_complex(inbuf, outbuf, nitems, 
+      subroutine mpi_reduce_complex(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       integer nitems, type, op, root, comm, ierr, i
@@ -180,11 +180,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_reduce_int(inbuf, outbuf, nitems, 
+      subroutine mpi_reduce_int(inbuf, outbuf, nitems,
      $                      type, op, root, comm, ierr)
       implicit none
       integer nitems, type, op, root, comm, ierr, i
@@ -192,49 +192,49 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_allreduce(inbuf, outbuf, nitems, 
+      subroutine mpi_allreduce(inbuf, outbuf, nitems,
      $                      type, op, comm, ierr)
       implicit none
       integer nitems, type, op, comm, ierr
       double precision inbuf(*), outbuf(*)
 
-      call mpi_reduce(inbuf, outbuf, nitems, 
+      call mpi_reduce(inbuf, outbuf, nitems,
      $                      type, op, 0, comm, ierr)
       return
       end
 
-      subroutine mpi_alltoall(inbuf, nitems, type, outbuf, nitems_dum, 
+      subroutine mpi_alltoall(inbuf, nitems, type, outbuf, nitems_dum,
      $                        type_dum, comm, ierr)
       implicit none
       include 'mpif.h'
       integer nitems, type, comm, ierr, nitems_dum, type_dum
       double precision inbuf(*), outbuf(*)
       if (type .eq. mpi_double_precision) then
-         call mpi_alltoall_dp(inbuf, outbuf, nitems, 
+         call mpi_alltoall_dp(inbuf, outbuf, nitems,
      $                      type, comm, ierr)
       else if (type .eq.  mpi_double_complex) then
-         call mpi_alltoall_dc(inbuf, outbuf, nitems, 
+         call mpi_alltoall_dc(inbuf, outbuf, nitems,
      $                      type, comm, ierr)
       else if (type .eq.  mpi_complex) then
-         call mpi_alltoall_complex(inbuf, outbuf, nitems, 
+         call mpi_alltoall_complex(inbuf, outbuf, nitems,
      $                      type, comm, ierr)
       else if (type .eq.  mpi_real) then
-         call mpi_alltoall_real(inbuf, outbuf, nitems, 
+         call mpi_alltoall_real(inbuf, outbuf, nitems,
      $                      type, comm, ierr)
       else if (type .eq.  mpi_integer) then
-         call mpi_alltoall_int(inbuf, outbuf, nitems, 
+         call mpi_alltoall_int(inbuf, outbuf, nitems,
      $                      type, comm, ierr)
-      else 
+      else
          print *, 'mpi_alltoall: unknown type ', type
       end if
       return
       end
 
-      subroutine mpi_alltoall_dc(inbuf, outbuf, nitems, 
+      subroutine mpi_alltoall_dc(inbuf, outbuf, nitems,
      $                           type, comm, ierr)
       implicit none
       integer nitems, type, comm, ierr, i
@@ -242,12 +242,12 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
 
-      subroutine mpi_alltoall_complex(inbuf, outbuf, nitems, 
+      subroutine mpi_alltoall_complex(inbuf, outbuf, nitems,
      $                           type, comm, ierr)
       implicit none
       integer nitems, type, comm, ierr, i
@@ -255,11 +255,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_alltoall_dp(inbuf, outbuf, nitems, 
+      subroutine mpi_alltoall_dp(inbuf, outbuf, nitems,
      $                           type, comm, ierr)
       implicit none
       integer nitems, type, comm, ierr, i
@@ -267,11 +267,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_alltoall_real(inbuf, outbuf, nitems, 
+      subroutine mpi_alltoall_real(inbuf, outbuf, nitems,
      $                             type, comm, ierr)
       implicit none
       integer nitems, type, comm, ierr, i
@@ -279,11 +279,11 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 
-      subroutine mpi_alltoall_int(inbuf, outbuf, nitems, 
+      subroutine mpi_alltoall_int(inbuf, outbuf, nitems,
      $                            type, comm, ierr)
       implicit none
       integer nitems, type, comm, ierr, i
@@ -291,7 +291,7 @@ c assume double precision, which is all SP uses
       do i = 1, nitems
          outbuf(i) = inbuf(i)
       end do
-      
+
       return
       end
 

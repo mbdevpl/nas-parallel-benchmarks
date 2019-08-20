@@ -29,9 +29,9 @@ This is a bug fixing release of NPB3.3.
 
  - LU:
    * code clean up (suggested by Rob Van der Wijngaart)
-      > avoid using MPI_ANY_SOURCE in exchange_*.f, which might 
+      > avoid using MPI_ANY_SOURCE in exchange_*.f, which might
         alter performance in some cases.
-      > delete references to sethyper and 'icomm*', which are 
+      > delete references to sethyper and 'icomm*', which are
         no longer used since NPB2.2.
    * change the low-bound limit on the sub-domain size in subdomain.f
      from 4 to 3 in order to increase allowable process counts.
@@ -66,16 +66,16 @@ Changes in NPB3.3
  - The Class E problem has been introduced in seven of the benchmarks
    (BT, SP, LU, CG, MG, FT, and EP) in all three implementations.
 
- - The Class D problem has been added to the IS benchmark in all 
-   three implementations.  It requires the compiler support of 
-   64-bit "long" type in C.  The MPI version of IS now allows runs 
+ - The Class D problem has been added to the IS benchmark in all
+   three implementations.  It requires the compiler support of
+   64-bit "long" type in C.  The MPI version of IS now allows runs
    up to 1024 processes.
 
  - The Bucket Sort option (USE_BUCKETS) has been added to
    the OpenMP version of IS and made as the default.
 
  - Introduced the "twiddle" array in the OpenMP FT benchmark,
-   which has been used in the MPI and SER versions and seems 
+   which has been used in the MPI and SER versions and seems
    to improve performance for larger problem sizes.
 
  - Merged vector codes for the BT and LU benchmarks into
@@ -93,11 +93,11 @@ Changes in NPB3.3
 
 2. Bug fixes
 
- - MPI/FT: fixed a verification failure for cases where NX/=NY 
+ - MPI/FT: fixed a verification failure for cases where NX/=NY
    and the 2D decomposition are used.  The bug occurred at least
    for (Class D, NPROCS=2048) and (Class B, NPROCS=512).
 
-   fixed an output printing format problem occurred when 
+   fixed an output printing format problem occurred when
    the number of processes >= 1000.
 
  - MPI/SP: fixed a performance regression due to improper
@@ -105,7 +105,7 @@ Changes in NPB3.3
 
  - MPI/IS: minor fix to support large processor counts (>=512).
 
- - OMP/UA: fixed a race condition in mason.f, avoided the use 
+ - OMP/UA: fixed a race condition in mason.f, avoided the use
    of the LASTPRIVATE directive.
 
  - OMP/LU: minor fix in data flushing for pipelining.
@@ -124,12 +124,12 @@ Changes in NPB3.3
    * made the benchmark output consistent with other NPBs.
 
  - fixed a use of uninitialized variable in MPI/sys/setparams.c.
-   setparams in all three versions was updated to deal with 
+   setparams in all three versions was updated to deal with
    make.def that contains carriage-return character ('\r').
 
  - SER/FT: added 'implicit none' to all missing places.
 
- - SER/IS: fixed missing variable declarations for the Bucket 
+ - SER/IS: fixed missing variable declarations for the Bucket
    Sort option (when USE_BUCKETS is defined).
 
 3. Others
@@ -138,7 +138,7 @@ Changes in NPB3.3
    is now set to 0, indicating no file hints will be used.
    The setting can be changed by using the "inputbt.data" file.
 
- - The hyperplane version of LU (LU-HP) is no longer included 
+ - The hyperplane version of LU (LU-HP) is no longer included
    in the distribution.
 
 
@@ -153,19 +153,19 @@ This is a bug fixing release of NPB3.2.
 1. MPI version
   - sys/setparams.c: removed a duplicated statement for writing
       FT parameters and made invalid SUBTYPE as an error condition.
-      The 'duplicated statement' problem was fixed in NPB3.2 (See 
-      the note below).  However, during the final updating process, 
+      The 'duplicated statement' problem was fixed in NPB3.2 (See
+      the note below).  However, during the final updating process,
       the fix was left out, even though the log file was updated.
 
   - BT: included SUBTYPE=EPIO in the I/O verification.
 
-  - LU: bcast_inputs.f: fixed wrong data type (dp_type) used for 
-      communicating integers (nx0,ny0,nz0) with the correct type 
+  - LU: bcast_inputs.f: fixed wrong data type (dp_type) used for
+      communicating integers (nx0,ny0,nz0) with the correct type
       MPI_INTEGER.
 
-  - MG: fixed a mis-calculation of parameter "nr" in globals.h 
-      that caused run-time failure for NPROCS >= 512 
-      (reported by Donald Ferry of Cray).  Expanded to limit to 
+  - MG: fixed a mis-calculation of parameter "nr" in globals.h
+      that caused run-time failure for NPROCS >= 512
+      (reported by Donald Ferry of Cray).  Expanded to limit to
       131072 processes and added an error checking code.
 
       The use of MPI_ANY_SOURCE for MPI_Irecv inside subroutine
@@ -178,11 +178,11 @@ This is a bug fixing release of NPB3.2.
   - EP: use THREADPRIVATE for working array storage. It should not
       change performance but made some compiler happier.
 
-  - LU: add variable "v" to FLUSH to ensure solution data properly 
+  - LU: add variable "v" to FLUSH to ensure solution data properly
       flushed for pipeline.  This change is needed according to
       the OpenMP 2.5 standard.
 
-  - IS: reorganized working buffers so that the count for key 
+  - IS: reorganized working buffers so that the count for key
       population could be more naturally performed.  This version
       uses much less stack space.
 
@@ -198,9 +198,9 @@ Changes in NPB3.2
 [07-Jan-05]
 
 1. DC version in NPB3.2-SER was converted to C from C++
-   (CLASSES S, W, A, B). 
+   (CLASSES S, W, A, B).
    sys/setparams.c file was changed appropriately.
-   
+
 2. OpenMP version of DC was added to NPB3.2-OMP.
 
 3. Data Traffic benchmark DT was added to NPB3.2-MPI.
@@ -285,7 +285,7 @@ The following changes are made in NPB3.1-OMP.
 1. Included a hyper-plane version of the LU benchmark: LU-HP
    - based on the serial version
 
-2. The dummy 'omp_lib_dum' library is not longer used for compilation 
+2. The dummy 'omp_lib_dum' library is not longer used for compilation
    without an OpenMP compiler. Conditional compilation is now used.
 
 3. Parallelization of the initialization part of MG.
@@ -307,15 +307,15 @@ Changes in NPB2.x MPI version
 Changes in 2.4.1
 - fixed error in BT/Makefile (replaced "==" with "=")
 - added stub function accumulate_norms in BT/btio.f
-- changed type of Class B verification constants in BT/verify.f from 
+- changed type of Class B verification constants in BT/verify.f from
   single to double precision
-                                                       
+
 Changes in 2.4
 - Added I/O benchmark (subtype of BT).
 - Added Class D for all benchmarks except IS.
 - Reduced size of tabulated exponentials in FT.
-- Made minor changes to FT to prevent integer overflow for class D on 
-  systems with 32-bit integers. FT class D will not run on small 
+- Made minor changes to FT to prevent integer overflow for class D on
+  systems with 32-bit integers. FT class D will not run on small
   numbers of processors anymore.
 
 

@@ -2,7 +2,7 @@
 
       include 'npbparams.h'
 
-c.....Array dimensions     
+c.....Array dimensions
       integer lx1, lnje, nsides, nxyz
       parameter(lx1=5, lnje=2, nsides=6,  nxyz=lx1*lx1*lx1)
 
@@ -25,49 +25,49 @@ c.....Array dimensions
 c.....double precision arrays associated with collocation points
       double precision
      &       ta1  (lx1,lx1,lx1,lelt), ta2   (lx1,lx1,lx1,lelt),
-     &       trhs (lx1,lx1,lx1,lelt), t     (lx1,lx1,lx1,lelt), 
-     &       tmult(lx1,lx1,lx1,lelt), dpcelm(lx1,lx1,lx1,lelt), 
+     &       trhs (lx1,lx1,lx1,lelt), t     (lx1,lx1,lx1,lelt),
+     &       tmult(lx1,lx1,lx1,lelt), dpcelm(lx1,lx1,lx1,lelt),
      &       pdiff(lx1,lx1,lx1,lelt), pdiffp(lx1,lx1,lx1,lelt)
       common /colldp/ ta1, ta2, trhs, t, tmult, dpcelm, pdiff, pdiffp
 
 c.....double precision arays associated with mortar points
       double precision
-     &       umor(lmor), mormult(lmor), tmort(lmor), tmmor(lmor), 
-     &       rmor(lmor), dpcmor (lmor), pmorx(lmor), ppmor(lmor) 
-      common /mortdp/ umor, mormult, tmort,tmmor, rmor, dpcmor, 
+     &       umor(lmor), mormult(lmor), tmort(lmor), tmmor(lmor),
+     &       rmor(lmor), dpcmor (lmor), pmorx(lmor), ppmor(lmor)
+      common /mortdp/ umor, mormult, tmort,tmmor, rmor, dpcmor,
      &                pmorx, ppmor
 
 c.... integer arrays associated with element faces
-      integer idmo    (lx1,lx1,lnje,lnje,nsides,lelt), 
-     &        idel    (lx1,lx1,          nsides,lelt), 
-     &        sje     (2,2,              nsides,lelt), 
+      integer idmo    (lx1,lx1,lnje,lnje,nsides,lelt),
+     &        idel    (lx1,lx1,          nsides,lelt),
+     &        sje     (2,2,              nsides,lelt),
      &        sje_new (2,2,              nsides,lelt),
-     &        ijel    (2,                nsides,lelt), 
+     &        ijel    (2,                nsides,lelt),
      &        ijel_new(2,                nsides,lelt),
-     &        cbc     (                  nsides,lelt), 
-     &        cbc_new (                  nsides,lelt) 
+     &        cbc     (                  nsides,lelt),
+     &        cbc_new (                  nsides,lelt)
       common /facein/ idmo, ijel, idel, ijel_new, sje, sje_new, cbc,
      &               cbc_new
 
 c.....integer array associated with vertices
-      integer vassign  (8,lelt),      emo(2,8,8*lelt),   
+      integer vassign  (8,lelt),      emo(2,8,8*lelt),
      &        nemo (8*    lelt)
       common /vin/vassign, emo, nemo
 
 c.....integer array associated with element edges
-      integer diagn  (2,12,lelt) 
-      common /edgein/diagn 
+      integer diagn  (2,12,lelt)
+      common /edgein/diagn
 
 c.... integer arrays associated with elements
-      integer tree (      lelt), mt_to_id    (     lelt),                   
+      integer tree (      lelt), mt_to_id    (     lelt),
      &        newc (      lelt), mt_to_id_old(     lelt),
-     &        newi (      lelt), id_to_mt    (     lelt), 
+     &        newi (      lelt), id_to_mt    (     lelt),
      &        newe (      lelt), ref_front_id(     lelt),
-     &        front(      lelt), action      (     lelt), 
+     &        front(      lelt), action      (     lelt),
      &        ich  (      lelt), size_e      (     lelt),
      &        treenew     (     lelt)
       common /eltin/ tree, treenew,mt_to_id,mt_to_id_old,
-     &               id_to_mt, newc, newi, newe, ref_front_id, 
+     &               id_to_mt, newc, newi, newe, ref_front_id,
      &               ich, size_e, front, action
 
 c.....logical arrays associated with vertices
@@ -75,7 +75,7 @@ c.....logical arrays associated with vertices
       common /vlg/ ifpcmor
 
 c.....logical arrays associated with edge
-      logical eassign  (12,lelt),  if_1_edge(12,lelt), 
+      logical eassign  (12,lelt),  if_1_edge(12,lelt),
      &        ncon_edge(12,lelt)
       common /edgelg/ eassign,  ncon_edge, if_1_edge
 
@@ -84,7 +84,7 @@ c.....logical arrays associated with elements
       common /facelg/ skip, ifcoa, ifcoa_id
 
 c.....logical arrays associated with element faces
-      logical fassign(nsides,lelt), edgevis(4,nsides,lelt)      
+      logical fassign(nsides,lelt), edgevis(4,nsides,lelt)
       common /masonl/ fassign, edgevis
 
 c.....small arrays
@@ -97,7 +97,7 @@ c.....small arrays
      $       pcmor_nc0(lx1,lx1,2,2,refine_max),
      $       pcmor_c(lx1,lx1,refine_max), tcpre(lx1,lx1),
      $       pcmor_cor(8,refine_max)
-      common /pcr/ pcmor_nc1,pcmor_c,pcmor_nc0,pcmor_nc2,tcpre, 
+      common /pcr/ pcmor_nc1,pcmor_c,pcmor_nc0,pcmor_nc2,tcpre,
      $             pcmor_cor
 
 c.....gauss-labotto and gauss points
@@ -114,10 +114,10 @@ c.....coordinate of element vertices
       common /coord/ xc,yc,zc,xc_new,yc_new,zc_new
 
 c.....dr/dx, dx/dr  and Jacobian
-      double precision jacm1_s(lx1,lx1,lx1,refine_max), 
+      double precision jacm1_s(lx1,lx1,lx1,refine_max),
      $       rxm1_s(lx1,lx1,lx1,refine_max),
      $       xrm1_s(lx1,lx1,lx1,refine_max)
-      common /giso/ jacm1_s,xrm1_s, rxm1_s 
+      common /giso/ jacm1_s,xrm1_s, rxm1_s
 
 c.....mass matrices (diagonal)
       double precision bm1_s(lx1,lx1,lx1,refine_max)
@@ -129,7 +129,7 @@ c.....dertivative matrices d/dr
 
 c.....interpolation operators
       double precision
-     $       ixm31(lx1,lx1*2-1), ixtm31(lx1*2-1,lx1), ixmc1(lx1,lx1),  
+     $       ixm31(lx1,lx1*2-1), ixtm31(lx1*2-1,lx1), ixmc1(lx1,lx1),
      $       ixtmc1(lx1,lx1), ixmc2(lx1,lx1),  ixtmc2(lx1,lx1),
      $       map2(lx1),map4(lx1)
       common /ixyz/ ixmc1,ixtmc1,ixmc2,ixtmc2,ixm31,ixtm31,map2,map4
@@ -139,12 +139,12 @@ c.....collocation location within an element
       common /xfracs/xfrac(lx1)
 
 c.....used in laplacian operator
-      double precision g1m1_s(lx1,lx1,lx1,refine_max), 
+      double precision g1m1_s(lx1,lx1,lx1,refine_max),
      $       g4m1_s(lx1,lx1,lx1,refine_max),
      $       g5m1_s(lx1,lx1,lx1,refine_max),
      $       g6m1_s(lx1,lx1,lx1,refine_max)
       common /gmfact/ g1m1_s,g4m1_s,g5m1_s, g6m1_s
-      
+
 c.....We store some tables of useful topological constants
 c     These constants are intialized in a block data 'top_constants'
       integer f_e_ef(4,6)

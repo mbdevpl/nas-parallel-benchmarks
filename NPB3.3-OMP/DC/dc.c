@@ -65,13 +65,13 @@
 #define MAX_TIMERS 64  /* NPB maximum timers */
   void    timer_clear(int);
   void    timer_start(int);
-  void    timer_stop(int); 
+  void    timer_stop(int);
   double  timer_read(int);
 #endif
 
 void c_print_results( char   *name,
                       char   clss,
-                      int    n1, 
+                      int    n1,
                       int    n2,
                       int    n3,
                       int    niter,
@@ -89,7 +89,7 @@ void c_print_results( char   *name,
                       char   *clinkflags );
 
 void initADCpar(ADC_PAR *par);
-int ParseParFile(char* parfname, ADC_PAR *par); 
+int ParseParFile(char* parfname, ADC_PAR *par);
 int GenerateADC(ADC_PAR *par);
 void ShowADCPar(ADC_PAR *par);
 int32 DC(ADC_VIEW_PARS *adcpp);
@@ -97,7 +97,7 @@ int Verify(long long int checksum,ADC_VIEW_PARS *adcpp);
 
 #define BlockSize 1024
 
-int main ( int argc, char * argv[] ) 
+int main ( int argc, char * argv[] )
 {
   ADC_PAR *parp;
   ADC_VIEW_PARS *adcpp;
@@ -124,18 +124,18 @@ int main ( int argc, char * argv[] )
   parp->clss=CLASS;
   if(argc!=3){
     parp->dim=attrnum;
-    parp->tuplenum=input_tuples;    
+    parp->tuplenum=input_tuples;
   }else if( (argc==3)&&(!ParseParFile(argv[2], parp))) {
     PutErrMsg("main.ParseParFile failed")
     exit(1);
   }
-  ShowADCPar(parp); 
+  ShowADCPar(parp);
   if(!GenerateADC(parp)) {
      PutErrMsg("main.GenerateAdc failed")
      exit(1);
   }
 
-  adcpp->ndid = parp->ndid;  
+  adcpp->ndid = parp->ndid;
   adcpp->clss = parp->clss;
   adcpp->nd = parp->dim;
   adcpp->nm = parp->mnum;
@@ -147,7 +147,7 @@ int main ( int argc, char * argv[] )
     adcpp->memoryLimit = 0;
   if(adcpp->memoryLimit <= 0){
     /* size of rb-tree with tuplenum nodes */
-    adcpp->memoryLimit = parp->tuplenum*(50+5*parp->dim); 
+    adcpp->memoryLimit = parp->tuplenum*(50+5*parp->dim);
     fprintf(stdout,"Estimated rb-tree size = %d \n", adcpp->memoryLimit);
   }
   adcpp->nInputRecs = parp->tuplenum;
@@ -165,7 +165,7 @@ int main ( int argc, char * argv[] )
   return 0;
 }
 
-int32		 CloseAdcView(ADC_VIEW_CNTL *adccntl);  
+int32		 CloseAdcView(ADC_VIEW_CNTL *adccntl);
 int32		 PartitionCube(ADC_VIEW_CNTL *avp);				
 ADC_VIEW_CNTL *NewAdcViewCntl(ADC_VIEW_PARS *adcpp, uint32 pnum);
 int32		 ComputeGivenGroupbys(ADC_VIEW_CNTL *adccntl);
@@ -175,7 +175,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
    double t_total=0.0;
    int verified;
 
-   typedef struct { 
+   typedef struct {
       int    verificationFailed;
       uint32 totalViewTuples;
       uint64 totalViewSizesInBytes;
@@ -183,7 +183,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
       uint64 checksum;
       double tm_max;
    } PAR_VIEW_ST;
-   
+
    PAR_VIEW_ST *pvstp;
 
    pvstp = (PAR_VIEW_ST*) malloc(sizeof(PAR_VIEW_ST));
@@ -193,7 +193,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
    pvstp->totalNumberOfMadeViews = 0;
    pvstp->checksum = 0;
 
-#ifdef _OPENMP    
+#ifdef _OPENMP
    adcpp->nTasks=omp_get_max_threads();
    fprintf(stdout,"\nNumber of available threads:  %d\n", adcpp->nTasks);
    if (adcpp->nTasks > MAX_NUMBER_OF_TASKS) {
@@ -212,15 +212,15 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
 #endif
    adccntlp = NewAdcViewCntl(adcpp, itsk);
 
-   if (!adccntlp) { 
+   if (!adccntlp) {
       PutErrMsg("ParRun.NewAdcViewCntl: returned NULL")
       adccntlp->verificationFailed=1;
    }else{
      adccntlp->verificationFailed = 0;
      if (adccntlp->retCode!=0) {
-   	fprintf(stderr, 
+   	fprintf(stderr,
    		 "DC.NewAdcViewCntl: return code = %d\n",
-   						adccntlp->retCode); 
+   						adccntlp->retCode);
      }
    }
 
@@ -236,7 +236,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
      timer_stop(itimer);
      tm0 = timer_read(itimer);
    }
-#ifdef _OPENMP    
+#ifdef _OPENMP
 #pragma omp critical
 #endif
    {
@@ -247,7 +247,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
        pvstp->totalViewSizesInBytes += adccntlp->totalViewFileSize;
        pvstp->totalViewTuples += adccntlp->totalOfViewRows;
        pvstp->checksum += adccntlp->totchs[0];
-     }   
+     }
    }
    if(CloseAdcView(adccntlp)) {
      PutErrMsg("ParRun.CloseAdcView: is failed");
@@ -255,8 +255,8 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
    }
  } /* omp parallel */
 
-   t_total=pvstp->tm_max; 
- 
+   t_total=pvstp->tm_max;
+
    pvstp->verificationFailed=Verify(pvstp->checksum,adcpp);
    verified = (pvstp->verificationFailed == -1)? -1 :
               (pvstp->verificationFailed ==  0)?  1 : 0;
@@ -269,7 +269,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
    fprintf(stdout," Number of Tasks  =         %12d\n", (int) adcpp->nTasks);
    fprintf(stdout," Tuples Generated = %20.0f\n",
            (double) pvstp->totalViewTuples);
-   fprintf(stdout," Tuples/s         = %20.2f\n", 
+   fprintf(stdout," Tuples/s         = %20.2f\n",
            (double) pvstp->totalViewTuples / t_total);
    fprintf(stdout," Checksum         = %20.12e\n", (double) pvstp->checksum);
    if (pvstp->verificationFailed)
@@ -282,8 +282,8 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
                    0,
                    1,
   		   t_total,
-  		   (double) pvstp->totalViewTuples * 1.e-6 / t_total, 
-  		   "Tuples generated", 
+  		   (double) pvstp->totalViewTuples * 1.e-6 / t_total,
+  		   "Tuples generated",
   		   verified,
   		   NPBVERSION,
   		   COMPILETIME,
@@ -292,7 +292,7 @@ int32 DC(ADC_VIEW_PARS *adcpp) {
   		   C_LIB,
   		   C_INC,
   		   CFLAGS,
-  		   CLINKFLAGS); 
+  		   CLINKFLAGS);
    return ADC_OK;
 }
 

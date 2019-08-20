@@ -47,7 +47,7 @@ c---------------------------------------------------------------------
 
        include  'header.h'
        include  'mpinpb.h'
-      
+
        integer i, niter, step, c, error, fstatus
        double precision navg, mflops, mbytes, n3
 
@@ -55,13 +55,13 @@ c---------------------------------------------------------------------
        double precision t, tmax, tiominv, tpc, timer_read
        logical verified
        character class, cbuff*40
-       double precision t1(t_last+2), tsum(t_last+2), 
+       double precision t1(t_last+2), tsum(t_last+2),
      >                  tming(t_last+2), tmaxg(t_last+2)
        character        t_recs(t_last+2)*8
 
        integer wr_interval
 
-       data t_recs/'total', 'i/o', 'rhs', 'xsolve', 'ysolve', 'zsolve', 
+       data t_recs/'total', 'i/o', 'rhs', 'xsolve', 'ysolve', 'zsolve',
      >             'bpack', 'exch', 'xcomm', 'ycomm', 'zcomm',
      >             ' totcomp', ' totcomm'/
 
@@ -73,7 +73,7 @@ c      Root node reads input file (if it exists) else takes
 c      defaults from parameters
 c---------------------------------------------------------------------
        if (node .eq. root) then
-          
+
           write(*, 1000)
 
           open (unit=2,file='timer.flag',status='old',iostat=fstatus)
@@ -87,7 +87,7 @@ c---------------------------------------------------------------------
 c
           rd_interval = 0
           if (fstatus .eq. 0) then
-            write(*,233) 
+            write(*,233)
  233        format(' Reading from input file inputbt.data')
             read (2,*) niter
             read (2,*) dt
@@ -105,7 +105,7 @@ c
             endif
             close(2)
           else
-            write(*,234) 
+            write(*,234)
             niter = niter_default
             dt    = dt_default
             grid_points(1) = problem_size
@@ -127,7 +127,7 @@ c             set default to No-File-Hints with a value of 0
           write(*, 1001) grid_points(1), grid_points(2), grid_points(3)
           write(*, 1002) niter, dt
           if (no_nodes .ne. total_nodes) write(*, 1004) total_nodes
-          if (no_nodes .ne. maxcells*maxcells) 
+          if (no_nodes .ne. maxcells*maxcells)
      >        write(*, 1005) maxcells*maxcells
           write(*, 1003) no_nodes
 
@@ -149,10 +149,10 @@ c             set default to No-File-Hints with a value of 0
        call mpi_bcast(niter, 1, MPI_INTEGER,
      >                root, comm_setup, error)
 
-       call mpi_bcast(dt, 1, dp_type, 
+       call mpi_bcast(dt, 1, dp_type,
      >                root, comm_setup, error)
 
-       call mpi_bcast(grid_points(1), 3, MPI_INTEGER, 
+       call mpi_bcast(grid_points(1), 3, MPI_INTEGER,
      >                root, comm_setup, error)
 
        call mpi_bcast(wr_interval, 1, MPI_INTEGER,
@@ -161,7 +161,7 @@ c             set default to No-File-Hints with a value of 0
        call mpi_bcast(rd_interval, 1, MPI_INTEGER,
      >                root, comm_setup, error)
 
-       call mpi_bcast(timeron, 1, MPI_LOGICAL, 
+       call mpi_bcast(timeron, 1, MPI_LOGICAL,
      >                root, comm_setup, error)
 
        call make_set
@@ -246,15 +246,15 @@ c---------------------------------------------------------------------
 
        call verify(niter, class, verified)
 
-       call mpi_reduce(t, tmax, 1, 
-     >                 dp_type, MPI_MAX, 
+       call mpi_reduce(t, tmax, 1,
+     >                 dp_type, MPI_MAX,
      >                 root, comm_setup, error)
 
        if (iotype .ne. 0) then
           t = timer_read(2)
           if (t .ne. 0.d0) t = 1.0d0 / t
-          call mpi_reduce(t, tiominv, 1, 
-     >                    dp_type, MPI_SUM, 
+          call mpi_reduce(t, tiominv, 1,
+     >                    dp_type, MPI_SUM,
      >                    root, comm_setup, error)
        endif
 
@@ -284,10 +284,10 @@ c---------------------------------------------------------------------
      >               '   I/O data rate  (MB/sec) : ', f14.2)
           endif
 
-         call print_results('BT', class, grid_points(1), 
-     >     grid_points(2), grid_points(3), niter, maxcells*maxcells, 
-     >     total_nodes, tmax, mflops, '          floating point', 
-     >     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5, 
+         call print_results('BT', class, grid_points(1),
+     >     grid_points(2), grid_points(3), niter, maxcells*maxcells,
+     >     total_nodes, tmax, mflops, '          floating point',
+     >     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5,
      >     cs6, '(none)')
        endif
 
@@ -302,11 +302,11 @@ c---------------------------------------------------------------------
        t1(t_last+2) = t1(t_xcomm)+t1(t_ycomm)+t1(t_zcomm)+t1(t_exch)
        t1(t_last+1) = t1(t_total)  - t1(t_last+2)
 
-       call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM, 
+       call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM,
      >                 0, comm_setup, error)
-       call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN, 
+       call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN,
      >                 0, comm_setup, error)
-       call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX, 
+       call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX,
      >                 0, comm_setup, error)
 
        if (node .eq. 0) then
@@ -316,7 +316,7 @@ c---------------------------------------------------------------------
              write(*, 810) i, t_recs(i), tming(i), tmaxg(i), tsum(i)
           end do
        endif
- 800   format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum', 
+ 800   format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum',
      >        5x, 'average')
  810   format(' timer ', i2, '(', A8, ') :', 3(2x,f10.4))
 

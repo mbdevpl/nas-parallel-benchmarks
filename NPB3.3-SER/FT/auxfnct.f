@@ -1,16 +1,16 @@
 c---------------------------------------------------------------------
-c compute the roots-of-unity array that will be used for subsequent FFTs. 
+c compute the roots-of-unity array that will be used for subsequent FFTs.
 c---------------------------------------------------------------------
       subroutine CompExp (n, exponent)
 
       implicit none
       integer n
-      double complex exponent(n) 
+      double complex exponent(n)
       integer ilog2
-      external ilog2      
-     
+      external ilog2
+
       integer m,nu,ku,i,j,ln
-      double precision t, ti, pi 
+      double precision t, ti, pi
       data pi /3.141592653589793238d0/
 
       nu = n
@@ -23,11 +23,11 @@ c---------------------------------------------------------------------
          do i = 0, ln - 1
             ti = i * t
             exponent(i+ku) = dcmplx(cos(ti),sin(ti))
-         enddo        
+         enddo
          ku = ku + ln
          ln = 2 * ln
       enddo
-            
+
       return
       end
 
@@ -38,7 +38,7 @@ c---------------------------------------------------------------------
       implicit none
       integer n
 c---------------------------------------------------------------------
-c---------------------------------------------------------------------  
+c---------------------------------------------------------------------
       integer nn, lg
       if (n .eq. 1) then
          ilog2=0
@@ -80,7 +80,7 @@ c---------------------------------------------------------------------
       do while (n .gt. 1)
          n2 = n/2
          if (n2 * 2 .eq. n) then
-            dummy = randlc(q, q) 
+            dummy = randlc(q, q)
             n = n2
          else
             dummy = randlc(r, q)
@@ -128,8 +128,8 @@ c---------------------------------------------------------------------
       parameter (seed = 314159265.d0, a = 1220703125.d0)
       external randlc
       double precision randlc
-      
-      start = seed                                    
+
+      start = seed
 c---------------------------------------------------------------------
 c Jump to the starting element for our first plane.
 c---------------------------------------------------------------------
@@ -140,16 +140,16 @@ c---------------------------------------------------------------------
 c Go through by z planes filling in one square at a time.
 c---------------------------------------------------------------------
       RanStarts(1) = start
-      do k = 2, d3 
+      do k = 2, d3
          dummy = randlc(start, an)
          RanStarts(k) = start
       end do
-      
-      do k = 1, d3 
+
+      do k = 1, d3
          x0 = RanStarts(k)
-         do j = 1, d2 
+         do j = 1, d2
            call vranlc(2*d1, x0, a, tmp)
-           do i = 1, d1 
+           do i = 1, d1
              u0(i,j,k)=tmp(i)
            end do
          end do
@@ -173,7 +173,7 @@ c---------------------------------------------------------------------
                  end do
               end do
            end do
-      
+
       return
       end
 c---------------------------------------------------------------------

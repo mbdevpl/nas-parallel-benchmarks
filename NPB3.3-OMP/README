@@ -1,7 +1,7 @@
 The OpenMP implementation of NPB 3.3 (NPB3.3-OMP)
 --------------------------------------------------
 
-For problem reports and suggestions on the implementation, 
+For problem reports and suggestions on the implementation,
 please contact:
 
    NAS Parallel Benchmark Team
@@ -20,18 +20,18 @@ For explanation of compilation and running of the benchmarks,
 please refer to README.install.
 
 
-NPB3.3-OMP introduces a new problem size (class E) to seven of 
-the benchmarks (BT, SP, LU, CG, MG, FT, and EP). The version 
-also includes a new problem size (class D) for the IS benchmark, 
+NPB3.3-OMP introduces a new problem size (class E) to seven of
+the benchmarks (BT, SP, LU, CG, MG, FT, and EP). The version
+also includes a new problem size (class D) for the IS benchmark,
 which was not present in the previous releases.
 
-The release is merged with the vector codes for the BT and LU 
-benchmarks, which can be selected with the VERSION=VEC option 
-during compilation.  However, successful vectorization highly 
-depends on the compiler used.  Some changes to compiler directives 
+The release is merged with the vector codes for the BT and LU
+benchmarks, which can be selected with the VERSION=VEC option
+during compilation.  However, successful vectorization highly
+depends on the compiler used.  Some changes to compiler directives
 for vectorization in the current codes (see *_vec.f files)
 may be required.
 
-OMP/LU-HP (the hyper-plane implementation of LU) is no longer 
-included in the distribution.  To get this version, please 
+OMP/LU-HP (the hyper-plane implementation of LU) is no longer
+included in the distribution.  To get this version, please
 download NPB3.2.1 instead.

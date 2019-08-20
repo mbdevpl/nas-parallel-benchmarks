@@ -17,10 +17,10 @@ include ../sys/make.common
 # npbparams.h is included by header.h
 # The following rule should do the trick but many make programs (not gmake)
 # will do the wrong thing and rebuild the world every time (because the
-# mod time on header.h is not changed. One solution would be to 
+# mod time on header.h is not changed. One solution would be to
 # touch header.h but this might cause confusion if someone has
 # accidentally deleted it. Instead, make the dependency on npbparams.h
-# explicit in all the lines below (even though dependence is indirect). 
+# explicit in all the lines below (even though dependence is indirect).
 
 # header.h: npbparams.h
 
@@ -93,13 +93,13 @@ solve_subs.o:     solve_subs.f  npbparams.h
 add.o:            add.f  header.h npbparams.h
 error.o:          error.f  header.h npbparams.h  mpinpb.h
 verify.o:         verify.f  header.h npbparams.h  mpinpb.h
-setup_mpi.o:      setup_mpi.f mpinpb.h npbparams.h 
+setup_mpi.o:      setup_mpi.f mpinpb.h npbparams.h
 btio.o:           btio.f  header.h npbparams.h
-btio_common.o:    btio_common.f mpinpb.h npbparams.h 
-fortran_io.o:     fortran_io.f mpinpb.h npbparams.h 
-simple_mpiio.o:   simple_mpiio.f mpinpb.h npbparams.h 
-full_mpiio.o:     full_mpiio.f mpinpb.h npbparams.h 
-epio.o:           epio.f mpinpb.h npbparams.h 
+btio_common.o:    btio_common.f mpinpb.h npbparams.h
+fortran_io.o:     fortran_io.f mpinpb.h npbparams.h
+simple_mpiio.o:   simple_mpiio.f mpinpb.h npbparams.h
+full_mpiio.o:     full_mpiio.f mpinpb.h npbparams.h
+epio.o:           epio.f mpinpb.h npbparams.h
 
 clean:
 	- rm -f *.o *~ mputil*

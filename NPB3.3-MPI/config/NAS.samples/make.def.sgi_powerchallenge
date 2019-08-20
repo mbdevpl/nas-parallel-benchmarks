@@ -1,4 +1,4 @@
-# This is for the SGI PowerChallenge Array at NASA Ames. mrf77 and 
+# This is for the SGI PowerChallenge Array at NASA Ames. mrf77 and
 # mrcc are local scripts that invoke the proper MPI library.
 MPIF77 = mrf77
 FLINK  = mrf77

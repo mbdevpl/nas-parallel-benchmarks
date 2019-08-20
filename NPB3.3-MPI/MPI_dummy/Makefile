@@ -1,5 +1,5 @@
-# Makefile for MPI dummy library. 
-# Must be edited for a specific machine. Does NOT read in 
+# Makefile for MPI dummy library.
+# Must be edited for a specific machine. Does NOT read in
 # the make.def file of NPB 2.3
 F77 = f77
 CC = cc
@@ -33,6 +33,6 @@ test: test.f
 
 
 
-clean: 
+clean:
 	- rm -f *~ *.o
 	- rm -f test libmpi.a

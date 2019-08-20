@@ -121,7 +121,7 @@ c---------------------------------------------------------------------
  1001    format(' Size: ', i4, 'x', i4, 'x', i4)
  1002    format(' Iterations: ', i4)
  1003    format(' Number of processes: ', i5, /)
-         
+
 
 
       end if

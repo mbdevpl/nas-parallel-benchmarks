@@ -18,7 +18,7 @@ c---------------------------------------------------------------------
       double precision xi, eta, zeta, u_exact(5), rms(5), rms_work(5),
      >     add
 
-      do m = 1, 5 
+      do m = 1, 5
          rms_work(m) = 0.0d0
       enddo
 
@@ -46,7 +46,7 @@ c---------------------------------------------------------------------
          enddo
       enddo
 
-      call mpi_allreduce(rms_work, rms, 5, dp_type, 
+      call mpi_allreduce(rms_work, rms, 5, dp_type,
      >     MPI_SUM, comm_setup, error)
 
       do m = 1, 5
@@ -76,7 +76,7 @@ c---------------------------------------------------------------------
 
       do m = 1, 5
          rms_work(m) = 0.0d0
-      enddo 
+      enddo
 
       do c = 1, ncells
          do k = start(3,c), cell_size(3,c)-end(3,c)-1
@@ -85,21 +85,21 @@ c---------------------------------------------------------------------
                   do m = 1, 5
                      add = rhs(m,i,j,k,c)
                      rms_work(m) = rms_work(m) + add*add
-                  enddo 
-               enddo 
-            enddo 
-         enddo 
-      enddo 
+                  enddo
+               enddo
+            enddo
+         enddo
+      enddo
 
-      call mpi_allreduce(rms_work, rms, 5, dp_type, 
+      call mpi_allreduce(rms_work, rms, 5, dp_type,
      >     MPI_SUM, comm_setup, error)
 
       do m = 1, 5
          do d = 1, 3
             rms(m) = rms(m) / dble(grid_points(d)-2)
-         enddo 
+         enddo
          rms(m) = dsqrt(rms(m))
-      enddo 
+      enddo
 
       return
       end

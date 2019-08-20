@@ -17,7 +17,7 @@ c---------------------------------------------------------------------
       integer error, nc, color
 
       call mpi_init(error)
-      
+
       call mpi_comm_size(MPI_COMM_WORLD, total_nodes, error)
       call mpi_comm_rank(MPI_COMM_WORLD, node, error)
 
@@ -35,7 +35,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c We handle a non-square number of nodes by making the excess nodes
 c inactive. However, we can never handle more cells than were compiled
-c in. 
+c in.
 c---------------------------------------------------------------------
 
       if (nc .gt. maxcells) nc = maxcells
@@ -47,14 +47,14 @@ c---------------------------------------------------------------------
          active = .true.
          color = 0
       end if
-      
+
       call mpi_comm_split(MPI_COMM_WORLD,color,node,comm_setup,error)
       if (.not. active) return
 
       call mpi_comm_size(comm_setup, no_nodes, error)
       call mpi_comm_dup(comm_setup, comm_solve, error)
       call mpi_comm_dup(comm_setup, comm_rhs, error)
-      
+
 c---------------------------------------------------------------------
 c     let node 0 be the root for the group (there is only one)
 c---------------------------------------------------------------------

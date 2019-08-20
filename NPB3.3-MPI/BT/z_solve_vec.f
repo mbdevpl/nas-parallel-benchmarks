@@ -8,10 +8,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     Performs line solves in Z direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
 c---------------------------------------------------------------------
@@ -109,10 +109,10 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      
+
       subroutine z_unpack_solve_info(c)
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
@@ -124,7 +124,7 @@ c---------------------------------------------------------------------
 
       include 'header.h'
 
-      integer i,j,m,n,ptr,c,kstart 
+      integer i,j,m,n,ptr,c,kstart
 
       kstart = 0
       ptr = 0
@@ -148,7 +148,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      
+
       subroutine z_send_solve_info(send_id,c)
 
 c---------------------------------------------------------------------
@@ -191,7 +191,7 @@ c---------------------------------------------------------------------
       enddo
 
 c---------------------------------------------------------------------
-c     send buffer 
+c     send buffer
 c---------------------------------------------------------------------
       if (timeron) call timer_start(t_zcomm)
       call mpi_isend(in_buffer, buffer_size,
@@ -240,8 +240,8 @@ c---------------------------------------------------------------------
 
       if (timeron) call timer_start(t_zcomm)
       call mpi_isend(in_buffer, buffer_size,
-     >     dp_type, predecessor(3), 
-     >     TOP+ip+jp*NCELLS, comm_solve, 
+     >     dp_type, predecessor(3),
+     >     TOP+ip+jp*NCELLS, comm_solve,
      >     send_id,error)
       if (timeron) call timer_stop(t_zcomm)
 
@@ -298,8 +298,8 @@ c---------------------------------------------------------------------
       jp = cell_coord(2,c) - 1
       buffer_size=MAX_CELL_DIM*MAX_CELL_DIM*BLOCK_SIZE
       call mpi_irecv(out_buffer, buffer_size,
-     >     dp_type, successor(3), 
-     >     TOP+ip+jp*NCELLS, comm_solve, 
+     >     dp_type, successor(3),
+     >     TOP+ip+jp*NCELLS, comm_solve,
      >     recv_id, error)
 
       return
@@ -314,7 +314,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     post mpi receives 
+c     post mpi receives
 c---------------------------------------------------------------------
 
       include 'header.h'
@@ -326,13 +326,13 @@ c---------------------------------------------------------------------
       buffer_size=MAX_CELL_DIM*MAX_CELL_DIM*
      >     (BLOCK_SIZE*BLOCK_SIZE + BLOCK_SIZE)
       call mpi_irecv(out_buffer, buffer_size,
-     >     dp_type, predecessor(3), 
+     >     dp_type, predecessor(3),
      >     BOTTOM+ip+jp*NCELLS, comm_solve,
      >     recv_id, error)
 
       return
       end
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -352,9 +352,9 @@ c---------------------------------------------------------------------
 
       integer first, last, c, i, k
       integer m,n,j,jsize,isize,ksize,kstart
-      
+
       kstart = 0
-      isize = cell_size(1,c)-end(1,c)-1      
+      isize = cell_size(1,c)-end(1,c)-1
       jsize = cell_size(2,c)-end(2,c)-1
       ksize = cell_size(3,c)-1
       if (last .eq. 0) then
@@ -365,7 +365,7 @@ c     U(jsize) uses info from previous cell if not last cell
 c---------------------------------------------------------------------
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,ksize,c) = rhs(m,i,j,ksize,c) 
+                     rhs(m,i,j,ksize,c) = rhs(m,i,j,ksize,c)
      >                    - lhsc(m,n,i,j,ksize,c)*
      >                    backsub_info(n,i,j,c)
                   enddo
@@ -378,7 +378,7 @@ c---------------------------------------------------------------------
             do i=start(1,c),isize
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,k,c) = rhs(m,i,j,k,c) 
+                     rhs(m,i,j,k,c) = rhs(m,i,j,k,c)
      >                    - lhsc(m,n,i,j,k,c)*rhs(n,i,j,k+1,c)
                   enddo
                enddo
@@ -399,10 +399,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(KMAX) and rhs'(KMAX) will be sent to next cell.
 c---------------------------------------------------------------------
@@ -435,10 +435,10 @@ c---------------------------------------------------------------------
          enddo
       enddo
 
-      do j=start(2,c),jsize 
+      do j=start(2,c),jsize
 
 c---------------------------------------------------------------------
-c     This function computes the left hand side for the three z-factors 
+c     This function computes the left hand side for the three z-factors
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -459,33 +459,33 @@ c---------------------------------------------------------------------
                fjac(1,4,i,k) = 1.0d+00
                fjac(1,5,i,k) = 0.0d+00
 
-               fjac(2,1,i,k) = - ( u(2,i,j,k,c)*u(4,i,j,k,c) ) 
-     >              * tmp2 
+               fjac(2,1,i,k) = - ( u(2,i,j,k,c)*u(4,i,j,k,c) )
+     >              * tmp2
                fjac(2,2,i,k) = u(4,i,j,k,c) * tmp1
                fjac(2,3,i,k) = 0.0d+00
                fjac(2,4,i,k) = u(2,i,j,k,c) * tmp1
                fjac(2,5,i,k) = 0.0d+00
 
                fjac(3,1,i,k) = - ( u(3,i,j,k,c)*u(4,i,j,k,c) )
-     >              * tmp2 
+     >              * tmp2
                fjac(3,2,i,k) = 0.0d+00
                fjac(3,3,i,k) = u(4,i,j,k,c) * tmp1
                fjac(3,4,i,k) = u(3,i,j,k,c) * tmp1
                fjac(3,5,i,k) = 0.0d+00
 
-               fjac(4,1,i,k) = - (u(4,i,j,k,c)*u(4,i,j,k,c) * tmp2 ) 
+               fjac(4,1,i,k) = - (u(4,i,j,k,c)*u(4,i,j,k,c) * tmp2 )
      >              + c2 * qs(i,j,k,c)
-               fjac(4,2,i,k) = - c2 *  u(2,i,j,k,c) * tmp1 
+               fjac(4,2,i,k) = - c2 *  u(2,i,j,k,c) * tmp1
                fjac(4,3,i,k) = - c2 *  u(3,i,j,k,c) * tmp1
                fjac(4,4,i,k) = ( 2.0d+00 - c2 )
-     >              *  u(4,i,j,k,c) * tmp1 
+     >              *  u(4,i,j,k,c) * tmp1
                fjac(4,5,i,k) = c2
 
                fjac(5,1,i,k) = ( c2 * 2.0d0 * qs(i,j,k,c)
      >              - c1 * ( u(5,i,j,k,c) * tmp1 ) )
      >              * ( u(4,i,j,k,c) * tmp1 )
                fjac(5,2,i,k) = - c2 * ( u(2,i,j,k,c)*u(4,i,j,k,c) )
-     >              * tmp2 
+     >              * tmp2
                fjac(5,3,i,k) = - c2 * ( u(3,i,j,k,c)*u(4,i,j,k,c) )
      >              * tmp2
                fjac(5,4,i,k) = c1 * ( u(5,i,j,k,c) * tmp1 )
@@ -545,7 +545,7 @@ c---------------------------------------------------------------------
 
                lhsa(1,1,i,k) = - tmp2 * fjac(1,1,i,k-1)
      >              - tmp1 * njac(1,1,i,k-1)
-     >              - tmp1 * dz1 
+     >              - tmp1 * dz1
                lhsa(1,2,i,k) = - tmp2 * fjac(1,2,i,k-1)
      >              - tmp1 * njac(1,2,i,k-1)
                lhsa(1,3,i,k) = - tmp2 * fjac(1,3,i,k-1)
@@ -573,7 +573,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(3,2,i,k-1)
                lhsa(3,3,i,k) = - tmp2 * fjac(3,3,i,k-1)
      >              - tmp1 * njac(3,3,i,k-1)
-     >              - tmp1 * dz3 
+     >              - tmp1 * dz3
                lhsa(3,4,i,k) = - tmp2 * fjac(3,4,i,k-1)
      >              - tmp1 * njac(3,4,i,k-1)
                lhsa(3,5,i,k) = - tmp2 * fjac(3,5,i,k-1)
@@ -640,7 +640,7 @@ c---------------------------------------------------------------------
                lhsb(5,3,i,k) = tmp1 * 2.0d+00 * njac(5,3,i,k)
                lhsb(5,4,i,k) = tmp1 * 2.0d+00 * njac(5,4,i,k)
                lhsb(5,5,i,k) = 1.0d+00
-     >              + tmp1 * 2.0d+00 * njac(5,5,i,k) 
+     >              + tmp1 * 2.0d+00 * njac(5,5,i,k)
      >              + tmp1 * 2.0d+00 * dz5
 
                lhsc(1,1,i,j,k,c) =  tmp2 * fjac(1,1,i,k+1)
@@ -710,7 +710,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     outer most do loops - sweeping in i direction
 c---------------------------------------------------------------------
-         if (first .eq. 1) then 
+         if (first .eq. 1) then
 
 c---------------------------------------------------------------------
 c     multiply c(i,j,kstart) by b_inverse and copy back to c
@@ -727,7 +727,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
          do k=kstart+first,ksize-last
 !dir$ ivdep
@@ -735,7 +735,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     subtract A*lhs_vector(k-1) from lhs_vector(k)
-c     
+c
 c     rhs(k) = rhs(k) - A*rhs(k-1)
 c---------------------------------------------------------------------
                call matvec_sub(lhsa(1,1,i,k),
@@ -795,7 +795,7 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 
 
 

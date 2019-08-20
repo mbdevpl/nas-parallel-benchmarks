@@ -2,7 +2,7 @@
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
-      subroutine init_comm 
+      subroutine init_comm
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
@@ -12,7 +12,7 @@ c
 c   initialize MPI and establish rank and size
 c
 c This is a module in the MPI implementation of LUSSOR
-c pseudo application from the NAS Parallel Benchmarks. 
+c pseudo application from the NAS Parallel Benchmarks.
 c
 c---------------------------------------------------------------------
 

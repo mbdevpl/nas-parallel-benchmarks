@@ -64,13 +64,13 @@ c  num_procs must be a power of 2, and num_procs=num_proc_cols*num_proc_rows.
 c  num_proc_cols and num_proc_cols are to be found in npbparams.h.
 c  When num_procs is not square, then num_proc_cols must be = 2*num_proc_rows.
 c---------------------------------------------------------------------
-      integer    num_procs 
+      integer    num_procs
       parameter( num_procs = num_proc_cols * num_proc_rows )
 
 
 
 c---------------------------------------------------------------------
-c  Class specific parameters: 
+c  Class specific parameters:
 c  It appears here for reference only.
 c  These are their values, however, this info is imported in the npbparams.h
 c  include file, which is written by the sys/setparams.c program.
@@ -79,57 +79,57 @@ c---------------------------------------------------------------------
 C----------
 C  Class S:
 C----------
-CC       parameter( na=1400, 
-CC      >           nonzer=7, 
-CC      >           shift=10., 
+CC       parameter( na=1400,
+CC      >           nonzer=7,
+CC      >           shift=10.,
 CC      >           niter=15,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class W:
 C----------
 CC       parameter( na=7000,
-CC      >           nonzer=8, 
-CC      >           shift=12., 
+CC      >           nonzer=8,
+CC      >           shift=12.,
 CC      >           niter=15,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class A:
 C----------
 CC       parameter( na=14000,
-CC      >           nonzer=11, 
-CC      >           shift=20., 
+CC      >           nonzer=11,
+CC      >           shift=20.,
 CC      >           niter=15,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class B:
 C----------
-CC       parameter( na=75000, 
-CC      >           nonzer=13, 
-CC      >           shift=60., 
+CC       parameter( na=75000,
+CC      >           nonzer=13,
+CC      >           shift=60.,
 CC      >           niter=75,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class C:
 C----------
-CC       parameter( na=150000, 
-CC      >           nonzer=15, 
-CC      >           shift=110., 
+CC       parameter( na=150000,
+CC      >           nonzer=15,
+CC      >           shift=110.,
 CC      >           niter=75,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class D:
 C----------
-CC       parameter( na=1500000, 
-CC      >           nonzer=21, 
-CC      >           shift=500., 
+CC       parameter( na=1500000,
+CC      >           nonzer=21,
+CC      >           shift=500.,
 CC      >           niter=100,
 CC      >           rcond=1.0d-1 )
 C----------
 C  Class E:
 C----------
-CC       parameter( na=9000000, 
-CC      >           nonzer=26, 
-CC      >           shift=1500., 
+CC       parameter( na=9000000,
+CC      >           nonzer=26,
+CC      >           shift=1500.,
 CC      >           niter=100,
 CC      >           rcond=1.0d-1 )
 
@@ -141,23 +141,23 @@ CC      >           rcond=1.0d-1 )
 
 
 
-      common / partit_size  /  naa, nzz, 
+      common / partit_size  /  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
      >                         send_start,
      >                         send_len
-      integer                  naa, nzz, 
+      integer                  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
@@ -227,44 +227,44 @@ c---------------------------------------------------------------------
       call initialize_mpi
 
 
-      if( na .eq. 1400 .and. 
-     &    nonzer .eq. 7 .and. 
+      if( na .eq. 1400 .and.
+     &    nonzer .eq. 7 .and.
      &    niter .eq. 15 .and.
      &    shift .eq. 10.d0 ) then
          class = 'S'
          zeta_verify_value = 8.5971775078648d0
-      else if( na .eq. 7000 .and. 
-     &         nonzer .eq. 8 .and. 
+      else if( na .eq. 7000 .and.
+     &         nonzer .eq. 8 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 12.d0 ) then
          class = 'W'
          zeta_verify_value = 10.362595087124d0
-      else if( na .eq. 14000 .and. 
-     &         nonzer .eq. 11 .and. 
+      else if( na .eq. 14000 .and.
+     &         nonzer .eq. 11 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 20.d0 ) then
          class = 'A'
          zeta_verify_value = 17.130235054029d0
-      else if( na .eq. 75000 .and. 
-     &         nonzer .eq. 13 .and. 
+      else if( na .eq. 75000 .and.
+     &         nonzer .eq. 13 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 60.d0 ) then
          class = 'B'
          zeta_verify_value = 22.712745482631d0
-      else if( na .eq. 150000 .and. 
-     &         nonzer .eq. 15 .and. 
+      else if( na .eq. 150000 .and.
+     &         nonzer .eq. 15 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 110.d0 ) then
          class = 'C'
          zeta_verify_value = 28.973605592845d0
-      else if( na .eq. 1500000 .and. 
-     &         nonzer .eq. 21 .and. 
+      else if( na .eq. 1500000 .and.
+     &         nonzer .eq. 21 .and.
      &         niter .eq. 100 .and.
      &         shift .eq. 500.d0 ) then
          class = 'D'
          zeta_verify_value = 52.514532105794d0
-      else if( na .eq. 9000000 .and. 
-     &         nonzer .eq. 26 .and. 
+      else if( na .eq. 9000000 .and.
+     &         nonzer .eq. 26 .and.
      &         niter .eq. 100 .and.
      &         shift .eq. 1.5d3 ) then
          class = 'E'
@@ -274,7 +274,7 @@ c---------------------------------------------------------------------
       endif
 
       if( me .eq. root )then
-         write( *,1000 ) 
+         write( *,1000 )
          write( *,1001 ) na
          write( *,1002 ) niter
          write( *,1003 ) nprocs
@@ -302,8 +302,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Set up processor info, such as whether sq num of procs, etc
 c---------------------------------------------------------------------
-      call setup_proc_info( num_procs, 
-     >                      num_proc_rows, 
+      call setup_proc_info( num_procs,
+     >                      num_proc_rows,
      >                      num_proc_cols )
 
 
@@ -333,7 +333,7 @@ c---------------------------------------------------------------------
 c  Set up partition's sparse random matrix for given class size
 c---------------------------------------------------------------------
       call makea(naa, nzz, a, colidx, rowstr, nonzer,
-     >           firstrow, lastrow, firstcol, lastcol, 
+     >           firstrow, lastrow, firstcol, lastcol,
      >           rcond, arow, acol, aelt, v, iv, shift)
 
 
@@ -343,7 +343,7 @@ c  Note: as a result of the above call to makea:
 c        values of j used in indexing rowstr go from 1 --> lastrow-firstrow+1
 c        values of colidx which are col indexes go from firstcol --> lastcol
 c        So:
-c        Shift the col index vals from actual (firstcol --> lastcol ) 
+c        Shift the col index vals from actual (firstcol --> lastcol )
 c        to local, i.e., (1 --> lastcol-firstcol+1)
 c---------------------------------------------------------------------
       do j=1,lastrow-firstrow+1
@@ -380,7 +380,7 @@ c---------------------------------------------------------------------
      >                    q,
      >                    r,
      >                    w,
-     >                    rnorm, 
+     >                    rnorm,
      >                    l2npcols,
      >                    reduce_exch_proc,
      >                    reduce_send_starts,
@@ -404,7 +404,7 @@ c---------------------------------------------------------------------
          do i = 1, l2npcols
             if (timeron) call timer_start(t_ncomm)
             call mpi_irecv( norm_temp2,
-     >                      2, 
+     >                      2,
      >                      dp_type,
      >                      reduce_exch_proc(i),
      >                      i,
@@ -412,7 +412,7 @@ c---------------------------------------------------------------------
      >                      request,
      >                      ierr )
             call mpi_send(  norm_temp1,
-     >                      2, 
+     >                      2,
      >                      dp_type,
      >                      reduce_exch_proc(i),
      >                      i,
@@ -431,9 +431,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp1(2)*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp1(2)*z(j)
+         enddo
 
 
       enddo                              ! end of do one iteration untimed
@@ -482,7 +482,7 @@ c---------------------------------------------------------------------
      >                    q,
      >                    r,
      >                    w,
-     >                    rnorm, 
+     >                    rnorm,
      >                    l2npcols,
      >                    reduce_exch_proc,
      >                    reduce_send_starts,
@@ -507,7 +507,7 @@ c---------------------------------------------------------------------
          do i = 1, l2npcols
             if (timeron) call timer_start(t_ncomm)
             call mpi_irecv( norm_temp2,
-     >                      2, 
+     >                      2,
      >                      dp_type,
      >                      reduce_exch_proc(i),
      >                      i,
@@ -515,7 +515,7 @@ c---------------------------------------------------------------------
      >                      request,
      >                      ierr )
             call mpi_send(  norm_temp1,
-     >                      2, 
+     >                      2,
      >                      dp_type,
      >                      reduce_exch_proc(i),
      >                      i,
@@ -542,9 +542,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp1(2)*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp1(2)*z(j)
+         enddo
 
 
       enddo                              ! end of main iter inv pow meth
@@ -559,7 +559,7 @@ c---------------------------------------------------------------------
 
       call mpi_reduce( t,
      >                 tmax,
-     >                 1, 
+     >                 1,
      >                 dp_type,
      >                 MPI_MAX,
      >                 root,
@@ -584,7 +584,7 @@ c---------------------------------------------------------------------
  202           format(' Error is   ', E20.13)
             else
                verified = .FALSE.
-               write(*, 300) 
+               write(*, 300)
                write(*, 301) zeta
                write(*, 302) zeta_verify_value
  300           format(' VERIFICATION FAILED')
@@ -612,7 +612,7 @@ c---------------------------------------------------------------------
 
          call print_results('CG', class, na, 0, 0,
      >                      niter, nnodes_compiled, nprocs, tmax,
-     >                      mflops, '          floating point', 
+     >                      mflops, '          floating point',
      >                      verified, npbversion, compiletime,
      >                      cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -629,11 +629,11 @@ c---------------------------------------------------------------------
       t1(t_last+2) = t1(t_rcomm) + t1(t_ncomm)
       t1(t_last+1) = t1(t_total) - t1(t_last+2)
 
-      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM, 
+      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN, 
+      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX, 
+      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX,
      >                0, MPI_COMM_WORLD, ierr)
 
       if (me .eq. 0) then
@@ -643,7 +643,7 @@ c---------------------------------------------------------------------
             write(*, 810) i, t_recs(i), tming(i), tmaxg(i), tsum(i)
          end do
       endif
- 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum', 
+ 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum',
      >       5x, 'average')
  810  format(' timer ', i2, '(', A8, ') :', 3(2x,f10.4))
 
@@ -695,8 +695,8 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      subroutine setup_proc_info( num_procs, 
-     >                            num_proc_rows, 
+      subroutine setup_proc_info( num_procs,
+     >                            num_proc_rows,
      >                            num_proc_cols )
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
@@ -705,23 +705,23 @@ c---------------------------------------------------------------------
 
       include 'mpinpb.h'
 
-      common / partit_size  /  naa, nzz, 
+      common / partit_size  /  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
      >                         send_start,
      >                         send_len
-      integer                  naa, nzz, 
+      integer                  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
@@ -736,11 +736,11 @@ c---------------------------------------------------------------------
 c  num_procs must be a power of 2, and num_procs=num_proc_cols*num_proc_rows
 c  When num_procs is not square, then num_proc_cols = 2*num_proc_rows
 c---------------------------------------------------------------------
-c  First, number of procs must be power of two. 
+c  First, number of procs must be power of two.
 c---------------------------------------------------------------------
       if( nprocs .ne. num_procs )then
           if( me .eq. root ) write( *,9000 ) nprocs, num_procs
- 9000     format(      /,'Error: ',/,'num of procs allocated   (', 
+ 9000     format(      /,'Error: ',/,'num of procs allocated   (',
      >                 i4, ' )',
      >                 /,'is not equal to',/,
      >                 'compiled number of procs (',
@@ -753,7 +753,7 @@ c---------------------------------------------------------------------
       i = num_proc_cols
  100  continue
           if( i .ne. 1 .and. i/2*2 .ne. i )then
-              if ( me .eq. root ) then  
+              if ( me .eq. root ) then
                  write( *,* ) 'Error: num_proc_cols is ',
      >                         num_proc_cols,
      >                        ' which is not a power of two'
@@ -765,11 +765,11 @@ c---------------------------------------------------------------------
           if( i .ne. 0 )then
               goto 100
           endif
-      
+
       i = num_proc_rows
  200  continue
           if( i .ne. 1 .and. i/2*2 .ne. i )then
-              if ( me .eq. root ) then 
+              if ( me .eq. root ) then
                  write( *,* ) 'Error: num_proc_rows is ',
      >                         num_proc_rows,
      >                        ' which is not a power of two'
@@ -781,7 +781,7 @@ c---------------------------------------------------------------------
           if( i .ne. 0 )then
               goto 200
           endif
-      
+
       log2nprocs = 0
       i = nprocs
  300  continue
@@ -800,7 +800,7 @@ c---------------------------------------------------------------------
 
 CC       write( *,* ) 'nprocs, log2nprocs: ',nprocs,log2nprocs
 
-      
+
       npcols = num_proc_cols
       nprows = num_proc_rows
 
@@ -819,7 +819,7 @@ c---------------------------------------------------------------------
      >                                 reduce_send_lengths,
      >                                 reduce_recv_starts,
      >                                 reduce_recv_lengths )
-     >                                 
+     >
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -829,23 +829,23 @@ c---------------------------------------------------------------------
 
       integer      col_size, row_size
 
-      common / partit_size  /  naa, nzz, 
+      common / partit_size  /  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
      >                         send_start,
      >                         send_len
-      integer                  naa, nzz, 
+      integer                  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
@@ -869,8 +869,8 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c  If naa evenly divisible by npcols, then it is evenly divisible 
-c  by nprows 
+c  If naa evenly divisible by npcols, then it is evenly divisible
+c  by nprows
 c---------------------------------------------------------------------
 
       if( naa/npcols*npcols .eq. naa )then
@@ -882,7 +882,7 @@ c---------------------------------------------------------------------
           lastrow  = firstrow - 1 + row_size
 c---------------------------------------------------------------------
 c  If naa not evenly divisible by npcols, then first subdivide for nprows
-c  and then, if npcols not equal to nprows (i.e., not a sq number of procs), 
+c  and then, if npcols not equal to nprows (i.e., not a sq number of procs),
 c  get col subdivisions by dividing by 2 each row subdivision.
 c---------------------------------------------------------------------
       else
@@ -910,7 +910,7 @@ c---------------------------------------------------------------------
                   lastcol  = firstcol - 1 + col_size
               endif
           else
-              if( (proc_col/2) .lt. 
+              if( (proc_col/2) .lt.
      >                           naa - naa/(npcols/2)*(npcols/2) )then
                   col_size = naa/(npcols/2) + 1
                   firstcol = (proc_col/2)*col_size + 1
@@ -948,7 +948,7 @@ CC                   write( *,* ) firstcol,lastcol
               send_len   = (lastrow-firstrow+1)/2
           endif
       endif
-          
+
 
 
 
@@ -1034,7 +1034,7 @@ c---------------------------------------------------------------------
      >                       q,
      >                       r,
      >                       w,
-     >                       rnorm, 
+     >                       rnorm,
      >                       l2npcols,
      >                       reduce_exch_proc,
      >                       reduce_send_starts,
@@ -1045,10 +1045,10 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c  Floaging point arrays here are named as in NPB1 spec discussion of 
+c  Floaging point arrays here are named as in NPB1 spec discussion of
 c  CG algorithm
 c---------------------------------------------------------------------
- 
+
       implicit none
 
       include 'mpinpb.h'
@@ -1057,23 +1057,23 @@ c---------------------------------------------------------------------
       integer status(MPI_STATUS_SIZE ), request
 
 
-      common / partit_size  /  naa, nzz, 
+      common / partit_size  /  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
      >                         send_start,
      >                         send_len
-      integer                  naa, nzz, 
+      integer                  naa, nzz,
      >                         npcols, nprows,
      >                         proc_col, proc_row,
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol,
      >                         exch_proc,
      >                         exch_recv_length,
@@ -1089,7 +1089,7 @@ c---------------------------------------------------------------------
 
       double precision   p(*),
      >                   q(*),
-     >                   r(*),               
+     >                   r(*),
      >                   w(*)                ! used as work temporary
 
       integer   l2npcols
@@ -1119,7 +1119,7 @@ c---------------------------------------------------------------------
          z(j) = 0.0d0
          r(j) = x(j)
          p(j) = r(j)
-         w(j) = 0.0d0                 
+         w(j) = 0.0d0
       enddo
 
 
@@ -1210,14 +1210,14 @@ c---------------------------------------------------------------------
                w(j) = w(j) + q(j)
             enddo
          enddo
-      
+
 
 c---------------------------------------------------------------------
 c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
          if( l2npcols .ne. 0 )then
             if (timeron) call timer_start(t_rcomm)
-            call mpi_irecv( q,               
+            call mpi_irecv( q,
      >                      exch_recv_length,
      >                      dp_type,
      >                      exch_proc,
@@ -1226,7 +1226,7 @@ c---------------------------------------------------------------------
      >                      request,
      >                      ierr )
 
-            call mpi_send(  w(send_start),   
+            call mpi_send(  w(send_start),
      >                      send_len,
      >                      dp_type,
      >                      exch_proc,
@@ -1248,7 +1248,7 @@ c---------------------------------------------------------------------
          do j=1, max( lastrow-firstrow+1, lastcol-firstcol+1 )
             w(j) = 0.0d0
          enddo
-         
+
 
 c---------------------------------------------------------------------
 c  Obtain p.q
@@ -1305,7 +1305,7 @@ c---------------------------------------------------------------------
             z(j) = z(j) + alpha*p(j)
             r(j) = r(j) - alpha*q(j)
          enddo
-            
+
 c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
@@ -1402,14 +1402,14 @@ c---------------------------------------------------------------------
             w(j) = w(j) + r(j)
          enddo
       enddo
-      
+
 
 c---------------------------------------------------------------------
 c  Exchange piece of q with transpose processor:
 c---------------------------------------------------------------------
       if( l2npcols .ne. 0 )then
          if (timeron) call timer_start(t_rcomm)
-         call mpi_irecv( r,               
+         call mpi_irecv( r,
      >                   exch_recv_length,
      >                   dp_type,
      >                   exch_proc,
@@ -1417,8 +1417,8 @@ c---------------------------------------------------------------------
      >                   mpi_comm_world,
      >                   request,
      >                   ierr )
-   
-         call mpi_send(  w(send_start),   
+
+         call mpi_send(  w(send_start),
      >                   send_len,
      >                   dp_type,
      >                   exch_proc,
@@ -1439,10 +1439,10 @@ c  At this point, r contains A.z
 c---------------------------------------------------------------------
          sum = 0.0d0
          do j=1, lastcol-firstcol+1
-            d   = x(j) - r(j)         
+            d   = x(j) - r(j)
             sum = sum + d*d
          enddo
-         
+
 c---------------------------------------------------------------------
 c  Obtain d with a sum-reduce
 c---------------------------------------------------------------------

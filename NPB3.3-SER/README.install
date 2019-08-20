@@ -15,35 +15,35 @@ For problem reports and suggestions on the implementation, please contact
 
    NPB3.3-SER uses the same directory tree as NPB2.3.
    Before compilation, one needs to check the configuration file
-   'make.def' in the config directory and modify the file as necessary.  
+   'make.def' in the config directory and modify the file as necessary.
    If it does not (yet) exist, copy 'make.def.template' or one of the
-   sample files in the NAS.samples subdirectory to 'make.def' and 
+   sample files in the NAS.samples subdirectory to 'make.def' and
    edit the content for site- and machine-specific data.  Then
 
       make <benchmark> CLASS=<class> [VERSION=VEC]
 
-   <benchmark> is one of (BT, SP, LU, FT, CG, MG, EP, IS, UA, DC) and 
-   <class> is one of (S, W, A, B, C).  Although Classes D and E are also 
-   defined for a number of benchmarks, the memory requirement and 
-   execution time likely exceed what most of the single processor 
+   <benchmark> is one of (BT, SP, LU, FT, CG, MG, EP, IS, UA, DC) and
+   <class> is one of (S, W, A, B, C).  Although Classes D and E are also
+   defined for a number of benchmarks, the memory requirement and
+   execution time likely exceed what most of the single processor
    systems can support.
 
    Classes C, D and E are not defined for DC.
    Class E is not defined for IS and UA.
 
-   The "VERSION=VEC" option is used for selecting the vectorized 
+   The "VERSION=VEC" option is used for selecting the vectorized
    versions of BT and LU.
 
-   Class D for IS (Integer Sort) requires a compiler/system that 
-   supports the "long" type in C to be 64-bit.  As examples, the SGI 
+   Class D for IS (Integer Sort) requires a compiler/system that
+   supports the "long" type in C to be 64-bit.  As examples, the SGI
    MIPS compiler for the SGI Origin using the "-64" compilation flag and
    the Intel compiler for IA64 are known to work.
 
    In order to build the class E version of CG, the integer type
-   needs to be promoted to 64-bit, which is usually done through 
+   needs to be promoted to 64-bit, which is usually done through
    compilation flag (such as "-i8" for FFLAGS in config/make.def).
 
-   To build a suite of benchmarks, one can create the file 
+   To build a suite of benchmarks, one can create the file
    "config/suite.def", which contains a list of executables to build.
    Each line in the file contains the name of a benchmark and the class,
    separated by spaces or tabs (see suite.def.template for an example).
@@ -53,47 +53,47 @@ For problem reports and suggestions on the implementation, please contact
 
 
    ================================
-   
+
    The "RAND" variable in make.def
    --------------------------------
-   
+
    Most of the NPBs use a random number generator. In two of the NPBs (FT
    and EP) the computation of random numbers is included in the timed
    part of the calculation, and it is important that the random number
    generator be efficient.  The default random number generator package
-   provided is called "randi8" and should be used where possible. It has 
+   provided is called "randi8" and should be used where possible. It has
    the following requirements:
-   
+
    randi8:
      1. Uses integer*8 arithmetic. Compiler must support integer*8
      2. Uses the Fortran 90 IAND intrinsic. Compiler must support IAND.
-     3. Assumes overflow bits are discarded by the hardware. In particular, 
-        that the lowest 46 bits of a*b are always correct, even if the 
-        result a*b is larger than 2^64. 
-   
+     3. Assumes overflow bits are discarded by the hardware. In particular,
+        that the lowest 46 bits of a*b are always correct, even if the
+        result a*b is larger than 2^64.
+
    Since randi8 may not work on all machines, we supply the following
    alternatives:
-   
+
    randi8_safe
      1. Uses integer*8 arithmetic
-     2. Uses the Fortran 90 IBITS intrinsic. 
+     2. Uses the Fortran 90 IBITS intrinsic.
      3. Does not make any assumptions about overflow. Should always
-        work correctly if compiler supports integer*8 and IBITS. 
-   
+        work correctly if compiler supports integer*8 and IBITS.
+
    randdp
-     1. Uses double precision arithmetic (to simulate integer*8 operations). 
+     1. Uses double precision arithmetic (to simulate integer*8 operations).
         Should work with any system with support for 64-bit floating
-        point arithmetic.      
-   
+        point arithmetic.
+
    randdpvec
-     1. Similar to randdp but written to be easier to vectorize. 
+     1. Similar to randdp but written to be easier to vectorize.
 
 
 2. Execution
 
    The executable is named <benchmark-name>.<class>.x and is placed
    in the bin subdirectory (or in the directory BINDIR specified in
-   make.def, if you've defined it).  NPB3.3-SER can be run as regular 
+   make.def, if you've defined it).  NPB3.3-SER can be run as regular
    executables without additional settings.  For example:
 
       bin/bt.A.x > BT.A_out
@@ -102,8 +102,8 @@ For problem reports and suggestions on the implementation, please contact
 
    Each benchmark includes a set of additional timers for profiling purpose
    (reporting timing for selected code blocks).  By default, these timers
-   are disabled.  To enable the timers, create a dummy file 'timer.flag' 
-   in the current working directory (not necessarily where the executable 
+   are disabled.  To enable the timers, create a dummy file 'timer.flag'
+   in the current working directory (not necessarily where the executable
    is located) before running a benchmark.
 
 
@@ -112,7 +112,7 @@ For problem reports and suggestions on the implementation, please contact
 3.1 BT
 
 This version is optimized for memory performance.  It uses much less
-memory than the original version due to the size reduction of working 
+memory than the original version due to the size reduction of working
 arrays.
 
 Serial performance in comparison with the original NPB2.3-serial.

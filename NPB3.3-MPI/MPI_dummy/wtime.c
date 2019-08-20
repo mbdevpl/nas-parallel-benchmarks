@@ -10,4 +10,4 @@ void wtime(double *t)
   *t = (tv.tv_sec - sec) + 1.0e-6*tv.tv_usec;
 }
 
-    
+

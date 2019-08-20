@@ -20,7 +20,7 @@ c------------------------------------------------------------------
 
       rdtime=1.d0/dtime
 
-c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(ie,isize,i,j,k,q) 
+c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(ie,isize,i,j,k,q)
       do ie = 1, nelt
         call r_init(dpcelm(1,1,1,ie),nxyz,0.d0)
         isize=size_e(ie)
@@ -28,7 +28,7 @@ c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(ie,isize,i,j,k,q)
           do j = 1, lx1
             do i = 1, lx1
               do q = 1, lx1
-                dpcelm(i,j,k,ie) = dpcelm(i,j,k,ie) + 
+                dpcelm(i,j,k,ie) = dpcelm(i,j,k,ie) +
      &                        g1m1_s(q,j,k,isize) * dxtm1_2(i,q) +
      &                        g1m1_s(i,q,k,isize) * dxtm1_2(j,q) +
      &                        g1m1_s(i,j,q,isize) * dxtm1_2(k,q)
@@ -48,8 +48,8 @@ c.....take inverse.
 
       call reciprocal(dpcelm,ntot)
 
-c.....compute preconditioner on mortar points. NOTE:  dpcmor for 
-c     nonconforming cases will be corrected in subroutine setpcmo 
+c.....compute preconditioner on mortar points. NOTE:  dpcmor for
+c     nonconforming cases will be corrected in subroutine setpcmo
 c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(I)
       do i=1,nmor
         dpcmor(i)=1.d0/dpcmor(i)
@@ -63,26 +63,26 @@ c$OMP END PARALLEL DO
 c--------------------------------------------------------------
       subroutine setpcmo_pre
 c--------------------------------------------------------------
-c     pre-compute elemental contribution to preconditioner  
+c     pre-compute elemental contribution to preconditioner
 c     for all situations
 c--------------------------------------------------------------
-      
+
       include 'header.h'
 
       integer element_size, i, j, ii, jj, col
       double precision
-     &       p(lx1,lx1,lx1), p0(lx1,lx1,lx1), mtemp(lx1,lx1), 
+     &       p(lx1,lx1,lx1), p0(lx1,lx1,lx1), mtemp(lx1,lx1),
      &       temp(lx1,lx1,lx1), temp1(lx1,lx1), tmp(lx1,lx1),tig(lx1)
 
-c.....corners on face of type 3 
+c.....corners on face of type 3
 
       call r_init(tcpre,lx1*lx1,0.d0)
       call r_init(tmp,lx1*lx1,0.d0)
       call r_init(tig,5,0.d0)
       tig(1)   =1.d0
-      tmp(1,1) =1.d0 
+      tmp(1,1) =1.d0
 
-c.....tcpre results from mapping a unit spike field (unity at 
+c.....tcpre results from mapping a unit spike field (unity at
 c     collocation point (1,1), zero elsewhere) on an entire element
 c     face to the (1,1) segment of a nonconforming face
       do i=2,lx1-1
@@ -90,7 +90,7 @@ c     face to the (1,1) segment of a nonconforming face
           tmp(i,1) = tmp(i,1)+ qbnew(i-1,j,1)*tig(j)
         end do
       end do
- 
+
       do col=1,lx1
         tcpre(col,1)=tmp(col,1)
 
@@ -108,9 +108,9 @@ c$OMP& mtemp,temp1,p0,ii,jj)
 
 c.......for conforming cases
 
-c.......pcmor_c (i,j,element_size) records the intermediate value 
-c       (preconditioner=1/pcmor_c) of the preconditor on collocation 
-c       point (i,j) on a conforming face of an element of size 
+c.......pcmor_c (i,j,element_size) records the intermediate value
+c       (preconditioner=1/pcmor_c) of the preconditor on collocation
+c       point (i,j) on a conforming face of an element of size
 c       element_size.
 
         do j=1,lx1/2+1
@@ -129,12 +129,12 @@ c       element_size.
           end do
         end do
 
-c.......for nonconforming cases 
+c.......for nonconforming cases
 
 c.......nonconforming face interior
 
-c.......pcmor_nc1(i,j,ii,jj,element_size) records the intermediate 
-c       preconditioner value on collocation point (i,j) on mortar 
+c.......pcmor_nc1(i,j,ii,jj,element_size) records the intermediate
+c       preconditioner value on collocation point (i,j) on mortar
 c       (ii,jj)  on a nonconforming face of an element of size element_
 c       size
         do j=2,lx1
@@ -175,15 +175,15 @@ c.......nonconforming edges
           mtemp(i,j)=1.d0
           if(i.eq.lx1)mtemp(i,j)=2.d0
           call transf_nc(mtemp,p)
-          call laplacian(temp,p,element_size)                          
-          call transfb_nc1(temp1,temp)                   
-          pcmor_nc1(i,j,1,1,element_size)=temp1(i,j)      
-          pcmor_nc1(j,i,1,1,element_size)=temp1(i,j)                              
+          call laplacian(temp,p,element_size)
+          call transfb_nc1(temp1,temp)
+          pcmor_nc1(i,j,1,1,element_size)=temp1(i,j)
+          pcmor_nc1(j,i,1,1,element_size)=temp1(i,j)
           do ii=1,lx1
 c...........p0 is for the case that a nonconforming edge is shared by
 c           two conforming faces
             p0(ii,1,1)=p(ii,1,1)
-            do jj=1,lx1 
+            do jj=1,lx1
 c.............now p is for the case that a nonconforming edge is shared
 c             by nonconforming faces
               p(ii,1,jj)=p(ii,jj,1)
@@ -191,22 +191,22 @@ c             by nonconforming faces
           end do
 
           call laplacian(temp,p,element_size)
-          call transfb_nc2(temp1,temp)                
+          call transfb_nc2(temp1,temp)
 
 c.........pcmor_nc2(i,j,ii,jj,element_size) gives the intermediate
-c         preconditioner value on collocation point (i,j) on a 
+c         preconditioner value on collocation point (i,j) on a
 c         nonconforming face of an element with size size_element
 
-          pcmor_nc2(i,j,1,1,element_size)=temp1(i,j)*2.d0 
+          pcmor_nc2(i,j,1,1,element_size)=temp1(i,j)*2.d0
           pcmor_nc2(j,i,1,1,element_size)=
      &          pcmor_nc2(i,j,1,1,element_size)
 
-          call laplacian(temp,p0,element_size) 
-          call transfb_nc0(temp1,temp)                  
+          call laplacian(temp,p0,element_size)
+          call transfb_nc0(temp1,temp)
 
 c.........pcmor_nc0(i,j,ii,jj,element_size) gives the intermediate
-c         preconditioner value on collocation point (i,j) on a 
-c         conforming face of an element, which shares a nonconforming 
+c         preconditioner value on collocation point (i,j) on a
+c         conforming face of an element, which shares a nonconforming
 c         edge with another conforming face
           pcmor_nc0(i,j,1,1,element_size)=temp1(i,j)
           pcmor_nc0(j,i,1,1,element_size)=temp1(i,j)
@@ -228,13 +228,13 @@ c.......symmetrical copy
         do i=1,lx1-1
           pcmor_nc1(i,j,1,2,element_size)=
      &          pcmor_nc1(lx1+1-i,j,1,1,element_size)
-          pcmor_nc0(i,j,1,2,element_size)=                                           
-     &          pcmor_nc0(lx1+1-i,j,1,1,element_size)                                      
-          pcmor_nc2(i,j,1,2,element_size)=                                           
-     &          pcmor_nc2(lx1+1-i,j,1,1,element_size)                                      
+          pcmor_nc0(i,j,1,2,element_size)=
+     &          pcmor_nc0(lx1+1-i,j,1,1,element_size)
+          pcmor_nc2(i,j,1,2,element_size)=
+     &          pcmor_nc2(lx1+1-i,j,1,1,element_size)
         end do
 
-        do j=2,lx1                                            
+        do j=2,lx1
           do i=1,lx1-1
             pcmor_nc1(i,j,1,2,element_size)=
      &            pcmor_nc1(lx1+1-i,j,1,1,element_size)
@@ -242,11 +242,11 @@ c.......symmetrical copy
           i=lx1
           pcmor_nc1(i,j,1,2,element_size)=
      &          pcmor_nc1(lx1+1-i,j,1,1,element_size)
-          pcmor_nc0(i,j,1,2,element_size)=                                           
-     &          pcmor_nc0(lx1+1-i,j,1,1,element_size)                                      
-          pcmor_nc2(i,j,1,2,element_size)=                                           
-     &          pcmor_nc2(lx1+1-i,j,1,1,element_size)                                      
-        end do                                                
+          pcmor_nc0(i,j,1,2,element_size)=
+     &          pcmor_nc0(lx1+1-i,j,1,1,element_size)
+          pcmor_nc2(i,j,1,2,element_size)=
+     &          pcmor_nc2(lx1+1-i,j,1,1,element_size)
+        end do
 
         j=1
         i=1
@@ -288,28 +288,28 @@ c.......symmetrical copy
      &        pcmor_nc0(lx1+1-i,lx1+1-j,1,1,element_size)
         pcmor_nc2(i,j,2,2,element_size)=
      &        pcmor_nc2(lx1+1-i,lx1+1-j,1,1,element_size)
-          
-        do j=2,lx1-1                                            
+
+        do j=2,lx1-1
           do i=2,lx1-1
             pcmor_nc1(i,j,2,2,element_size)=
      &            pcmor_nc1(lx1+1-i,lx1+1-j,1,1,element_size)
           end do
           i=lx1
-          pcmor_nc1(i,j,2,2,element_size)=                                       
-     &          pcmor_nc1(lx1+1-i,lx1+1-j,1,1,element_size)                               
-          pcmor_nc0(i,j,2,2,element_size)=                                       
-     &          pcmor_nc0(lx1+1-i,lx1+1-j,1,1,element_size)   
-          pcmor_nc2(i,j,2,2,element_size)=                                       
-     &          pcmor_nc2(lx1+1-i,lx1+1-j,1,1,element_size)                     
-        end do                                                
+          pcmor_nc1(i,j,2,2,element_size)=
+     &          pcmor_nc1(lx1+1-i,lx1+1-j,1,1,element_size)
+          pcmor_nc0(i,j,2,2,element_size)=
+     &          pcmor_nc0(lx1+1-i,lx1+1-j,1,1,element_size)
+          pcmor_nc2(i,j,2,2,element_size)=
+     &          pcmor_nc2(lx1+1-i,lx1+1-j,1,1,element_size)
+        end do
         j=lx1
         do i=2,lx1-1
-          pcmor_nc1(i,j,2,2,element_size)=                                       
-     &          pcmor_nc1(lx1+1-i,lx1+1-j,1,1,element_size)          
+          pcmor_nc1(i,j,2,2,element_size)=
+     &          pcmor_nc1(lx1+1-i,lx1+1-j,1,1,element_size)
           pcmor_nc0(i,j,2,2,element_size)=
-     &          pcmor_nc0(lx1+1-i,lx1+1-j,1,1,element_size)          
-          pcmor_nc2(i,j,2,2,element_size)=                                       
-     &          pcmor_nc2(lx1+1-i,lx1+1-j,1,1,element_size)    
+     &          pcmor_nc0(lx1+1-i,lx1+1-j,1,1,element_size)
+          pcmor_nc2(i,j,2,2,element_size)=
+     &          pcmor_nc2(lx1+1-i,lx1+1-j,1,1,element_size)
         end do
 
 
@@ -319,8 +319,8 @@ c.......Among three edges and three faces sharing a vertex on an element
 c       situation 1: only one edge is nonconforming
 c       situation 2: two edges are nonconforming
 c       situation 3: three edges are nonconforming
-c       situation 4: one face is nonconforming 
-c       situation 5: one face and one edge are nonconforming 
+c       situation 4: one face is nonconforming
+c       situation 5: one face and one edge are nonconforming
 c       situation 6: two faces are nonconforming
 c       situation 7: three faces are nonconforming
 
@@ -334,8 +334,8 @@ c.......situation 1
         do i=1,lx1
            p0(i,1,1)=tcpre(i,1)
         end do
-        call laplacian(temp,p0,element_size) 
-        call transfb_cor_e(1,pcmor_cor(1,element_size),temp)                  
+        call laplacian(temp,p0,element_size)
+        call transfb_cor_e(1,pcmor_cor(1,element_size),temp)
 
 c.......situation 2
         call r_init(p0,nxyz,0.d0)
@@ -344,7 +344,7 @@ c.......situation 2
            p0(1,i,1)=tcpre(i,1)
         end do
         call laplacian(temp,p0,element_size)
-        call transfb_cor_e(2,pcmor_cor(2,element_size),temp)                  
+        call transfb_cor_e(2,pcmor_cor(2,element_size),temp)
 
 c.......situation 3
         call r_init(p0,nxyz,0.d0)
@@ -354,7 +354,7 @@ c.......situation 3
            p0(1,1,i)=tcpre(i,1)
         end do
         call laplacian(temp,p0,element_size)
-        call transfb_cor_e(3,pcmor_cor(3,element_size),temp)                  
+        call transfb_cor_e(3,pcmor_cor(3,element_size),temp)
 
 c.......situation 4
         call r_init(p0,nxyz,0.d0)
@@ -378,7 +378,7 @@ c.......situation 5
         end do
         call laplacian(temp,p0,element_size)
         call transfb_cor_f(5,pcmor_cor(5,element_size),temp)
- 
+
 c.......situation 6
         call r_init(p0,nxyz,0.d0)
         do j=1,lx1
@@ -401,10 +401,10 @@ c.......situation 7
         call laplacian(temp,p0,element_size)
         call transfb_cor_f(7,pcmor_cor(7,element_size),temp)
 
-      end do    
-c$OMP END PARALLEL DO     
+      end do
+c$OMP END PARALLEL DO
       return
-      end 
+      end
 
 
 c------------------------------------------------------------------------
@@ -413,32 +413,32 @@ c------------------------------------------------------------------------
 c     compute the preconditioner by identifying its geometry configuration
 c     and sum the values from the precomputed elemental contributions
 c------------------------------------------------------------------------
-      
+
       include 'header.h'
 
-      integer face2, nb1, nb2, sizei, imor, enum, i,j, 
+      integer face2, nb1, nb2, sizei, imor, enum, i,j,
      &        iel, iside, nn1, nn2
 
-c$OMP PARALLEL DEFAULT(SHARED) PRIVATE(IMOR,IEL,ISIDE,I) 
+c$OMP PARALLEL DEFAULT(SHARED) PRIVATE(IMOR,IEL,ISIDE,I)
 c$OMP DO
       do imor=1,nvertex
        ifpcmor(imor)=.false.
       end do
 c$OMP END DO nowait
-   
-c$OMP DO 
+
+c$OMP DO
       do iel=1,nelt
         do iside=1,nsides
           do i=1,4
             edgevis(i,iside,iel)=.false.
-          end do 
-        end do 
-      end do 
-c$OMP END DO 
+          end do
+        end do
+      end do
+c$OMP END DO
 c$OMP END PARALLEL
 
 c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(IEL,iside,sizei,
-c$OMP& imor,enum,face2,nb1,nb2,i,j,nn1,nn2) 
+c$OMP& imor,enum,face2,nb1,nb2,i,j,nn1,nn2)
 
       do iel=1,nelt
         do iside=1,nsides
@@ -448,7 +448,7 @@ c.........for nonconforming faces
 
 c...........vertices
 
-c...........ifpcmor(imor)=.true. indicates that mortar point imor has 
+c...........ifpcmor(imor)=.true. indicates that mortar point imor has
 c           been visited
             imor=idmo(1,1,1,1,iside,iel)
             if(.not.ifpcmor(imor))then
@@ -478,7 +478,7 @@ c.............compute the preconditioner on mortar point imor
 c...........edges on nonconforming faces, enum is local edge number
             do enum=1,4
 
-c.............edgevis(enum,iside,iel)=.true. indicates that local edge 
+c.............edgevis(enum,iside,iel)=.true. indicates that local edge
 c             enum of face iside of iel has been visited
               if(.not.edgevis(enum,iside,iel))then
                 edgevis(enum,iside,iel)=.true.
@@ -492,7 +492,7 @@ c               calculateing the preconditioner value.
 
 c...................Compute the preconditioner on local edge enum on face
 c                   iside of element iel, 1 is neighborhood information got
-c                   by examing neighbors(nb1). For detailed meaning of 1, 
+c                   by examing neighbors(nb1). For detailed meaning of 1,
 c                   see subroutine com_dpc.
 
                     call com_dpc(iside,iel,enum,1,sizei)
@@ -523,13 +523,13 @@ c                   see subroutine com_dpc.
               end if
             end do
 
-c...........mortar element interior (not edge of mortar) 
+c...........mortar element interior (not edge of mortar)
 
             do nn1=1,2
               do nn2=1,2
                 do j=2,lx1-1
                   do i=2,lx1-1
-                    imor=idmo(i,j,nn1,nn2,iside,iel) 
+                    imor=idmo(i,j,nn1,nn2,iside,iel)
                     dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,nn1,nn2,sizei)+
      &                                pcmor_c(i,j,sizei+1))
                   end do
@@ -537,32 +537,32 @@ c...........mortar element interior (not edge of mortar)
               end do
             end do
 
-c...........for i,j=lx1 there are duplicated mortar points, so 
+c...........for i,j=lx1 there are duplicated mortar points, so
 c           pcmor_c needs to be doubled or quadrupled
             i=lx1
             do j=2,lx1-1
-              imor=idmo(i,j,1,1,iside,iel)            
+              imor=idmo(i,j,1,1,iside,iel)
               dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,1,1,sizei)+
      &                          pcmor_c(i,j,sizei+1)*2.d0)
-              imor=idmo(i,j,2,1,iside,iel)                
+              imor=idmo(i,j,2,1,iside,iel)
               dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,2,1,sizei)+
      &                          pcmor_c(i,j,sizei+1)*2.d0)
-            end do      
+            end do
 
             j=lx1
-            imor=idmo(i,j,1,1,iside,iel)                                         
+            imor=idmo(i,j,1,1,iside,iel)
             dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,1,1,sizei)+
      &                        pcmor_c(i,j,sizei+1)*4.d0)
             do i=2,lx1-1
-              imor=idmo(i,j,1,1,iside,iel)  
+              imor=idmo(i,j,1,1,iside,iel)
               dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,1,1,sizei)+
      &                          pcmor_c(i,j,sizei+1)*2.d0)
-              imor=idmo(i,j,1,2,iside,iel) 
+              imor=idmo(i,j,1,2,iside,iel)
               dpcmor(imor) = 1.d0/(pcmor_nc1(i,j,1,2,sizei)+
      &                          pcmor_c(i,j,sizei+1)*2.d0)
             end do
 
-          end if 
+          end if
         end do
       end do
 c$OMP END PARALLEL DO
@@ -606,7 +606,7 @@ c       one element
         end do
 
 c.......each n indicates how many nonconforming faces and nonconforming
-c       edges share this vertex on an element, 
+c       edges share this vertex on an element,
 
         if(sface.eq.0)then
           if(sedge.eq.0)then
@@ -617,7 +617,7 @@ c       edges share this vertex on an element,
              n=2
           elseif(sedge.eq.3)then
              n=3
-          end if 
+          end if
         elseif (sface.eq.1)then
           if (sedge.eq.1)then
            n=5
@@ -629,8 +629,8 @@ c       edges share this vertex on an element,
         else if(sface.eq.3)then
            n=7
         end if
-          
-c.......sum the intermediate pre-computed preconditioner values for 
+
+c.......sum the intermediate pre-computed preconditioner values for
 c       all elements
         tmortemp=tmortemp+pcmor_cor(n,sizei)
 
@@ -640,16 +640,16 @@ c.....dpcmor(imor) is the value of the preconditioner on mortar point imor
       dpcmor(imor)=1.d0/tmortemp
 
       return
-      end 
+      end
 
 c------------------------------------------------------------------------
       subroutine com_dpc(iside,iel,enumber,n,isize)
 c------------------------------------------------------------------------
-c     Compute preconditioner for local edge enumber of face iside 
+c     Compute preconditioner for local edge enumber of face iside
 c     on element iel.
 c     isize is element size,
 c     n is one of five different configurations
-c     anc1, ac, anc2, anc0 are coefficients for different edges. 
+c     anc1, ac, anc2, anc0 are coefficients for different edges.
 c     nc0 refers to nonconforming edge shared by two conforming faces
 c     nc1 refers to nonconforming edge shared by one nonconforming face
 c     nc2 refers to nonconforming edges shared by two nonconforming faces
@@ -658,11 +658,11 @@ c------------------------------------------------------------------------
 
       include 'header.h'
 
-      integer n, isize,iside,iel, enumber, nn1start, nn1end, nn2start, 
+      integer n, isize,iside,iel, enumber, nn1start, nn1end, nn2start,
      &        nn2end, jstart, jend, istart, iend, i, j, nn1, nn2, imor
       double precision anc1,ac,anc2,anc0,temp
 
-c.....different local edges have different loop ranges 
+c.....different local edges have different loop ranges
       if(enumber.eq.1)then
         nn1start=1
         nn1end=1
@@ -788,5 +788,5 @@ c.......local edge 4
         dpcmor(imor)=1.d0/temp
 
       return
-      end 
+      end
 

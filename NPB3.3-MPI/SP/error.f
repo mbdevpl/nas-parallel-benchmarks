@@ -19,7 +19,7 @@ c---------------------------------------------------------------------
        double precision xi, eta, zeta, u_exact(5), rms(5), rms_work(5),
      >                  add
 
-       do   m = 1, 5 
+       do   m = 1, 5
           rms_work(m) = 0.0d0
        end do
 
@@ -47,7 +47,7 @@ c---------------------------------------------------------------------
           end do
        end do
 
-       call mpi_allreduce(rms_work, rms, 5, dp_type, 
+       call mpi_allreduce(rms_work, rms, 5, dp_type,
      >                 MPI_SUM, comm_setup, error)
 
        do    m = 1, 5
@@ -89,7 +89,7 @@ c---------------------------------------------------------------------
 
 
 
-       call mpi_allreduce(rms_work, rms, 5, dp_type, 
+       call mpi_allreduce(rms_work, rms, 5, dp_type,
      >                 MPI_SUM, comm_setup, error)
 
        do   m = 1, 5

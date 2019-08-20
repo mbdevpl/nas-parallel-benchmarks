@@ -60,7 +60,7 @@ c
            subsizes(2) = cell_size(2, c)
            subsizes(3) = cell_size(3, c)
 c
-c Cell is 4th dimension, 1 cell per cell type to handle varying 
+c Cell is 4th dimension, 1 cell per cell type to handle varying
 c cell sub-array sizes
 c
            subsizes(4) = 1
@@ -68,19 +68,19 @@ c
 c
 c type constructors use 0-based start addresses
 c
-           starts(1) = 2 
+           starts(1) = 2
            starts(2) = 2
            starts(3) = 2
            starts(4) = c-1
 
-c 
+c
 c Create buftype for a cell
 c
-           call MPI_Type_create_subarray(4, sizes, subsizes, 
-     $          starts, MPI_ORDER_FORTRAN, element, 
+           call MPI_Type_create_subarray(4, sizes, subsizes,
+     $          starts, MPI_ORDER_FORTRAN, element,
      $          cell_btype(c), ierr)
 c
-c block length and displacement for joining cells - 
+c block length and displacement for joining cells -
 c 1 cell buftype per block, cell buftypes have own displacment
 c generated from cell number (4th array dimension)
 c
@@ -146,7 +146,7 @@ c
                 stop
        endif
 
-        call MPI_File_set_view(fp, iseek, element, 
+        call MPI_File_set_view(fp, iseek, element,
      $          combined_ftype, 'native', info, ierr)
 
        if (ierr .ne. MPI_SUCCESS) then

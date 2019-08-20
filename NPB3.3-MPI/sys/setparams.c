@@ -1,36 +1,36 @@
-/* 
+/*
  * This utility configures a NPB to be built for a specific number
- * of nodes and a specific class. It creates a file "npbparams.h" 
- * in the source directory. This file keeps state information about 
+ * of nodes and a specific class. It creates a file "npbparams.h"
+ * in the source directory. This file keeps state information about
  * which size of benchmark is currently being built (so that nothing
  * if unnecessarily rebuilt) and defines (through PARAMETER statements)
- * the number of nodes and class for which a benchmark is being built. 
+ * the number of nodes and class for which a benchmark is being built.
 
- * The utility takes 3 arguments: 
+ * The utility takes 3 arguments:
  *       setparams benchmark-name nprocs class
  *    benchmark-name is "sp", "bt", etc
  *    nprocs is the number of processors to run on
  *    class is the size of the benchmark
  * These parameters are checked for the current benchmark. If they
- * are invalid, this program prints a message and aborts. 
+ * are invalid, this program prints a message and aborts.
  * If the parameters are ok, the current npbsize.h (actually just
- * the first line) is read in. If the new parameters are the same as 
+ * the first line) is read in. If the new parameters are the same as
  * the old, nothing is done, but an exit code is returned to force the
  * user to specify (otherwise the make procedure succeeds but builds a
- * binary of the wrong name).  Otherwise the file is rewritten. 
- * Errors write a message (to stdout) and abort. 
- * 
+ * binary of the wrong name).  Otherwise the file is rewritten.
+ * Errors write a message (to stdout) and abort.
+ *
  * This program makes use of two extra benchmark "classes"
  * class "X" means an invalid specification. It is returned if
- * there is an error parsing the config file. 
+ * there is an error parsing the config file.
  * class "U" is an external specification meaning "unknown class"
- * 
+ *
  * Unfortunately everything has to be case sensitive. This is
  * because we can always convert lower to upper or v.v. but
  * can't feed this information back to the makefile, so typing
  * make CLASS=a and make CLASS=A will produce different binaries.
  *
- * 
+ *
  */
 
 #include <sys/types.h>
@@ -41,9 +41,9 @@
 #include <time.h>
 
 /*
- * This is the master version number for this set of 
+ * This is the master version number for this set of
  * NPB benchmarks. It is in an obscure place so people
- * won't accidentally change it. 
+ * won't accidentally change it.
  */
 
 #define VERSION "3.3.1"
@@ -99,13 +99,13 @@ int main(int argc, char *argv[])
   int nprocs, nprocs_old, type;
   char class, class_old;
   int subtype = -1, old_subtype = -1;
-  
+
   /* Get command line arguments. Make sure they're ok. */
   get_info(argc, argv, &type, &nprocs, &class, &subtype);
   if (class != 'U') {
 #ifdef VERBOSE
-    printf("setparams: For benchmark %s: number of processors = %d class = %c\n", 
-	   argv[1], nprocs, class); 
+    printf("setparams: For benchmark %s: number of processors = %d class = %c\n",
+	   argv[1], nprocs, class);
 #endif
     check_info(type, nprocs, class);
   }
@@ -115,8 +115,8 @@ int main(int argc, char *argv[])
   if (class != 'U') {
     if (class_old != 'X') {
 #ifdef VERBOSE
-      printf("setparams:     old settings: number of processors = %d class = %c\n", 
-	     nprocs_old, class_old); 
+      printf("setparams:     old settings: number of processors = %d class = %c\n",
+	     nprocs_old, class_old);
 #endif
     }
   } else {
@@ -125,12 +125,12 @@ int main(int argc, char *argv[])
   * You must specify NPROCS and CLASS to build this benchmark         *\n\
   * For example, to build a class A benchmark for 4 processors, type  *\n\
   *       make {benchmark-name} NPROCS=4 CLASS=A                      *\n\
-  *********************************************************************\n\n"); 
+  *********************************************************************\n\n");
 
     if (class_old != 'X') {
 #ifdef VERBOSE
-      printf("setparams: Previous settings were CLASS=%c NPROCS=%d\n", 
-	     class_old, nprocs_old); 
+      printf("setparams: Previous settings were CLASS=%c NPROCS=%d\n",
+	     class_old, nprocs_old);
 #endif
     }
     exit(1); /* exit on class==U */
@@ -139,12 +139,12 @@ int main(int argc, char *argv[])
   /* Write out new information if it's different. */
   if (nprocs != nprocs_old || class != class_old || subtype != old_subtype) {
 #ifdef VERBOSE
-    printf("setparams: Writing %s\n", FILENAME); 
+    printf("setparams: Writing %s\n", FILENAME);
 #endif
     write_info(type, nprocs, class, subtype);
   } else {
 #ifdef VERBOSE
-    printf("setparams: Settings unchanged. %s unmodified\n", FILENAME); 
+    printf("setparams: Settings unchanged. %s unmodified\n", FILENAME);
 #endif
   }
 
@@ -153,11 +153,11 @@ int main(int argc, char *argv[])
 
 
 /*
- *  get_info(): Get parameters from command line 
+ *  get_info(): Get parameters from command line
  */
 
 void get_info(int argc, char *argv[], int *typep, int *nprocsp, char *classp,
-	      int *subtypep) 
+	      int *subtypep)
 {
 
   if (argc < 4) {
@@ -206,12 +206,12 @@ void get_info(int argc, char *argv[], int *typep, int *nprocsp, char *classp,
 }
 
 /*
- *  check_info(): Make sure command line data is ok for this benchmark 
+ *  check_info(): Make sure command line data is ok for this benchmark
  */
 
-void check_info(int type, int nprocs, char class) 
+void check_info(int type, int nprocs, char class)
 {
-  int rootprocs, logprocs; 
+  int rootprocs, logprocs;
 
   /* check number of processors */
   if (nprocs <= 0) {
@@ -224,7 +224,7 @@ void check_info(int type, int nprocs, char class)
   case BT:
     rootprocs = isqrt(nprocs);
     if (rootprocs < 0) {
-      printf("setparams: Number of processors %d must be a square (1,4,9,...) for this benchmark", 
+      printf("setparams: Number of processors %d must be a square (1,4,9,...) for this benchmark",
               nprocs);
       exit(1);
     }
@@ -238,7 +238,7 @@ void check_info(int type, int nprocs, char class)
   case LU:
     rootprocs = isqrt2(nprocs);
     if (rootprocs < 0) {
-      printf("setparams: Failed to determine proc_grid for nprocs=%d\n", 
+      printf("setparams: Failed to determine proc_grid for nprocs=%d\n",
               nprocs);
       exit(1);
     }
@@ -262,19 +262,19 @@ void check_info(int type, int nprocs, char class)
 
   default:
     /* never should have gotten this far with a bad name */
-    printf("setparams: (Internal Error) Benchmark type %d unknown to this program\n", type); 
+    printf("setparams: (Internal Error) Benchmark type %d unknown to this program\n", type);
     exit(1);
   }
 
   /* check class */
-  if (class != 'S' && 
-      class != 'W' && 
-      class != 'A' && 
-      class != 'B' && 
-      class != 'C' && 
-      class != 'D' && 
+  if (class != 'S' &&
+      class != 'W' &&
+      class != 'A' &&
+      class != 'B' &&
+      class != 'C' &&
+      class != 'D' &&
       class != 'E') {
-    printf("setparams: Unknown benchmark class %c\n", class); 
+    printf("setparams: Unknown benchmark class %c\n", class);
     printf("setparams: Allowed classes are \"S\", \"W\", and \"A\" through \"E\"\n");
     exit(1);
   }
@@ -291,12 +291,12 @@ void check_info(int type, int nprocs, char class)
 }
 
 
-/* 
- * read_info(): Read previous information from file. 
+/*
+ * read_info(): Read previous information from file.
  *              Not an error if file doesn't exist, because this
- *              may be the first time we're running. 
+ *              may be the first time we're running.
  *              Assumes the first line of the file is in a special
- *              format that we understand (since we wrote it). 
+ *              format that we understand (since we wrote it).
  */
 
 void read_info(int type, int *nprocsp, char *classp, int *subtypep)
@@ -306,11 +306,11 @@ void read_info(int type, int *nprocsp, char *classp, int *subtypep)
   fp = fopen(FILENAME, "r");
   if (fp == NULL) {
 #ifdef VERBOSE
-    printf("setparams: INFO: configuration file %s does not exist (yet)\n", FILENAME); 
+    printf("setparams: INFO: configuration file %s does not exist (yet)\n", FILENAME);
 #endif
     goto abort;
   }
-  
+
   /* first line of file contains info (fortran), first two lines (C) */
 
   switch(type) {
@@ -364,7 +364,7 @@ void read_info(int type, int *nprocsp, char *classp, int *subtypep)
           break;
       default:
         /* never should have gotten this far with a bad name */
-        printf("setparams: (Internal Error) Benchmark type %d unknown to this program\n", type); 
+        printf("setparams: (Internal Error) Benchmark type %d unknown to this program\n", type);
         exit(1);
   }
 
@@ -381,14 +381,14 @@ void read_info(int type, int *nprocsp, char *classp, int *subtypep)
 }
 
 
-/* 
- * write_info(): Write new information to config file. 
+/*
+ * write_info(): Write new information to config file.
  *               First line is in a special format so we can read
  *               it in again. Then comes a warning. The rest is all
- *               specific to a particular benchmark. 
+ *               specific to a particular benchmark.
  */
 
-void write_info(int type, int nprocs, char class, int subtype) 
+void write_info(int type, int nprocs, char class, int subtype)
 {
   FILE *fp;
   char *BT_TYPES[] = {"NONE", "FULL", "SIMPLE", "EPIO", "FORTRAN"};
@@ -448,7 +448,7 @@ c  \n");
    \n");
           break;
       default:
-          printf("setparams: (Internal error): Unknown benchmark type %d\n", 
+          printf("setparams: (Internal error): Unknown benchmark type %d\n",
                                                                          type);
           exit(1);
   }
@@ -465,10 +465,10 @@ c  \n");
     write_mg_info(fp, nprocs, class);
     break;
   case IS:
-    write_is_info(fp, nprocs, class);  
+    write_is_info(fp, nprocs, class);
     break;
   case DT:
-    write_dt_info(fp, nprocs, class);  
+    write_dt_info(fp, nprocs, class);
     break;
   case FT:
     write_ft_info(fp, nprocs, class);
@@ -493,11 +493,11 @@ c  \n");
 }
 
 
-/* 
+/*
  * write_sp_info(): Write SP specific info to config file
  */
 
-void write_sp_info(FILE *fp, int nprocs, char class) 
+void write_sp_info(FILE *fp, int nprocs, char class)
 {
   int maxcells, problem_size, niter;
   char *dt;
@@ -514,17 +514,17 @@ void write_sp_info(FILE *fp, int nprocs, char class)
     exit(1);
   }
   fprintf(fp, "%sinteger maxcells, problem_size, niter_default\n", FINDENT);
-  fprintf(fp, "%sparameter (maxcells=%d, problem_size=%d, niter_default=%d)\n", 
+  fprintf(fp, "%sparameter (maxcells=%d, problem_size=%d, niter_default=%d)\n",
 	       FINDENT, maxcells, problem_size, niter);
   fprintf(fp, "%sdouble precision dt_default\n", FINDENT);
   fprintf(fp, "%sparameter (dt_default = %s)\n", FINDENT, dt);
 }
-  
-/* 
+
+/*
  * write_bt_info(): Write BT specific info to config file
  */
 
-void write_bt_info(FILE *fp, int nprocs, char class, int io) 
+void write_bt_info(FILE *fp, int nprocs, char class, int io)
 {
   int maxcells, problem_size, niter, wr_interval;
   char *dt;
@@ -542,7 +542,7 @@ void write_bt_info(FILE *fp, int nprocs, char class, int io)
   }
   wr_interval = 5;
   fprintf(fp, "%sinteger maxcells, problem_size, niter_default\n", FINDENT);
-  fprintf(fp, "%sparameter (maxcells=%d, problem_size=%d, niter_default=%d)\n", 
+  fprintf(fp, "%sparameter (maxcells=%d, problem_size=%d, niter_default=%d)\n",
 	       FINDENT, maxcells, problem_size, niter);
   fprintf(fp, "%sdouble precision dt_default\n", FINDENT);
   fprintf(fp, "%sparameter (dt_default = %s)\n", FINDENT, dt);
@@ -573,14 +573,14 @@ void write_bt_info(FILE *fp, int nprocs, char class, int io)
     }
   }
 }
-  
 
 
-/* 
+
+/*
  * write_lu_info(): Write SP specific info to config file
  */
 
-void write_lu_info(FILE *fp, int nprocs, char class) 
+void write_lu_info(FILE *fp, int nprocs, char class)
 {
   int isiz1, isiz2, itmax, inorm, problem_size;
   int xdiv, ydiv; /* number of cells in x and y direction */
@@ -602,7 +602,7 @@ void write_lu_info(FILE *fp, int nprocs, char class)
   ydiv = nprocs/xdiv;
   isiz1 = problem_size/xdiv; if (isiz1*xdiv < problem_size) isiz1++;
   isiz2 = problem_size/ydiv; if (isiz2*ydiv < problem_size) isiz2++;
-  
+
 
   fprintf(fp, "\nc number of nodes for which this version is compiled\n");
   fprintf(fp, "%sinteger nnodes_compiled, nnodes_xdim\n", FINDENT);
@@ -611,29 +611,29 @@ void write_lu_info(FILE *fp, int nprocs, char class)
 
   fprintf(fp, "\nc full problem size\n");
   fprintf(fp, "%sinteger isiz01, isiz02, isiz03\n", FINDENT);
-  fprintf(fp, "%sparameter (isiz01=%d, isiz02=%d, isiz03=%d)\n", 
+  fprintf(fp, "%sparameter (isiz01=%d, isiz02=%d, isiz03=%d)\n",
 	  FINDENT, problem_size, problem_size, problem_size);
 
   fprintf(fp, "\nc sub-domain array size\n");
   fprintf(fp, "%sinteger isiz1, isiz2, isiz3\n", FINDENT);
-  fprintf(fp, "%sparameter (isiz1=%d, isiz2=%d, isiz3=isiz03)\n", 
+  fprintf(fp, "%sparameter (isiz1=%d, isiz2=%d, isiz3=isiz03)\n",
 	       FINDENT, isiz1, isiz2);
 
   fprintf(fp, "\nc number of iterations and how often to print the norm\n");
   fprintf(fp, "%sinteger itmax_default, inorm_default\n", FINDENT);
-  fprintf(fp, "%sparameter (itmax_default=%d, inorm_default=%d)\n", 
+  fprintf(fp, "%sparameter (itmax_default=%d, inorm_default=%d)\n",
 	  FINDENT, itmax, inorm);
 
   fprintf(fp, "%sdouble precision dt_default\n", FINDENT);
   fprintf(fp, "%sparameter (dt_default = %s)\n", FINDENT, dt_default);
-  
+
 }
 
-/* 
+/*
  * write_mg_info(): Write MG specific info to config file
  */
 
-void write_mg_info(FILE *fp, int nprocs, char class) 
+void write_mg_info(FILE *fp, int nprocs, char class)
 {
   int problem_size, nit, log2_size, log2_nprocs, lt_default, lm;
   int ndim1, ndim2, ndim3;
@@ -661,24 +661,24 @@ void write_mg_info(FILE *fp, int nprocs, char class)
   fprintf(fp, "%sinteger nprocs_compiled\n", FINDENT);
   fprintf(fp, "%sparameter (nprocs_compiled = %d)\n", FINDENT, nprocs);
   fprintf(fp, "%sinteger nx_default, ny_default, nz_default\n", FINDENT);
-  fprintf(fp, "%sparameter (nx_default=%d, ny_default=%d, nz_default=%d)\n", 
+  fprintf(fp, "%sparameter (nx_default=%d, ny_default=%d, nz_default=%d)\n",
 	  FINDENT, problem_size, problem_size, problem_size);
   fprintf(fp, "%sinteger nit_default, lm, lt_default\n", FINDENT);
-  fprintf(fp, "%sparameter (nit_default=%d, lm = %d, lt_default=%d)\n", 
+  fprintf(fp, "%sparameter (nit_default=%d, lm = %d, lt_default=%d)\n",
 	  FINDENT, nit, lm, lt_default);
   fprintf(fp, "%sinteger debug_default\n", FINDENT);
   fprintf(fp, "%sparameter (debug_default=%d)\n", FINDENT, 0);
   fprintf(fp, "%sinteger ndim1, ndim2, ndim3\n", FINDENT);
-  fprintf(fp, "%sparameter (ndim1 = %d, ndim2 = %d, ndim3 = %d)\n", 
+  fprintf(fp, "%sparameter (ndim1 = %d, ndim2 = %d, ndim3 = %d)\n",
 	  FINDENT, ndim1, ndim2, ndim3);
 }
 
 
-/* 
+/*
  * write_dt_info(): Write DT specific info to config file
  */
 
-void write_dt_info(FILE *fp, int nprocs, char class) 
+void write_dt_info(FILE *fp, int nprocs, char class)
 {
   int num_samples,deviation,num_sources;
   if      (class == 'S') { num_samples=1728; deviation=128; num_sources=4; }
@@ -696,11 +696,11 @@ void write_dt_info(FILE *fp, int nprocs, char class)
   fprintf(fp, "#define NUM_SOURCES %d\n", num_sources);
 }
 
-/* 
+/*
  * write_is_info(): Write IS specific info to config file
  */
 
-void write_is_info(FILE *fp, int nprocs, char class) 
+void write_is_info(FILE *fp, int nprocs, char class)
 {
   if( class != 'S' &&
       class != 'W' &&
@@ -714,11 +714,11 @@ void write_is_info(FILE *fp, int nprocs, char class)
   }
 }
 
-/* 
+/*
  * write_cg_info(): Write CG specific info to config file
  */
 
-void write_cg_info(FILE *fp, int nprocs, char class) 
+void write_cg_info(FILE *fp, int nprocs, char class)
 {
   int na,nonzer,niter;
   char *shift,*rcond="1.0d-1";
@@ -764,23 +764,23 @@ void write_cg_info(FILE *fp, int nprocs, char class)
   num_proc_cols = num_proc_rows = ilog2(nprocs)/2;
   if (num_proc_cols+num_proc_rows != ilog2(nprocs)) num_proc_cols += 1;
   num_proc_cols = ipow2(num_proc_cols); num_proc_rows = ipow2(num_proc_rows);
-  
+
   fprintf( fp, "\nc number of nodes for which this version is compiled\n" );
   fprintf( fp, "%sinteger    nnodes_compiled\n", FINDENT );
   fprintf( fp, "%sparameter( nnodes_compiled = %d)\n", FINDENT, nprocs );
   fprintf( fp, "%sinteger    num_proc_cols, num_proc_rows\n", FINDENT );
-  fprintf( fp, "%sparameter( num_proc_cols=%d, num_proc_rows=%d )\n", 
+  fprintf( fp, "%sparameter( num_proc_cols=%d, num_proc_rows=%d )\n",
                                                           FINDENT,
                                                           num_proc_cols,
                                                           num_proc_rows );
 }
 
 
-/* 
+/*
  * write_ft_info(): Write FT specific info to config file
  */
 
-void write_ft_info(FILE *fp, int nprocs, char class) 
+void write_ft_info(FILE *fp, int nprocs, char class)
 {
   /* easiest way (given the way the benchmark is written)
    * is to specify log of number of grid points in each
@@ -802,7 +802,7 @@ void write_ft_info(FILE *fp, int nprocs, char class)
   if (ny > maxdim) maxdim = ny;
   if (nz > maxdim) maxdim = nz;
   fprintf(fp, "%sinteger nx, ny, nz, maxdim, niter_default, ntdivnp, np_min\n", FINDENT);
-  fprintf(fp, "%sparameter (nx=%d, ny=%d, nz=%d, maxdim=%d)\n", 
+  fprintf(fp, "%sparameter (nx=%d, ny=%d, nz=%d, maxdim=%d)\n",
           FINDENT, nx, ny, nz, maxdim);
   fprintf(fp, "%sparameter (niter_default=%d)\n", FINDENT, niter);
   fprintf(fp, "%sparameter (np_min = %d)\n", FINDENT, nprocs);
@@ -845,16 +845,16 @@ void write_ep_info(FILE *fp, int nprocs, char class)
 }
 
 
-/* 
- * This is a gross hack to allow the benchmarks to 
+/*
+ * This is a gross hack to allow the benchmarks to
  * print out how they were compiled. Various other ways
  * of doing this have been tried and they all fail on
  * some machine - due to a broken "make" program, or
  * F77 limitations, of whatever. Hopefully this will
  * always work because it uses very portable C. Unfortunately
- * it relies on parsing the make.def file - YUK. 
+ * it relies on parsing the make.def file - YUK.
  * If your machine doesn't have <string.h> or <ctype.h>, happy hacking!
- * 
+ *
  */
 
 #define VERBOSE
@@ -921,7 +921,7 @@ setparams: File %s doesn't exist. To build the NAS benchmarks\n\
     }
   }
 
-  
+
   (void) time(&t);
   tmp = localtime(&t);
   (void) strftime(compiletime, (size_t)LL, "%d %b %Y", tmp);
@@ -957,7 +957,7 @@ setparams: File %s doesn't exist. To build the NAS benchmarks\n\
           put_def_string(fp, "CMPI_INC", cmpi_inc);
           break;
       default:
-          printf("setparams: (Internal error): Unknown benchmark type %d\n", 
+          printf("setparams: (Internal error): Unknown benchmark type %d\n",
                                                                          type);
           exit(1);
   }
@@ -971,12 +971,12 @@ void check_line(char *line, char *label, char *val)
   original_line = line;
   /* compare beginning of line and label */
   while (*label != '\0' && *line == *label) {
-    line++; label++; 
+    line++; label++;
   }
   /* if *label is not EOS, we must have had a mismatch */
   if (*label != '\0') return;
   /* if *line is not a space, actual label is longer than test label */
-  if (!isspace(*line) && *line != '=') return ; 
+  if (!isspace(*line) && *line != '=') return ;
   /* skip over white space */
   while (isspace(*line)) line++;
   /* next char should be '=' */
@@ -1022,21 +1022,21 @@ int check_include_line(char *line, char *filename)
   char *include_string = "include";
   /* compare beginning of line and "include" */
   while (*include_string != '\0' && *line == *include_string) {
-    line++; include_string++; 
+    line++; include_string++;
   }
   /* if *include_string is not EOS, we must have had a mismatch */
   if (*include_string != '\0') return(0);
   /* if *line is not a space, first word is not "include" */
-  if (!isspace(*line)) return(0); 
+  if (!isspace(*line)) return(0);
   /* skip over white space */
   while (isspace(*++line));
   /* if EOS, nothing was specified */
   if (*line == '\0') return(0);
   /* next keyword should be name of include file in *filename */
   while (*filename != '\0' && *line == *filename) {
-    line++; filename++; 
-  }  
-  if (*filename != '\0' || 
+    line++; filename++;
+  }
+  if (*filename != '\0' ||
       (*line != ' ' && *line != '\0' && *line !='\n')) return(0);
   else return(1);
 }
@@ -1109,9 +1109,9 @@ void put_def_variable(FILE *fp, char *name, char *val)
 
 #if 0
 
-/* this version allows arbitrarily long lines but 
+/* this version allows arbitrarily long lines but
  * some compilers don't like that and they're rarely
- * useful 
+ * useful
  */
 
 #define LINELEN 65
@@ -1139,7 +1139,7 @@ void put_string(FILE *fp, char *name, char *val)
 
 
 /* integer square root. Return error if argument isn't
- * a perfect square or is less than or equal to zero 
+ * a perfect square or is less than or equal to zero
  */
 
 int isqrt(int i)
@@ -1172,10 +1172,10 @@ int isqrt2(int i)
     return(xdim);
   return(-1);
 }
-  
+
 
 /* integer log base two. Return error is argument isn't
- * a power of two or is less than or equal to zero 
+ * a power of two or is less than or equal to zero
  */
 
 int ilog2(int i)
@@ -1200,7 +1200,7 @@ int ipow2(int i)
   while(i--) pow2 *= 2;
   return(pow2);
 }
- 
+
 
 
 void write_convertdouble_info(int type, FILE *fp)

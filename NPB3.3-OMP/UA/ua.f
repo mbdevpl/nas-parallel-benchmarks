@@ -59,7 +59,7 @@ c---------------------------------------------------------------------
 c     Read input file (if it exists), else take
 c     defaults from parameters
 c---------------------------------------------------------------------
-          
+
       open (unit=2,file='timer.flag',status='old', iostat=fstatus)
       if (fstatus .eq. 0) then
          timeron = .true.
@@ -78,11 +78,11 @@ c---------------------------------------------------------------------
          timeron = .false.
       endif
 
-      write (*,1000) 
+      write (*,1000)
       open (unit=2,file='inputua.data',status='old', iostat=fstatus)
 
       if (fstatus .eq. 0) then
-        write(*,233) 
+        write(*,233)
  233    format(' Reading from input file inputua.data')
         read (2,*) fre
         read (2,*) niter
@@ -91,7 +91,7 @@ c---------------------------------------------------------------------
         class = 'U'
         close(2)
       else
-        write(*,234) 
+        write(*,234)
         fre        = fre_default
         niter      = niter_default
         nmxh       = nmxh_default
@@ -134,8 +134,8 @@ c.....set up initial mesh (single element) and solution (all zero)
 
       call init_locks
 
-c.....compute tables of coefficients and weights      
-      call coef 
+c.....compute tables of coefficients and weights
+      call coef
       call geom1
 
 c.....compute the discrete laplacian operators
@@ -166,10 +166,10 @@ c.........reset the solution and start the timer, keep track of total no elms
           do i = 1, t_last
              if (i.ne.t_init) call timer_clear(i)
           end do
-          call timer_start(1)          
+          call timer_start(1)
         endif
 
-c.......advance the convection step 
+c.......advance the convection step
         call convect(ifmortar)
 
         if (timeron) call timer_start(t_transf2)
@@ -179,13 +179,13 @@ c.......prepare the intital guess for cg
 c.......compute residual for diffusion term based on intital guess
 
 c.......compute the left hand side of equation, lapacian t
-c$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ie,k,j,i) 
-c$OMP DO 
+c$OMP PARALLEL DEFAULT(SHARED) PRIVATE(ie,k,j,i)
+c$OMP DO
         do ie = 1,nelt
           call laplacian(ta2(1,1,1,ie),ta1(1,1,1,ie),size_e(ie))
         end do
-c$OMP END DO 
-c.......compute the residual 
+c$OMP END DO
+c.......compute the residual
 c$OMP DO
         do ie = 1, nelt
           do k=1,lx1
@@ -198,7 +198,7 @@ c$OMP DO
         end do
 c$OMP END DO
 c$OMP END PARALLEL
-c.......get the residual on mortar 
+c.......get the residual on mortar
         call transfb(rmor,trhs)
         if (timeron) call timer_stop(t_transf2)
 
@@ -206,7 +206,7 @@ c.......apply boundary condition: zero out the residual on domain boundaries
 
 c.......apply boundary conidtion to trhs
 c$OMP PARALLEL DO DEFAULT(SHARED) PRIVATE(ie,iside)
-        do ie=1,nelt  
+        do ie=1,nelt
           do iside=1,nsides
             if (cbc(iside,ie).eq.0) then
               call facev(trhs(1,1,1,ie),iside,0.d0)
@@ -225,7 +225,7 @@ c.......add convection and diffusion
         call add2(ta1,t,ntot)
         if (timeron) call timer_stop(t_add2)
 
-        
+
 c.......perform mesh adaptation
         time=time+dtime
         if ((step.ne.0).and.(step/fre*fre .eq. step)) then
@@ -240,16 +240,16 @@ c.......perform mesh adaptation
 
       call timer_stop(1)
       tmax = timer_read(1)
-       
+
       call verify(class, verified)
 
 c.....compute millions of collocation points advanced per second.
 c.....diffusion: nmxh advancements, convection: 1 advancement
       mflops = nelt_tot*dble(lx1*lx1*lx1*(nmxh+1))/(tmax*1.d6)
 
-      call print_results('UA', class, refine_max, 0, 0, niter, 
-     &     tmax, mflops, '    coll. point advanced', 
-     &     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5, 
+      call print_results('UA', class, refine_max, 0, 0, niter,
+     &     tmax, mflops, '    coll. point advanced',
+     &     verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5,
      &     cs6, '(none)')
 
 c---------------------------------------------------------------------
@@ -279,5 +279,5 @@ c---------------------------------------------------------------------
 
  999  continue
 
-      end 
+      end
 

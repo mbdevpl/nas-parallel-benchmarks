@@ -37,7 +37,7 @@
 
 
 c---------------------------------------------------------------------
-c      NPB CG serial version      
+c      NPB CG serial version
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -119,44 +119,44 @@ c---------------------------------------------------------------------
       lastcol  = na
 
 
-      if( na .eq. 1400 .and. 
-     &    nonzer .eq. 7 .and. 
+      if( na .eq. 1400 .and.
+     &    nonzer .eq. 7 .and.
      &    niter .eq. 15 .and.
      &    shift .eq. 10.d0 ) then
          class = 'S'
          zeta_verify_value = 8.5971775078648d0
-      else if( na .eq. 7000 .and. 
-     &         nonzer .eq. 8 .and. 
+      else if( na .eq. 7000 .and.
+     &         nonzer .eq. 8 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 12.d0 ) then
          class = 'W'
          zeta_verify_value = 10.362595087124d0
-      else if( na .eq. 14000 .and. 
-     &         nonzer .eq. 11 .and. 
+      else if( na .eq. 14000 .and.
+     &         nonzer .eq. 11 .and.
      &         niter .eq. 15 .and.
      &         shift .eq. 20.d0 ) then
          class = 'A'
          zeta_verify_value = 17.130235054029d0
-      else if( na .eq. 75000 .and. 
-     &         nonzer .eq. 13 .and. 
+      else if( na .eq. 75000 .and.
+     &         nonzer .eq. 13 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 60.d0 ) then
          class = 'B'
          zeta_verify_value = 22.712745482631d0
-      else if( na .eq. 150000 .and. 
-     &         nonzer .eq. 15 .and. 
+      else if( na .eq. 150000 .and.
+     &         nonzer .eq. 15 .and.
      &         niter .eq. 75 .and.
      &         shift .eq. 110.d0 ) then
          class = 'C'
          zeta_verify_value = 28.973605592845d0
-      else if( na .eq. 1500000 .and. 
-     &         nonzer .eq. 21 .and. 
+      else if( na .eq. 1500000 .and.
+     &         nonzer .eq. 21 .and.
      &         niter .eq. 100 .and.
      &         shift .eq. 500.d0 ) then
          class = 'D'
          zeta_verify_value = 52.514532105794d0
-      else if( na .eq. 9000000 .and. 
-     &         nonzer .eq. 26 .and. 
+      else if( na .eq. 9000000 .and.
+     &         nonzer .eq. 26 .and.
      &         niter .eq. 100 .and.
      &         shift .eq. 1.5d3 ) then
          class = 'E'
@@ -165,7 +165,7 @@ c---------------------------------------------------------------------
          class = 'U'
       endif
 
-      write( *,1000 ) 
+      write( *,1000 )
       write( *,1001 ) na
       write( *,1002 ) niter
       write( *,* )
@@ -188,10 +188,10 @@ c---------------------------------------------------------------------
       zeta    = randlc( tran, amult )
 
 c---------------------------------------------------------------------
-c  
+c
 c---------------------------------------------------------------------
-      call makea(naa, nzz, a, colidx, rowstr, 
-     >           firstrow, lastrow, firstcol, lastcol, 
+      call makea(naa, nzz, a, colidx, rowstr,
+     >           firstrow, lastrow, firstcol, lastcol,
      >           arow, acol, aelt, iv)
 
 
@@ -201,7 +201,7 @@ c  Note: as a result of the above call to makea:
 c        values of j used in indexing rowstr go from 1 --> lastrow-firstrow+1
 c        values of colidx which are col indexes go from firstcol --> lastcol
 c        So:
-c        Shift the col index vals from actual (firstcol --> lastcol ) 
+c        Shift the col index vals from actual (firstcol --> lastcol )
 c        to local, i.e., (1 --> lastcol-firstcol+1)
 c---------------------------------------------------------------------
       do j=1,lastrow-firstrow+1
@@ -264,9 +264,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp2*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp2*z(j)
+         enddo
 
 
       enddo                              ! end of do one iteration untimed
@@ -276,7 +276,7 @@ c---------------------------------------------------------------------
 c  set starting vector to (1, 1, .... 1)
 c---------------------------------------------------------------------
 c
-c  
+c
 c
       do i = 1, na+1
          x(i) = 1.0D0
@@ -341,9 +341,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c  Normalize z to obtain x
 c---------------------------------------------------------------------
-         do j=1, lastcol-firstcol+1      
-            x(j) = norm_temp2*z(j)    
-         enddo                           
+         do j=1, lastcol-firstcol+1
+            x(j) = norm_temp2*z(j)
+         enddo
 
 
       enddo                              ! end of main iter inv pow meth
@@ -375,7 +375,7 @@ c         err = abs( zeta - zeta_verify_value)
  202        format(' Error is   ', E20.13)
          else
             verified = .FALSE.
-            write(*, 300) 
+            write(*, 300)
             write(*, 301) zeta
             write(*, 302) zeta_verify_value
  300        format(' VERIFICATION FAILED')
@@ -404,7 +404,7 @@ c         err = abs( zeta - zeta_verify_value)
 
          call print_results('CG', class, na, 0, 0,
      >                      niter, t,
-     >                      mflops, '          floating point', 
+     >                      mflops, '          floating point',
      >                      verified, npbversion, compiletime,
      >                      cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -460,10 +460,10 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c  Floaging point arrays here are named as in NPB1 spec discussion of 
+c  Floaging point arrays here are named as in NPB1 spec discussion of
 c  CG algorithm
 c---------------------------------------------------------------------
- 
+
       implicit none
 
 
@@ -521,10 +521,10 @@ c  q = A.p
 c  The partition submatrix-vector multiply: use workspace w
 c---------------------------------------------------------------------
 C
-C  NOTE: this version of the multiply is actually (slightly: maybe %5) 
-C        faster on the sp2 on 16 nodes than is the unrolled-by-2 version 
-C        below.   On the Cray t3d, the reverse is true, i.e., the 
-C        unrolled-by-two version is some 10% faster.  
+C  NOTE: this version of the multiply is actually (slightly: maybe %5)
+C        faster on the sp2 on 16 nodes than is the unrolled-by-2 version
+C        below.   On the Cray t3d, the reverse is true, i.e., the
+C        unrolled-by-two version is some 10% faster.
 C        The unrolled-by-8 version below is significantly faster
 C        on the Cray t3d - overall speed of code is 1.5 times faster.
 C
@@ -537,7 +537,7 @@ C
          enddo
 
 CC          do j=1,lastrow-firstrow+1
-CC             i = rowstr(j) 
+CC             i = rowstr(j)
 CC             iresidue = mod( rowstr(j+1)-i, 2 )
 CC             sum1 = 0.d0
 CC             sum2 = 0.d0
@@ -551,7 +551,7 @@ CC             q(j) = sum1 + sum2
 CC          enddo
 
 CC          do j=1,lastrow-firstrow+1
-CC             i = rowstr(j) 
+CC             i = rowstr(j)
 CC             iresidue = mod( rowstr(j+1)-i, 8 )
 CC             sum = 0.d0
 CC             do k=i,i+iresidue-1
@@ -569,7 +569,7 @@ CC      &                   + a(k+7)*p(colidx(k+7))
 CC             enddo
 CC             q(j) = sum
 CC          enddo
-            
+
 
 
 c---------------------------------------------------------------------
@@ -600,7 +600,7 @@ c---------------------------------------------------------------------
             z(j) = z(j) + alpha*p(j)
             r(j) = r(j) - alpha*q(j)
          enddo
-            
+
 c---------------------------------------------------------------------
 c  rho = r.r
 c  Now, obtain the norm of r: First, sum squares of r elements locally...
@@ -644,7 +644,7 @@ c---------------------------------------------------------------------
 c  At this point, r contains A.z
 c---------------------------------------------------------------------
       do j=1, lastcol-firstcol+1
-         d   = x(j) - r(j)         
+         d   = x(j) - r(j)
          sum = sum + d*d
       enddo
 
@@ -659,7 +659,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      subroutine makea( n, nz, a, colidx, rowstr, 
+      subroutine makea( n, nz, a, colidx, rowstr,
      >                  firstrow, lastrow, firstcol, lastcol,
      >                  arow, acol, aelt, iv )
 c---------------------------------------------------------------------
@@ -739,7 +739,7 @@ c---------------------------------------------------------------------
 c       ... make the sparse matrix from list of elements with duplicates
 c           (iv is used as  workspace)
 c---------------------------------------------------------------------
-      call sparse( a, colidx, rowstr, n, nz, nonzer, arow, acol, 
+      call sparse( a, colidx, rowstr, n, nz, nonzer, arow, acol,
      >             aelt, firstrow, lastrow,
      >             iv, rcond, shift )
       return
@@ -749,7 +749,7 @@ c-------end   of makea------------------------------
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
-      subroutine sparse( a, colidx, rowstr, n, nz, nonzer, arow, acol, 
+      subroutine sparse( a, colidx, rowstr, n, nz, nonzer, arow, acol,
      >                   aelt, firstrow, lastrow,
      >                   nzloc, rcond, shift )
 c---------------------------------------------------------------------

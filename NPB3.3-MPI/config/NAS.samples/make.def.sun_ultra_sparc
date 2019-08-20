@@ -1,4 +1,4 @@
-#    This is for a Sun SparcCenter or UltraEnterprise machine 
+#    This is for a Sun SparcCenter or UltraEnterprise machine
 MPIF77     = f77
 FLINK      = f77
 FMPI_LIB   = -L<your mpich installation tree>/lib/solaris/ch_lfshmem -lmpi

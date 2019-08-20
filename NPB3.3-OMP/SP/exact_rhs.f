@@ -14,14 +14,14 @@ c---------------------------------------------------------------------
        include 'header.h'
 
        double precision dtemp(5), xi, eta, zeta, dtpp
-       integer          m, i, j, k, ip1, im1, jp1, 
+       integer          m, i, j, k, ip1, im1, jp1,
      >                  jm1, km1, kp1
 
 !$omp parallel default(shared)
 !$omp& private(i,j,k,m,zeta,eta,xi,dtpp,im1,ip1,
 !$omp&         jm1,jp1,km1,kp1,dtemp)
 c---------------------------------------------------------------------
-c      initialize                                  
+c      initialize
 c---------------------------------------------------------------------
 !$omp do schedule(static)
        do   k= 0, grid_points(3)-1
@@ -35,7 +35,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c      xi-direction flux differences                      
+c      xi-direction flux differences
 c---------------------------------------------------------------------
 !$omp do schedule(static)
        do   k = 1, grid_points(3)-2
@@ -58,13 +58,13 @@ c---------------------------------------------------------------------
                 end do
 
                 cuf(i)   = buf(i,2) * buf(i,2)
-                buf(i,1) = cuf(i) + buf(i,3) * buf(i,3) + 
-     >                     buf(i,4) * buf(i,4) 
+                buf(i,1) = cuf(i) + buf(i,3) * buf(i,3) +
+     >                     buf(i,4) * buf(i,4)
                 q(i) = 0.5d0*(buf(i,2)*ue(i,2) + buf(i,3)*ue(i,3) +
      >                        buf(i,4)*ue(i,4))
 
              end do
- 
+
              do  i = 1, grid_points(1)-2
                 im1 = i-1
                 ip1 = i+1
@@ -83,7 +83,7 @@ c---------------------------------------------------------------------
      >                 ue(ip1,3)*buf(ip1,2)-ue(im1,3)*buf(im1,2))+
      >                 xxcon2*(buf(ip1,3)-2.0d0*buf(i,3)+buf(im1,3))+
      >                 dx3tx1*( ue(ip1,3)-2.0d0*ue(i,3) +ue(im1,3))
-                  
+
                 forcing(4,i,j,k) = forcing(4,i,j,k) - tx2*(
      >                 ue(ip1,4)*buf(ip1,2)-ue(im1,4)*buf(im1,2))+
      >                 xxcon2*(buf(ip1,4)-2.0d0*buf(i,4)+buf(im1,4))+
@@ -100,7 +100,7 @@ c---------------------------------------------------------------------
              end do
 
 c---------------------------------------------------------------------
-c            Fourth-order dissipation                         
+c            Fourth-order dissipation
 c---------------------------------------------------------------------
              do   m = 1, 5
                 i = 1
@@ -135,10 +135,10 @@ c---------------------------------------------------------------------
 !$omp end do nowait
 
 c---------------------------------------------------------------------
-c  eta-direction flux differences             
+c  eta-direction flux differences
 c---------------------------------------------------------------------
 !$omp do schedule(static)
-       do   k = 1, grid_points(3)-2          
+       do   k = 1, grid_points(3)-2
           zeta = dble(k) * dnzm1
           do   i=1, grid_points(1)-2
              xi = dble(i) * dnxm1
@@ -147,7 +147,7 @@ c---------------------------------------------------------------------
                 eta = dble(j) * dnym1
 
                 call exact_solution(xi, eta, zeta, dtemp)
-                do   m = 1, 5 
+                do   m = 1, 5
                    ue(j,m) = dtemp(m)
                 end do
                 dtpp = 1.0d0/dtemp(1)
@@ -157,7 +157,7 @@ c---------------------------------------------------------------------
                 end do
 
                 cuf(j)   = buf(j,3) * buf(j,3)
-                buf(j,1) = cuf(j) + buf(j,2) * buf(j,2) + 
+                buf(j,1) = cuf(j) + buf(j,2) * buf(j,2) +
      >                     buf(j,4) * buf(j,4)
                 q(j) = 0.5d0*(buf(j,2)*ue(j,2) + buf(j,3)*ue(j,3) +
      >                        buf(j,4)*ue(j,4))
@@ -166,7 +166,7 @@ c---------------------------------------------------------------------
              do  j = 1, grid_points(2)-2
                 jm1 = j-1
                 jp1 = j+1
-                  
+
                 forcing(1,i,j,k) = forcing(1,i,j,k) -
      >                ty2*( ue(jp1,3)-ue(jm1,3) )+
      >                dy1ty1*(ue(jp1,1)-2.0d0*ue(j,1)+ue(jm1,1))
@@ -198,7 +198,7 @@ c---------------------------------------------------------------------
              end do
 
 c---------------------------------------------------------------------
-c            Fourth-order dissipation                      
+c            Fourth-order dissipation
 c---------------------------------------------------------------------
              do   m = 1, 5
                 j = 1
@@ -233,7 +233,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c      zeta-direction flux differences                      
+c      zeta-direction flux differences
 c---------------------------------------------------------------------
 !$omp do schedule(static)
        do  j=1, grid_points(2)-2
@@ -331,7 +331,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c now change the sign of the forcing function, 
+c now change the sign of the forcing function,
 c---------------------------------------------------------------------
 !$omp do schedule(static)
        do   k = 1, grid_points(3)-2

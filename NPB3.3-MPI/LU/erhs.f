@@ -111,14 +111,14 @@ c---------------------------------------------------------------------
      >                         + rsd(3,i,j,k) * rsd(3,i,j,k)
      >                         + rsd(4,i,j,k) * rsd(4,i,j,k) )
      >                      / rsd(1,i,j,k)
-               flux(2,i,j,k) = rsd(2,i,j,k) * u21 + c2 * 
+               flux(2,i,j,k) = rsd(2,i,j,k) * u21 + c2 *
      >                         ( rsd(5,i,j,k) - q )
                flux(3,i,j,k) = rsd(3,i,j,k) * u21
                flux(4,i,j,k) = rsd(4,i,j,k) * u21
                flux(5,i,j,k) = ( c1 * rsd(5,i,j,k) - c2 * q ) * u21
             end do
          end do
-      end do 
+      end do
 
       do k = 2, nz - 1
          do j = jst, jend
@@ -143,7 +143,7 @@ c---------------------------------------------------------------------
                u41im1 = tmp * rsd(4,i-1,j,k)
                u51im1 = tmp * rsd(5,i-1,j,k)
 
-               flux(2,i,j,k) = (4.0d+00/3.0d+00) * tx3 * 
+               flux(2,i,j,k) = (4.0d+00/3.0d+00) * tx3 *
      >                        ( u21i - u21im1 )
                flux(3,i,j,k) = tx3 * ( u31i - u31im1 )
                flux(4,i,j,k) = tx3 * ( u41i - u41im1 )
@@ -261,8 +261,8 @@ c---------------------------------------------------------------------
      >                         + rsd(3,i,j,k) * rsd(3,i,j,k)
      >                         + rsd(4,i,j,k) * rsd(4,i,j,k) )
      >                      / rsd(1,i,j,k)
-               flux(2,i,j,k) = rsd(2,i,j,k) * u31 
-               flux(3,i,j,k) = rsd(3,i,j,k) * u31 + c2 * 
+               flux(2,i,j,k) = rsd(2,i,j,k) * u31
+               flux(3,i,j,k) = rsd(3,i,j,k) * u31 + c2 *
      >                       ( rsd(5,i,j,k) - q )
                flux(4,i,j,k) = rsd(4,i,j,k) * u31
                flux(5,i,j,k) = ( c1 * rsd(5,i,j,k) - c2 * q ) * u31
@@ -297,7 +297,7 @@ c---------------------------------------------------------------------
                u51jm1 = tmp * rsd(5,i,j-1,k)
 
                flux(2,i,j,k) = ty3 * ( u21j - u21jm1 )
-               flux(3,i,j,k) = (4.0d+00/3.0d+00) * ty3 * 
+               flux(3,i,j,k) = (4.0d+00/3.0d+00) * ty3 *
      >                       ( u31j - u31jm1 )
                flux(4,i,j,k) = ty3 * ( u41j - u41jm1 )
                flux(5,i,j,k) = 0.50d+00 * ( 1.0d+00 - c1*c5 )
@@ -400,9 +400,9 @@ c---------------------------------------------------------------------
      >                         + rsd(3,i,j,k) * rsd(3,i,j,k)
      >                         + rsd(4,i,j,k) * rsd(4,i,j,k) )
      >                      / rsd(1,i,j,k)
-               flux(2,i,j,k) = rsd(2,i,j,k) * u41 
-               flux(3,i,j,k) = rsd(3,i,j,k) * u41 
-               flux(4,i,j,k) = rsd(4,i,j,k) * u41 + c2 * 
+               flux(2,i,j,k) = rsd(2,i,j,k) * u41
+               flux(3,i,j,k) = rsd(3,i,j,k) * u41
+               flux(4,i,j,k) = rsd(4,i,j,k) * u41 + c2 *
      >                         ( rsd(5,i,j,k) - q )
                flux(5,i,j,k) = ( c1 * rsd(5,i,j,k) - c2 * q ) * u41
             end do
@@ -439,7 +439,7 @@ c---------------------------------------------------------------------
 
                flux(2,i,j,k) = tz3 * ( u21k - u21km1 )
                flux(3,i,j,k) = tz3 * ( u31k - u31km1 )
-               flux(4,i,j,k) = (4.0d+00/3.0d+00) * tz3 * ( u41k 
+               flux(4,i,j,k) = (4.0d+00/3.0d+00) * tz3 * ( u41k
      >                       - u41km1 )
                flux(5,i,j,k) = 0.50d+00 * ( 1.0d+00 - c1*c5 )
      >              * tz3 * ( ( u21k  **2 + u31k  **2 + u41k  **2 )

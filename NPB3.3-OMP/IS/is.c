@@ -1,13 +1,13 @@
 /*************************************************************************
- *                                                                       * 
+ *                                                                       *
  *       N  A  S     P A R A L L E L     B E N C H M A R K S  3.3        *
  *                                                                       *
  *                      O p e n M P     V E R S I O N                    *
- *                                                                       * 
- *                                  I S                                  * 
- *                                                                       * 
- ************************************************************************* 
- *                                                                       * 
+ *                                                                       *
+ *                                  I S                                  *
+ *                                                                       *
+ *************************************************************************
+ *                                                                       *
  *   This benchmark is an OpenMP version of the NPB IS code.             *
  *   It is described in NAS Technical Report 99-011.                     *
  *                                                                       *
@@ -33,11 +33,11 @@
  *         E-mail:  npb@nas.nasa.gov                                     *
  *         Fax:     (650) 604-3957                                       *
  *                                                                       *
- ************************************************************************* 
- *                                                                       * 
- *   Author: M. Yarrow                                                   * 
- *           H. Jin                                                      * 
- *                                                                       * 
+ *************************************************************************
+ *                                                                       *
+ *   Author: M. Yarrow                                                   *
+ *           H. Jin                                                      *
+ *                                                                       *
  *************************************************************************/
 
 #include "npbparams.h"
@@ -140,8 +140,8 @@
 #define  MAX_KEY             (1 << MAX_KEY_LOG_2)
 #define  NUM_BUCKETS         (1 << NUM_BUCKETS_LOG_2)
 #define  NUM_KEYS            TOTAL_KEYS
-#define  SIZE_OF_BUFFERS     NUM_KEYS  
-                                           
+#define  SIZE_OF_BUFFERS     NUM_KEYS
+
 
 #define  MAX_ITERATIONS      10
 #define  TEST_ARRAY_SIZE     5
@@ -166,20 +166,20 @@ INT_TYPE *key_buff_ptr_global;         /* used by full_verify to get */
                                        /* copies of rank info        */
 
 int      passed_verification;
-                                 
+
 
 /************************************/
 /* These are the three main arrays. */
 /* See SIZE_OF_BUFFERS def above    */
 /************************************/
-INT_TYPE key_array[SIZE_OF_BUFFERS],    
+INT_TYPE key_array[SIZE_OF_BUFFERS],
          key_buff1[MAX_KEY],
          key_buff2[SIZE_OF_BUFFERS],
          partial_verify_vals[TEST_ARRAY_SIZE],
          **key_buff1_aptr = NULL;
 
 #ifdef USE_BUCKETS
-INT_TYPE **bucket_size, 
+INT_TYPE **bucket_size,
          bucket_ptrs[NUM_BUCKETS];
 #pragma omp threadprivate(bucket_ptrs)
 #endif
@@ -191,34 +191,34 @@ INT_TYPE **bucket_size,
 INT_TYPE test_index_array[TEST_ARRAY_SIZE],
          test_rank_array[TEST_ARRAY_SIZE],
 
-         S_test_index_array[TEST_ARRAY_SIZE] = 
+         S_test_index_array[TEST_ARRAY_SIZE] =
                              {48427,17148,23627,62548,4431},
-         S_test_rank_array[TEST_ARRAY_SIZE] = 
+         S_test_rank_array[TEST_ARRAY_SIZE] =
                              {0,18,346,64917,65463},
 
-         W_test_index_array[TEST_ARRAY_SIZE] = 
+         W_test_index_array[TEST_ARRAY_SIZE] =
                              {357773,934767,875723,898999,404505},
-         W_test_rank_array[TEST_ARRAY_SIZE] = 
+         W_test_rank_array[TEST_ARRAY_SIZE] =
                              {1249,11698,1039987,1043896,1048018},
 
-         A_test_index_array[TEST_ARRAY_SIZE] = 
+         A_test_index_array[TEST_ARRAY_SIZE] =
                              {2112377,662041,5336171,3642833,4250760},
-         A_test_rank_array[TEST_ARRAY_SIZE] = 
+         A_test_rank_array[TEST_ARRAY_SIZE] =
                              {104,17523,123928,8288932,8388264},
 
-         B_test_index_array[TEST_ARRAY_SIZE] = 
+         B_test_index_array[TEST_ARRAY_SIZE] =
                              {41869,812306,5102857,18232239,26860214},
-         B_test_rank_array[TEST_ARRAY_SIZE] = 
-                             {33422937,10244,59149,33135281,99}, 
+         B_test_rank_array[TEST_ARRAY_SIZE] =
+                             {33422937,10244,59149,33135281,99},
 
-         C_test_index_array[TEST_ARRAY_SIZE] = 
+         C_test_index_array[TEST_ARRAY_SIZE] =
                              {44172927,72999161,74326391,129606274,21736814},
-         C_test_rank_array[TEST_ARRAY_SIZE] = 
+         C_test_rank_array[TEST_ARRAY_SIZE] =
                              {61147,882988,266290,133997595,133525895},
 
-         D_test_index_array[TEST_ARRAY_SIZE] = 
+         D_test_index_array[TEST_ARRAY_SIZE] =
                              {1317351170,995930646,1157283250,1503301535,1453734525},
-         D_test_rank_array[TEST_ARRAY_SIZE] = 
+         D_test_rank_array[TEST_ARRAY_SIZE] =
                              {1,36538729,1978098519,2145192618,2147425337};
 
 
@@ -231,7 +231,7 @@ void full_verify( void );
 
 void c_print_results( char   *name,
                       char   class,
-                      int    n1, 
+                      int    n1,
                       int    n2,
                       int    n3,
                       int    niter,
@@ -307,13 +307,13 @@ double	randlc( double *X, double *A )
       double		Z;
       int     		i, j;
 
-      if (KS == 0) 
+      if (KS == 0)
       {
         R23 = 1.0;
         R46 = 1.0;
         T23 = 1.0;
         T46 = 1.0;
-    
+
         for (i=1; i<=23; i++)
         {
           R23 = 0.50 * R23;
@@ -343,7 +343,7 @@ double	randlc( double *X, double *A )
       X1 = j;
       X2 = *X - T23 * X1;
       T1 = A1 * X2 + A2 * X1;
-      
+
       j  = R23 * T1;
       T2 = j;
       Z = T1 - T23 * T2;
@@ -352,7 +352,7 @@ double	randlc( double *X, double *A )
       T4 = j;
       *X = T3 - T46 * T4;
       return(R46 * *X);
-} 
+}
 
 
 
@@ -448,7 +448,7 @@ void	create_seq( double seed, double a )
 	    x = randlc(&s, &an);
 	    x += randlc(&s, &an);
     	    x += randlc(&s, &an);
-	    x += randlc(&s, &an);  
+	    x += randlc(&s, &an);
 
             key_array[i] = k*x;
 	}
@@ -549,7 +549,7 @@ void full_verify( void )
     for( i=0; i<NUM_KEYS; i++ )
         key_buff2[i] = key_array[i];
 
-    /* This is actual sorting. Each thread is responsible for 
+    /* This is actual sorting. Each thread is responsible for
        a subset of key values */
     j = omp_get_num_threads();
     j = (MAX_KEY + j - 1) / j;
@@ -641,7 +641,7 @@ void rank( int iteration )
     work_buff = bucket_size[myid];
 
 /*  Initialize */
-    for( i=0; i<NUM_BUCKETS; i++ )  
+    for( i=0; i<NUM_BUCKETS; i++ )
         work_buff[i] = 0;
 
 /*  Determine the number of keys in each bucket */
@@ -652,10 +652,10 @@ void rank( int iteration )
 /*  Accumulative bucket sizes are the bucket pointers.
     These are global sizes accumulated upon to each bucket */
     bucket_ptrs[0] = 0;
-    for( k=0; k< myid; k++ )  
+    for( k=0; k< myid; k++ )
         bucket_ptrs[0] += bucket_size[k][0];
 
-    for( i=1; i< NUM_BUCKETS; i++ ) { 
+    for( i=1; i< NUM_BUCKETS; i++ ) {
         bucket_ptrs[i] = bucket_ptrs[i-1];
         for( k=0; k< myid; k++ )
             bucket_ptrs[i] += bucket_size[k][i];
@@ -666,7 +666,7 @@ void rank( int iteration )
 
 /*  Sort into appropriate bucket */
     #pragma omp for schedule(static)
-    for( i=0; i<NUM_KEYS; i++ )  
+    for( i=0; i<NUM_KEYS; i++ )
     {
         k = key_array[i];
         key_buff2[bucket_ptrs[k >> shift]++] = k;
@@ -700,7 +700,7 @@ void rank( int iteration )
 
 /*  Ranking of all keys occurs in this section:                 */
 
-/*  In this section, the keys themselves are used as their 
+/*  In this section, the keys themselves are used as their
     own indexes to determine how many of each there are: their
     individual population                                       */
         m = (i > 0)? bucket_ptrs[i-1] : 0;
@@ -730,7 +730,7 @@ void rank( int iteration )
 
 /*  Ranking of all keys occurs in this section:                 */
 
-/*  In this section, the keys themselves are used as their 
+/*  In this section, the keys themselves are used as their
     own indexes to determine how many of each there are: their
     individual population                                       */
 
@@ -742,7 +742,7 @@ void rank( int iteration )
 /*  To obtain ranks of each key, successively add the individual key
     population                                          */
 
-    for( i=0; i<MAX_KEY-1; i++ )   
+    for( i=0; i<MAX_KEY-1; i++ )
         work_buff[i+1] += work_buff[i];
 
     #pragma omp barrier
@@ -762,7 +762,7 @@ void rank( int iteration )
 /* Observe that test_rank_array vals are   */
 /* shifted differently for different cases */
     for( i=0; i<TEST_ARRAY_SIZE; i++ )
-    {                                             
+    {
         k = partial_verify_vals[i];          /* test vals were put here */
         if( 0 < k  &&  k <= NUM_KEYS-1 )
         {
@@ -870,7 +870,7 @@ void rank( int iteration )
             }
             if( failed == 1 )
                 printf( "Failed partial verification: "
-                        "iteration %d, test key %d\n", 
+                        "iteration %d, test key %d\n",
                          iteration, (int)i );
         }
     }
@@ -882,10 +882,10 @@ void rank( int iteration )
     in rank are local; making them global slows down the code, probably
     since they cannot be made register by compiler                        */
 
-    if( iteration == MAX_ITERATIONS ) 
+    if( iteration == MAX_ITERATIONS )
         key_buff_ptr_global = key_buff_ptr;
 
-}      
+}
 
 
 /*****************************************************************/
@@ -903,7 +903,7 @@ int main( int argc, char **argv )
 
 
 /*  Initialize timers  */
-    timer_on = 0;            
+    timer_on = 0;
     if ((fp = fopen("timer.flag", "r")) != NULL) {
         fclose(fp);
         timer_on = 1;
@@ -948,7 +948,7 @@ int main( int argc, char **argv )
                 break;
         };
 
-        
+
 
 /*  Printout initial NPB info */
     printf
@@ -970,16 +970,16 @@ int main( int argc, char **argv )
     if (timer_on) timer_stop( 1 );
 
 
-/*  Do one interation for free (i.e., untimed) to guarantee initialization of  
+/*  Do one interation for free (i.e., untimed) to guarantee initialization of
     all data and code pages and respective tables */
-    rank( 1 );  
+    rank( 1 );
 
 /*  Start verification counter */
     passed_verification = 0;
 
     if( CLASS != 'S' ) printf( "\n   iteration\n" );
 
-/*  Start timer  */             
+/*  Start timer  */
     timer_start( 0 );
 
 
@@ -1017,7 +1017,7 @@ int main( int argc, char **argv )
                      timecounter,
                      ((double) (MAX_ITERATIONS*TOTAL_KEYS))
                                                   /timecounter/1000000.,
-                     "keys ranked", 
+                     "keys ranked",
                      passed_verification,
                      NPBVERSION,
                      COMPILETIME,

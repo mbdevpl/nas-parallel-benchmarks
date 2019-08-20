@@ -1,20 +1,20 @@
 c---------------------------------------------------------
-      subroutine convect(ifmortar)  
+      subroutine convect(ifmortar)
 c---------------------------------------------------------
 c     Advance the convection term using 4th order RK
-c     1.ta1 is solution from last time step 
+c     1.ta1 is solution from last time step
 c     2.the heat source is considered part of d/dx
 c     3.trhs is right hand side for the diffusion equation
 c     4.tmor is solution on mortar points, which will be used
-c       as the initial guess when advancing the diffusion term 
+c       as the initial guess when advancing the diffusion term
 c---------------------------------------------------------
 
       include 'header.h'
 
-      double precision alpha2, tempa(lx1,lx1,lx1), 
+      double precision alpha2, tempa(lx1,lx1,lx1),
      &       rdtime, pidivalpha, sixth,
      &       dtx1, dtx2, dtx3, src, rk1(lx1,lx1,lx1), rk2(lx1,lx1,lx1),
-     &       rk3(lx1,lx1,lx1), rk4(lx1,lx1,lx1), temp(lx1,lx1,lx1), 
+     &       rk3(lx1,lx1,lx1), rk4(lx1,lx1,lx1), temp(lx1,lx1,lx1),
      &       subtime(3), xx0(3), yy0(3), zz0(3), dtime2, r2, sum,
      &       xloc(lx1), yloc(lx1), zloc(lx1)
       integer k,iel,i,j,iside,isize, substep, ip
@@ -24,7 +24,7 @@ c---------------------------------------------------------
       if (timeron) call timer_start(t_convect)
       pidivalpha = dacos(-1.d0)/alpha
       alpha2     = alpha*alpha
-      dtime2     = dtime/2.d0 
+      dtime2     = dtime/2.d0
       rdtime     = 1.d0/dtime
       subtime(1) = time
       subtime(2) = time+dtime2
@@ -85,7 +85,7 @@ c       zloc(i) is the location of k'th collocation in z direction in an element
 
             end do
           end do
-        end do        
+        end do
 
         do k = 1, lx1
           do j = 1, lx1
@@ -117,7 +117,7 @@ c       zloc(i) is the location of k'th collocation in z direction in an element
               tempa(i,j,k)=ta1(i,j,k,iel)+dtime2*rk2(i,j,k)
             end do
           end do
-        end do        
+        end do
 
         do k = 1, lx1
           do j = 1, lx1
@@ -149,7 +149,7 @@ c       zloc(i) is the location of k'th collocation in z direction in an element
               temp(i,j,k)=ta1(i,j,k,iel)+dtime*rk3(i,j,k)
             end do
           end do
-        end do        
+        end do
 
         do k = 1, lx1
           do j = 1, lx1
@@ -182,7 +182,7 @@ c       zloc(i) is the location of k'th collocation in z direction in an element
      &                   rk2(i,j,k)+2.d0*rk3(i,j,k)+rk4(i,j,k))
             end do
           end do
-        end do        
+        end do
 
 c.......apply boundary condition
         do iside=1,nsides
@@ -190,7 +190,7 @@ c.......apply boundary condition
             call facev(tempa,iside,0.0d0)
           end if
         end do
-          
+
         do k=1,lx1
           do j=1,lx1
             do i=1,lx1
@@ -201,7 +201,7 @@ c.......apply boundary condition
           end do
         end do
 
-      end do 
+      end do
 c$OMP END PARALLEL DO
 
 c.....get mortar for intial guess for CG

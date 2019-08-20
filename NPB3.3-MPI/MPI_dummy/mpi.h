@@ -16,11 +16,11 @@
 #define MPI_STATUS_SIZE     3
 
 
-/* 
-   Status object.  It is the only user-visible MPI data-structure 
-   The "count" field is PRIVATE; use MPI_Get_count to access it. 
+/*
+   Status object.  It is the only user-visible MPI data-structure
+   The "count" field is PRIVATE; use MPI_Get_count to access it.
  */
-typedef struct { 
+typedef struct {
     int count;
     int MPI_SOURCE;
     int MPI_TAG;
@@ -66,10 +66,10 @@ int   MPI_Wait( MPI_Request *request,
 int   MPI_Init( int  *argc,
                 char ***argv );
 
-int   MPI_Comm_rank( MPI_Comm comm, 
+int   MPI_Comm_rank( MPI_Comm comm,
                      int      *rank );
 
-int   MPI_Comm_size( MPI_Comm comm, 
+int   MPI_Comm_size( MPI_Comm comm,
                      int      *size );
 
 double MPI_Wtime( void );

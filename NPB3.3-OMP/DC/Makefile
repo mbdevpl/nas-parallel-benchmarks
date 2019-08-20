@@ -14,7 +14,7 @@ OBJS = adc.o dc.o extbuild.o rbt.o jobcntl.o \
 # npbparams.h is provided for backward compatibility with NPB compilation
 # header.h: npbparams.h
 
-${PROGRAM}: config ${OBJS} 
+${PROGRAM}: config ${OBJS}
 	${CLINK} ${CLINKFLAGS} -o ${PROGRAM} ${OBJS} ${C_LIB}
 
 .c.o:
@@ -27,7 +27,7 @@ rbt.o:      rbt.c adcc.h adc.h rbt.h macrodef.h npbparams.h
 jobcntl.o:  jobcntl.c adcc.h adc.h macrodef.h npbparams.h
 
 clean:
-	- rm -f *.o 
+	- rm -f *.o
 	- rm -f npbparams.h core
-	- rm -f {../,}ADC.{logf,view,dat,viewsz,groupby,chunks}.* 
+	- rm -f {../,}ADC.{logf,view,dat,viewsz,groupby,chunks}.*
 

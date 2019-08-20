@@ -29,7 +29,7 @@ c---------------------------------------------------------------------
       integer nx, ny, nz
       integer k
       double precision  omega
-      double precision  v( 5, -1:ldmx+2, -1:ldmy+2, *), 
+      double precision  v( 5, -1:ldmx+2, -1:ldmy+2, *),
      >        tv(5, ldmx, ldmy),
      >        d( 5, 5, ldmx, ldmy),
      >        udx( 5, 5, ldmx, ldmy),
@@ -63,7 +63,7 @@ c---------------------------------------------------------------------
       do j = jend, jst, -1
          do i = iend, ist, -1
             do m = 1, 5
-                  tv( m, i, j ) = 
+                  tv( m, i, j ) =
      >      omega * (  udz( m, 1, i, j ) * v( 1, i, j, k+1 )
      >               + udz( m, 2, i, j ) * v( 2, i, j, k+1 )
      >               + udz( m, 3, i, j ) * v( 3, i, j, k+1 )
@@ -335,6 +335,6 @@ c---------------------------------------------------------------------
       iex = 3
       call exchange_1( v,k,iex )
       if (timeron) call timer_stop(t_ucomm)
- 
+
       return
       end

@@ -8,10 +8,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     Performs line solves in Z direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
 c---------------------------------------------------------------------
@@ -20,7 +20,7 @@ c---------------------------------------------------------------------
       include 'work_lhs.h'
 
       integer i, j, k, m, n, ksize
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     This function computes the left hand side for the three z-factors   
+c     This function computes the left hand side for the three z-factors
 c---------------------------------------------------------------------
 
       ksize = grid_points(3)-1
@@ -55,33 +55,33 @@ c---------------------------------------------------------------------
                fjac(1,4,k) = 1.0d+00
                fjac(1,5,k) = 0.0d+00
 
-               fjac(2,1,k) = - ( u(2,i,j,k)*u(4,i,j,k) ) 
-     >              * tmp2 
+               fjac(2,1,k) = - ( u(2,i,j,k)*u(4,i,j,k) )
+     >              * tmp2
                fjac(2,2,k) = u(4,i,j,k) * tmp1
                fjac(2,3,k) = 0.0d+00
                fjac(2,4,k) = u(2,i,j,k) * tmp1
                fjac(2,5,k) = 0.0d+00
 
                fjac(3,1,k) = - ( u(3,i,j,k)*u(4,i,j,k) )
-     >              * tmp2 
+     >              * tmp2
                fjac(3,2,k) = 0.0d+00
                fjac(3,3,k) = u(4,i,j,k) * tmp1
                fjac(3,4,k) = u(3,i,j,k) * tmp1
                fjac(3,5,k) = 0.0d+00
 
-               fjac(4,1,k) = - (u(4,i,j,k)*u(4,i,j,k) * tmp2 ) 
+               fjac(4,1,k) = - (u(4,i,j,k)*u(4,i,j,k) * tmp2 )
      >              + c2 * qs(i,j,k)
-               fjac(4,2,k) = - c2 *  u(2,i,j,k) * tmp1 
+               fjac(4,2,k) = - c2 *  u(2,i,j,k) * tmp1
                fjac(4,3,k) = - c2 *  u(3,i,j,k) * tmp1
                fjac(4,4,k) = ( 2.0d+00 - c2 )
-     >              *  u(4,i,j,k) * tmp1 
+     >              *  u(4,i,j,k) * tmp1
                fjac(4,5,k) = c2
 
-               fjac(5,1,k) = ( c2 * 2.0d0 * square(i,j,k) 
+               fjac(5,1,k) = ( c2 * 2.0d0 * square(i,j,k)
      >              - c1 * u(5,i,j,k) )
      >              * u(4,i,j,k) * tmp2
                fjac(5,2,k) = - c2 * ( u(2,i,j,k)*u(4,i,j,k) )
-     >              * tmp2 
+     >              * tmp2
                fjac(5,3,k) = - c2 * ( u(3,i,j,k)*u(4,i,j,k) )
      >              * tmp2
                fjac(5,4,k) = c1 * ( u(5,i,j,k) * tmp1 )
@@ -141,7 +141,7 @@ c---------------------------------------------------------------------
 
                lhs(1,1,aa,k) = - tmp2 * fjac(1,1,k-1)
      >              - tmp1 * njac(1,1,k-1)
-     >              - tmp1 * dz1 
+     >              - tmp1 * dz1
                lhs(1,2,aa,k) = - tmp2 * fjac(1,2,k-1)
      >              - tmp1 * njac(1,2,k-1)
                lhs(1,3,aa,k) = - tmp2 * fjac(1,3,k-1)
@@ -169,7 +169,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(3,2,k-1)
                lhs(3,3,aa,k) = - tmp2 * fjac(3,3,k-1)
      >              - tmp1 * njac(3,3,k-1)
-     >              - tmp1 * dz3 
+     >              - tmp1 * dz3
                lhs(3,4,aa,k) = - tmp2 * fjac(3,4,k-1)
      >              - tmp1 * njac(3,4,k-1)
                lhs(3,5,aa,k) = - tmp2 * fjac(3,5,k-1)
@@ -236,7 +236,7 @@ c---------------------------------------------------------------------
                lhs(5,3,bb,k) = tmp1 * 2.0d+00 * njac(5,3,k)
                lhs(5,4,bb,k) = tmp1 * 2.0d+00 * njac(5,4,k)
                lhs(5,5,bb,k) = 1.0d+00
-     >              + tmp1 * 2.0d+00 * njac(5,5,k) 
+     >              + tmp1 * 2.0d+00 * njac(5,5,k)
      >              + tmp1 * 2.0d+00 * dz5
 
                lhs(1,1,cc,k) =  tmp2 * fjac(1,1,k+1)
@@ -306,10 +306,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(KMAX) and rhs'(KMAX) will be sent to next cell.
 c---------------------------------------------------------------------
@@ -329,13 +329,13 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
             do k=1,ksize-1
 
 c---------------------------------------------------------------------
 c     subtract A*lhs_vector(k-1) from lhs_vector(k)
-c     
+c
 c     rhs(k) = rhs(k) - A*rhs(k-1)
 c---------------------------------------------------------------------
                call matvec_sub(lhs(1,1,aa,k),
@@ -398,7 +398,7 @@ c---------------------------------------------------------------------
             do k=ksize-1,0,-1
                do m=1,BLOCK_SIZE
                   do n=1,BLOCK_SIZE
-                     rhs(m,i,j,k) = rhs(m,i,j,k) 
+                     rhs(m,i,j,k) = rhs(m,i,j,k)
      >                    - lhs(m,n,cc,k)*rhs(n,i,j,k+1)
                   enddo
                enddo

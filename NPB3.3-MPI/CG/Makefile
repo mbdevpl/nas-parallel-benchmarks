@@ -16,7 +16,7 @@ cg.o:		cg.f  mpinpb.h npbparams.h timing.h
 	${FCOMPILE} cg.f
 
 clean:
-	- rm -f *.o *~ 
+	- rm -f *.o *~
 	- rm -f npbparams.h core
 
 

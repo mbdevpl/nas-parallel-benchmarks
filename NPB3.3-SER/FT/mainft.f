@@ -91,17 +91,17 @@ c---------------------------------------------------------------------
            mflops = 0.0
          endif
          call print_results('FT', class, nx, ny, nz, niter,
-     >      total_time, mflops, '          floating point', verified, 
-     >      npbversion, compiletime, cs1, cs2, cs3, cs4, 
+     >      total_time, mflops, '          floating point', verified,
+     >      npbversion, compiletime, cs1, cs2, cs3, cs4,
      >      cs5, cs6, cs7)
 !
       end
-      
+
       subroutine getclass(class)
         implicit none
         include 'npbparams.h'
         character class
-        if ((nx .eq. 64) .and. (ny .eq. 64) .and.                 
+        if ((nx .eq. 64) .and. (ny .eq. 64) .and.
      &      (nz .eq. 64) .and. (niter_default .eq. 6)) then
           class='S'
         else if ((nx .eq. 128) .and. (ny .eq. 128) .and.
@@ -125,4 +125,4 @@ c---------------------------------------------------------------------
 
         return
       end
-      
+

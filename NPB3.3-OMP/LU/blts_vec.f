@@ -4,7 +4,7 @@ c---------------------------------------------------------------------
       subroutine blts ( ldmx, ldmy, ldmz,
      >                  nx, ny, nz, k,
      >                  omega,
-     >                  v, 
+     >                  v,
      >                  ldz, ldy, ldx, d,
      >                  ist, iend, jst, jend,
      >                  lst, lend )
@@ -30,7 +30,7 @@ c---------------------------------------------------------------------
       integer k
       double precision  omega
 c---------------------------------------------------------------------
-c   To improve cache performance, second two dimensions padded by 1 
+c   To improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.  Only needed in v.
 c---------------------------------------------------------------------
       double precision  v( 5, ldmx/2*2+1, ldmy/2*2+1, ldmz),
@@ -137,7 +137,7 @@ c---------------------------------------------------------------------
      >           + ldx( 5, 5, i, j ) * v( 5, i-1, j, k ) )
 
 !            end do
-       
+
 c---------------------------------------------------------------------
 c   diagonal block inversion
 c

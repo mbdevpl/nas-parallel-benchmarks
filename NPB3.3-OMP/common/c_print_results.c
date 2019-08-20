@@ -9,7 +9,7 @@
 
 void c_print_results( char   *name,
                       char   class,
-                      int    n1, 
+                      int    n1,
                       int    n2,
                       int    n3,
                       int    niter,
@@ -43,7 +43,7 @@ void c_print_results( char   *name,
 #endif
 
 
-    printf( "\n\n %s Benchmark Completed\n", name ); 
+    printf( "\n\n %s Benchmark Completed\n", name );
 
     printf( " Class           =                        %c\n", class );
 
@@ -56,14 +56,14 @@ void c_print_results( char   *name,
         printf( " Size            =             %4dx%4dx%4d\n", n1,n2,n3 );
 
     printf( " Iterations      =             %12d\n", niter );
- 
+
     printf( " Time in seconds =             %12.2f\n", t );
 
     printf( " Total threads   =             %12d\n", num_threads);
 
     printf( " Avail threads   =             %12d\n", max_threads);
 
-    if (num_threads != max_threads) 
+    if (num_threads != max_threads)
         printf( " Warning: Threads used differ from threads available\n");
 
     printf( " Mop/s total     =             %12.2f\n", mops );
@@ -111,4 +111,4 @@ void c_print_results( char   *name,
     printf( " Moffett Field, CA  94035-1000\n\n" );
     printf( " Fax: 650-604-3957\n\n" ); */
 }
- 
+

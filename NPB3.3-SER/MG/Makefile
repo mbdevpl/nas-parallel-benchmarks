@@ -16,7 +16,7 @@ mg.o:		mg.f globals.h npbparams.h
 	${FCOMPILE} mg.f
 
 clean:
-	- rm -f *.o *~ 
+	- rm -f *.o *~
 	- rm -f npbparams.h core
 
 

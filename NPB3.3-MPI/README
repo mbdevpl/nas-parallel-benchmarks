@@ -1,7 +1,7 @@
 The MPI implementation of NPB 3.3 (NPB3.3-MPI)
 --------------------------------------------------
 
-For problem reports and suggestions on the implementation, 
+For problem reports and suggestions on the implementation,
 please contact:
 
    NAS Parallel Benchmark Team
@@ -25,9 +25,9 @@ This version includes additional timers in several benchmarks.
 
 
 New features in NPB3.3-MPI:
-  * NPB3.3-MPI introduces a new problem size (class E) to seven of  
-    the benchmarks (BT, SP, LU, CG, MG, FT, and EP).  The version 
-    also includes a new problem size (class D) for the IS benchmark, 
+  * NPB3.3-MPI introduces a new problem size (class E) to seven of
+    the benchmarks (BT, SP, LU, CG, MG, FT, and EP).  The version
+    also includes a new problem size (class D) for the IS benchmark,
     which was not present in the previous releases.
 
   * The release is merged with the vector codes for the BT and LU
