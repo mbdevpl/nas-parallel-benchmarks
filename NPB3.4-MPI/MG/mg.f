@@ -63,7 +63,7 @@ c and is NOT global. it is the current iteration
 c---------------------------------------------------------------------------c
 
       integer k, it
-      
+
       external timer_read
       double precision t, t0, tinit, mflops, timer_read
 
@@ -78,7 +78,7 @@ c---------------------------------------------------------------------------c
      >                 tming(t_last+2), tmaxg(t_last+2)
       character        t_recs(t_last+2)*8
 
-      data t_recs/'total', 'init', 'psinv', 'resid', 'rprj3', 
+      data t_recs/'total', 'init', 'psinv', 'resid', 'rprj3',
      >            'interp', 'norm2u3', 'comm3', 'rcomm',
      >            ' totcomp', ' totcomm'/
 
@@ -130,27 +130,27 @@ c---------------------------------------------------------------------
       call mpi_barrier(comm_work, ierr)
 
       call timer_start(T_init)
-      
+
 
 c---------------------------------------------------------------------
 c Read in and broadcast input data
 c---------------------------------------------------------------------
 
       if( me .eq. root )then
-         write (*, 1000) 
+         write (*, 1000)
 
          call check_timer_flag( timeron )
 
          open(unit=7,file="mg.input", status="old", iostat=fstatus)
          if (fstatus .eq. 0) then
-            write(*,50) 
+            write(*,50)
  50         format(' Reading from input file mg.input')
             read(7,*) lt
             read(7,*) nx(lt), ny(lt), nz(lt)
             read(7,*) nit
             read(7,*) (debug_vec(i),i=0,7)
          else
-            write(*,51) 
+            write(*,51)
  51         format(' No input file. Using compiled defaults ')
             lt = lt_default
             nit = nit_default
@@ -168,27 +168,27 @@ c---------------------------------------------------------------------
       call mpi_bcast(nx(lt), 1, MPI_INTEGER, 0, comm_work, ierr)
       call mpi_bcast(ny(lt), 1, MPI_INTEGER, 0, comm_work, ierr)
       call mpi_bcast(nz(lt), 1, MPI_INTEGER, 0, comm_work, ierr)
-      call mpi_bcast(debug_vec(0), 8, MPI_INTEGER, 0, 
+      call mpi_bcast(debug_vec(0), 8, MPI_INTEGER, 0,
      >               comm_work, ierr)
       call mpi_bcast(timeron, 1, MPI_LOGICAL, 0, comm_work, ierr)
 
       if ( (nx(lt) .ne. ny(lt)) .or. (nx(lt) .ne. nz(lt)) ) then
-         Class = 'U' 
+         Class = 'U'
       else if( nx(lt) .eq. 32 .and. nit .eq. 4 ) then
          Class = 'S'
       else if( nx(lt) .eq. 128 .and. nit .eq. 4 ) then
          Class = 'W'
-      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then  
+      else if( nx(lt) .eq. 256 .and. nit .eq. 4 ) then
          Class = 'A'
       else if( nx(lt) .eq. 256 .and. nit .eq. 20 ) then
          Class = 'B'
-      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then  
+      else if( nx(lt) .eq. 512 .and. nit .eq. 20 ) then
          Class = 'C'
-      else if( nx(lt) .eq. 1024 .and. nit .eq. 50 ) then  
+      else if( nx(lt) .eq. 1024 .and. nit .eq. 50 ) then
          Class = 'D'
-      else if( nx(lt) .eq. 2048 .and. nit .eq. 50 ) then  
+      else if( nx(lt) .eq. 2048 .and. nit .eq. 50 ) then
          Class = 'E'
-      else if( nx(lt) .eq. 4096 .and. nit .eq. 50 ) then  
+      else if( nx(lt) .eq. 4096 .and. nit .eq. 50 ) then
          Class = 'F'
       else
          Class = 'U'
@@ -207,11 +207,11 @@ c     debug_vec(5) = k => at level k or below, show result of interp
 c     debug_vec(6) = 1 => (unused)
 c     debug_vec(7) = 1 => (unused)
 c---------------------------------------------------------------------
-      a(0) = -8.0D0/3.0D0 
-      a(1) =  0.0D0 
-      a(2) =  1.0D0/6.0D0 
+      a(0) = -8.0D0/3.0D0
+      a(1) =  0.0D0
+      a(2) =  1.0D0/6.0D0
       a(3) =  1.0D0/12.0D0
-      
+
       if(Class .eq. 'A' .or. Class .eq. 'S'.or. Class .eq.'W') then
 c---------------------------------------------------------------------
 c     Coefficients for the S(a) smoother
@@ -270,7 +270,7 @@ c---------------------------------------------------------------------
       call timer_stop(T_init)
       if( me .eq. root )then
          tinit = timer_read(T_init)
-         write( *,'(/A,F15.3,A/)' ) 
+         write( *,'(/A,F15.3,A/)' )
      >        ' Initialization time: ',tinit, ' seconds'
       endif
 
@@ -341,7 +341,7 @@ c---------------------------------------------------------------------
  202           format(' Error is   ', E20.13)
             else
                verified = .FALSE.
-               write(*, 300) 
+               write(*, 300)
                write(*, 301) rnm2
                write(*, 302) verify_value
  300           format(' VERIFICATION FAILED')
@@ -365,9 +365,9 @@ c---------------------------------------------------------------------
             mflops = 0.0
          endif
 
-         call print_results('MG', class, nx(lt), ny(lt), nz(lt), 
+         call print_results('MG', class, nx(lt), ny(lt), nz(lt),
      >                      nit, nprocs, nprocs_total, t,
-     >                      mflops, '          floating point', 
+     >                      mflops, '          floating point',
      >                      verified, npbversion, compiletime,
      >                      cs1, cs2, cs3, cs4, cs5, cs6, cs7)
 
@@ -383,11 +383,11 @@ c---------------------------------------------------------------------
       t1(t_last+2) = t1(t_rcomm) + t1(t_comm3)
       t1(t_last+1) = t1(t_bench) - t1(t_last+2)
 
-      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM, 
+      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM,
      >                0, comm_work, ierr)
-      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN, 
+      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN,
      >                0, comm_work, ierr)
-      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX, 
+      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX,
      >                0, comm_work, ierr)
 
       if (me .eq. 0) then
@@ -397,7 +397,7 @@ c---------------------------------------------------------------------
             write(*, 810) i, t_recs(i), tming(i), tmaxg(i), tsum(i)
          end do
       endif
- 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum', 
+ 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum',
      >       5x, 'average')
  810  format(' timer ', i2, '(', A8, ') :', 3(2x,f10.4))
 
@@ -466,12 +466,12 @@ c---------------------------------------------------------------------
             take_ex(ax,k) = .false.
             give_ex(ax,k) = .false.
 
-            mi(ax,k) = 2 + 
+            mi(ax,k) = 2 +
      >           ((idi(ax)+1)*ng(ax,k))/pi(ax) -
      >           ((idi(ax)+0)*ng(ax,k))/pi(ax)
-            mip(ax,k) = 2 + 
+            mip(ax,k) = 2 +
      >           ((next(ax)+idi(ax)+1)*ng(ax,k))/pi(ax) -
-     >           ((next(ax)+idi(ax)+0)*ng(ax,k))/pi(ax) 
+     >           ((next(ax)+idi(ax)+0)*ng(ax,k))/pi(ax)
 
             if(mip(ax,k).eq.2.or.mi(ax,k).eq.2)then
                next(ax) = 2*next(ax)
@@ -487,8 +487,8 @@ c---------------------------------------------------------------------
             endif
          enddo
 
-         if( mi(1,k).eq.2 .or. 
-     >        mi(2,k).eq.2 .or. 
+         if( mi(1,k).eq.2 .or.
+     >        mi(2,k).eq.2 .or.
      >        mi(3,k).eq.2      )then
             dead(k) = .true.
          endif
@@ -612,7 +612,7 @@ c---------------------------------------------------------------------
       call zero3(u(ir(k)),m1(k),m2(k),m3(k))
       call psinv(r(ir(k)),u(ir(k)),m1(k),m2(k),m3(k),c,k)
 
-      do  k = lb+1, lt-1     
+      do  k = lb+1, lt-1
           j = k-1
 c---------------------------------------------------------------------
 c        prolongate from level k-1  to k
@@ -651,12 +651,12 @@ c---------------------------------------------------------------------
 c     psinv applies an approximate inverse as smoother:  u = u + Cr
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
+c     A and M denote the costs of Addition and Multiplication.
 c     Presuming coefficient c(3) is zero (the NPB assumes this,
 c     but it is thus not a general case), 2A + 1M may be eliminated,
 c     resulting in 13A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
 
       use mg_data
@@ -667,7 +667,7 @@ c---------------------------------------------------------------------
       integer i3, i2, i1
 
       double precision r1(m), r2(m)
-      
+
       if (timeron) call timer_start(t_psinv)
       do i3=2,n3-1
          do i2=2,n2-1
@@ -721,13 +721,13 @@ c---------------------------------------------------------------------
 c     resid computes the residual:  r = v - Au
 c
 c     This  implementation costs  15A + 4M per result, where
-c     A and M denote the costs of Addition (or Subtraction) and 
-c     Multiplication, respectively. 
+c     A and M denote the costs of Addition (or Subtraction) and
+c     Multiplication, respectively.
 c     Presuming coefficient a(1) is zero (the NPB assumes this,
 c     but it is thus not a general case), 3A + 1M may be eliminated,
 c     resulting in 12A + 3M.
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
 
       use mg_data
@@ -788,13 +788,13 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     rprj3 projects onto the next coarser grid, 
+c     rprj3 projects onto the next coarser grid,
 c     using a trilinear Finite Element projection:  s = r' = P r
-c     
+c
 c     This  implementation costs  20A + 4M per result, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.
 c---------------------------------------------------------------------
 
       use mg_data
@@ -888,11 +888,11 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c     interp adds the trilinear interpolation of the correction
 c     from the coarser grid to the current approximation:  u = u + Qu'
-c     
+c
 c     Observe that this  implementation costs  16A + 4M, where
-c     A and M denote the costs of Addition and Multiplication.  
-c     Note that this vectorizes, and is also fine for cache 
-c     based machines.  Vector machines may get slightly better 
+c     A and M denote the costs of Addition and Multiplication.
+c     Note that this vectorizes, and is also fine for cache
+c     based machines.  Vector machines may get slightly better
 c     performance however, with 8 separate "do i1" loops, rather than 4.
 c---------------------------------------------------------------------
 
@@ -960,7 +960,7 @@ c      parameter( m=535 )
             d1 = 1
             t1 = 0
          endif
-         
+
          if(n2.eq.3)then
             d2 = 2
             t2 = 1
@@ -968,7 +968,7 @@ c      parameter( m=535 )
             d2 = 1
             t2 = 0
          endif
-         
+
          if(n3.eq.3)then
             d3 = 2
             t3 = 1
@@ -976,7 +976,7 @@ c      parameter( m=535 )
             d3 = 1
             t3 = 0
          endif
-         
+
          do  i3=d3,mm3-1
             do  i2=d2,mm2-1
                do  i1=d1,mm1-1
@@ -1044,7 +1044,7 @@ c      parameter( m=535 )
          call showall(u,n1,n2,n3)
       endif
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -1146,7 +1146,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     comm3 organizes the communication on all borders 
+c     comm3 organizes the communication on all borders
 c---------------------------------------------------------------------
 
       use mg_data
@@ -1161,16 +1161,16 @@ c---------------------------------------------------------------------
       if( .not. dead(kk) )then
          do  axis = 1, 3
             if( nprocs .ne. 1) then
-   
+
                call ready( axis, -1, kk )
                call ready( axis, +1, kk )
-   
+
                call give3( axis, +1, u, n1, n2, n3, kk )
                call give3( axis, -1, u, n1, n2, n3, kk )
-   
+
                call take3( axis, -1, u, n1, n2, n3 )
                call take3( axis, +1, u, n1, n2, n3 )
-   
+
             else
                call comm1p( axis, u, n1, n2, n3, kk )
             endif
@@ -1210,7 +1210,7 @@ c---------------------------------------------------------------------
                call take3_ex( axis, -1, u, n1, n2, n3 )
                call take3_ex( axis, +1, u, n1, n2, n3 )
             endif
-   
+
             if( give_ex( axis, kk ) )then
                call give3_ex( axis, +1, u, n1, n2, n3, kk )
                call give3_ex( axis, -1, u, n1, n2, n3, kk )
@@ -1258,7 +1258,7 @@ c---------------------------------------------------------------------
       msg_id(axis,dir,1) = msg_type(axis,dir) +1000*me
 
       call mpi_irecv( buff(1,buff_id), buff_len,
-     >     dp_type, nbr(axis,-dir,k), msg_type(axis,dir), 
+     >     dp_type, nbr(axis,-dir,k), msg_type(axis,dir),
      >     comm_work, msg_id(axis,dir,1), ierr)
       if (timeron) call timer_stop(t_comm3)
       return
@@ -1287,7 +1287,7 @@ c---------------------------------------------------------------------
 
       integer i3, i2, i1, buff_len,buff_id
 
-      buff_id = 2 + dir 
+      buff_id = 2 + dir
       buff_len = 0
 
       if( axis .eq.  1 )then
@@ -1301,9 +1301,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1317,9 +1317,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1337,9 +1337,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1353,9 +1353,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1373,9 +1373,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1389,9 +1389,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1524,7 +1524,7 @@ c---------------------------------------------------------------------
 
       integer i3, i2, i1, buff_len, buff_id
 
-      buff_id = 2 + dir 
+      buff_id = 2 + dir
       buff_len = 0
 
       if( axis .eq.  1 )then
@@ -1538,9 +1538,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1556,9 +1556,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1576,9 +1576,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1594,9 +1594,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1614,9 +1614,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1632,9 +1632,9 @@ c---------------------------------------------------------------------
             enddo
 
             if (timeron) call timer_start(t_comm3)
-            call mpi_send( 
+            call mpi_send(
      >           buff(1, buff_id ), buff_len,dp_type,
-     >           nbr( axis, dir, k ), msg_type(axis,dir), 
+     >           nbr( axis, dir, k ), msg_type(axis,dir),
      >           comm_work, ierr)
             if (timeron) call timer_stop(t_comm3)
 
@@ -1791,7 +1791,7 @@ c---------------------------------------------------------------------
 
       dir = +1
 
-      buff_id = 2 + dir 
+      buff_id = 2 + dir
       buff_len = 0
 
       if( axis .eq.  1 )then
@@ -1823,7 +1823,7 @@ c---------------------------------------------------------------------
 
       dir = -1
 
-      buff_id = 2 + dir 
+      buff_id = 2 + dir
       buff_len = 0
 
       if( axis .eq.  1 )then
@@ -2043,7 +2043,7 @@ c---------------------------------------------------------------------
 
          dir = +1
 
-         buff_id = 2 + dir 
+         buff_id = 2 + dir
          buff_len = 0
 
          if( axis .eq.  1 )then
@@ -2081,7 +2081,7 @@ c---------------------------------------------------------------------
 
          dir = -1
 
-         buff_id = 2 + dir 
+         buff_id = 2 + dir
          buff_len = 0
 
          if( axis .eq.  1 )then
@@ -2201,14 +2201,14 @@ c---------------------------------------------------------------------
          do  i2=2,n2-1
             do  i1=2,n1-1
                if( z(i1,i2,i3) .gt. ten( 1, 1 ) )then
-                  ten(1,1) = z(i1,i2,i3) 
+                  ten(1,1) = z(i1,i2,i3)
                   j1(1,1) = i1
                   j2(1,1) = i2
                   j3(1,1) = i3
                   call bubble( ten, j1, j2, j3, mm, 1 )
                endif
                if( z(i1,i2,i3) .lt. ten( 1, 0 ) )then
-                  ten(1,0) = z(i1,i2,i3) 
+                  ten(1,0) = z(i1,i2,i3)
                   j1(1,0) = i1
                   j2(1,0) = i2
                   j3(1,0) = i3
@@ -2233,9 +2233,9 @@ c---------------------------------------------------------------------
          best = temp
          if(best.eq.z(j1(i1,1),j2(i1,1),j3(i1,1)))then
             jg( 0, i, 1) = me
-            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 ) 
-            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 ) 
-            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 ) 
+            jg( 1, i, 1) = is1 - 2 + j1( i1, 1 )
+            jg( 2, i, 1) = is2 - 2 + j2( i1, 1 )
+            jg( 3, i, 1) = is3 - 2 + j3( i1, 1 )
             i1 = i1-1
          else
             jg( 0, i, 1) = 0
@@ -2257,9 +2257,9 @@ c---------------------------------------------------------------------
          best = temp
          if(best.eq.z(j1(i0,0),j2(i0,0),j3(i0,0)))then
             jg( 0, i, 0) = me
-            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 ) 
-            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 ) 
-            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 ) 
+            jg( 1, i, 0) = is1 - 2 + j1( i0, 0 )
+            jg( 2, i, 0) = is2 - 2 + j2( i0, 0 )
+            jg( 3, i, 0) = is3 - 2 + j3( i0, 0 )
             i0 = i0-1
          else
             jg( 0, i, 0) = 0
@@ -2317,7 +2317,7 @@ c---------------------------------------------------------------------
 c          call showall(z,n1,n2,n3)
 c---------------------------------------------------------------------
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -2355,7 +2355,7 @@ c---------------------------------------------------------------------
          call mpi_barrier(comm_work,ierr)
       enddo
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -2393,7 +2393,7 @@ c---------------------------------------------------------------------
          call mpi_barrier(comm_work,ierr)
       enddo
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -2428,7 +2428,7 @@ c---------------------------------------------------------------------
 
 c     call comm3(z,n1,n2,n3)
 
-      return 
+      return
       end
 
 c---------------------------------------------------------------------
@@ -2517,7 +2517,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo
@@ -2543,7 +2543,7 @@ c---------------------------------------------------------------------
                j3( i+1, ind ) = j3( i,   ind )
                j3( i,   ind ) = j_temp
 
-            else 
+            else
                return
             endif
          enddo

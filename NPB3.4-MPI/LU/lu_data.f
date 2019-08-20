@@ -7,7 +7,7 @@ c---------------------------------------------------------------------
       module lu_data
 
 c---------------------------------------------------------------------
-c   npbparams.h defines parameters that depend on the class and 
+c   npbparams.h defines parameters that depend on the class and
 c   number of nodes
 c---------------------------------------------------------------------
 
@@ -24,10 +24,10 @@ c---------------------------------------------------------------------
       parameter (ipr_default = 1)
       double precision omega_default
       parameter (omega_default = 1.2d0)
-      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def, 
+      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def,
      >                 tolrsd4_def, tolrsd5_def
-      parameter (tolrsd1_def=1.0e-08, 
-     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08, 
+      parameter (tolrsd1_def=1.0e-08,
+     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08,
      >          tolrsd4_def=1.0e-08, tolrsd5_def=1.0e-08)
 
       double precision c1, c2, c3, c4, c5
@@ -129,8 +129,8 @@ c---------------------------------------------------------------------
 
       integer t_total, t_rhs, t_blts, t_buts, t_jacld, t_jacu,
      >        t_exch, t_lcomm, t_ucomm, t_rcomm, t_last
-      parameter (t_total=1, t_rhs=2, t_blts=3, t_buts=4, t_jacld=5, 
-     >        t_jacu=6, t_exch=7, t_lcomm=8, t_ucomm=9, t_rcomm=10, 
+      parameter (t_total=1, t_rhs=2, t_blts=3, t_buts=4, t_jacld=5,
+     >        t_jacu=6, t_exch=7, t_lcomm=8, t_ucomm=9, t_rcomm=10,
      >        t_last=10)
 
       double precision maxtime

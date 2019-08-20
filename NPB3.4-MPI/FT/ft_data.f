@@ -19,7 +19,7 @@ c total dimension scaled by the number of processes
 
 
       double precision seed, a, pi, alpha
-      parameter (seed = 314159265.d0, a = 1220703125.d0, 
+      parameter (seed = 314159265.d0, a = 1220703125.d0,
      >  pi = 3.141592653589793238d0, alpha=1.0d-6)
 
 c roots of unity array
@@ -39,9 +39,9 @@ c other stuff
 
 c--------------------------------------------------------------------
 c Cache blocking params. These values are good for most
-c RISC processors.  
+c RISC processors.
 c FFT parameters:
-c  fftblock controls how many ffts are done at a time. 
+c  fftblock controls how many ffts are done at a time.
 c  The default is appropriate for most cache-based machines
 c  On vector machines, the FFT can be vectorized with vector
 c  length equal to the block size, so the block size should
@@ -58,7 +58,7 @@ c--------------------------------------------------------------------
       parameter (fftblock_default=16, fftblockpad_default=18)
       integer transblock, transblockpad
       parameter(transblock=32, transblockpad=34)
-      
+
       integer fftblock, fftblockpad
 
 
@@ -97,7 +97,7 @@ c fftx(1)
 c compute residual(1)
 
 c for the 0D, 1D, 2D strategies, the layouts look like xxx
-c        
+c
 c            0D        1D        2D
 c 1:        xyz       xyz       xyz
 c 2:        xyz       xyz       yxz
@@ -112,16 +112,16 @@ c the array dimensions are stored in dims(coord, phase)
 c--------------------------------------------------------------------
 c Timing constants
 c--------------------------------------------------------------------
-      integer T_total, T_setup, T_fft, T_evolve, T_checksum, 
-     >        T_fftlow, T_fftcopy, T_transpose, 
-     >        T_transxzloc, T_transxzglo, T_transxzfin, 
-     >        T_transxyloc, T_transxyglo, T_transxyfin, 
+      integer T_total, T_setup, T_fft, T_evolve, T_checksum,
+     >        T_fftlow, T_fftcopy, T_transpose,
+     >        T_transxzloc, T_transxzglo, T_transxzfin,
+     >        T_transxyloc, T_transxyglo, T_transxyfin,
      >        T_synch, T_init, T_max
-      parameter (T_total = 1, T_setup = 2, T_fft = 3, 
-     >           T_evolve = 4, T_checksum = 5, 
+      parameter (T_total = 1, T_setup = 2, T_fft = 3,
+     >           T_evolve = 4, T_checksum = 5,
      >           T_fftlow = 6, T_fftcopy = 7, T_transpose = 8,
-     >           T_transxzloc = 9, T_transxzglo = 10, T_transxzfin = 11, 
-     >           T_transxyloc = 12, T_transxyglo = 13, 
+     >           T_transxzloc = 9, T_transxzglo = 10, T_transxzfin = 11,
+     >           T_transxyloc = 12, T_transxyglo = 13,
      >           T_transxyfin = 14,  T_synch = 15, T_init = 16,
      >           T_max = 16)
 
@@ -147,10 +147,10 @@ c---------------------------------------------------------------------
       module ft_fields
 
 c---------------------------------------------------------------------
-c u0, u1, u2 are the main arrays in the problem. 
-c Depending on the decomposition, these arrays will have different 
-c dimensions. To accomodate all possibilities, we allocate them as 
-c one-dimensional arrays and pass them to subroutines for different 
+c u0, u1, u2 are the main arrays in the problem.
+c Depending on the decomposition, these arrays will have different
+c dimensions. To accomodate all possibilities, we allocate them as
+c one-dimensional arrays and pass them to subroutines for different
 c views
 c  - u0 contains the initial (transformed) initial condition
 c  - u1 and u2 are working arrays
@@ -187,12 +187,12 @@ c---------------------------------------------------------------------
       ntdivnp = ((nx*ny)/np_min)*nz
 
 c---------------------------------------------------------------------
-c Padding+3 is to avoid accidental cache problems, 
+c Padding+3 is to avoid accidental cache problems,
 c since all array sizes are powers of two.
 c---------------------------------------------------------------------
       allocate (
-     >          u0     (ntdivnp+3), 
-     >          u1     (ntdivnp+3), 
+     >          u0     (ntdivnp+3),
+     >          u1     (ntdivnp+3),
      >          u2     (ntdivnp+3),
      >          twiddle(ntdivnp),
      >          u      (maxdim),

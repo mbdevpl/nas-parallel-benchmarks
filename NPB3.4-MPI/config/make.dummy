@@ -3,5 +3,5 @@ FMPI_INC  = -I../MPI_dummy
 CMPI_LIB  = -L../MPI_dummy -lmpi
 CMPI_INC  = -I../MPI_dummy
 default:: ${PROGRAM} libmpi.a
-libmpi.a: 
+libmpi.a:
 	cd ../MPI_dummy; $(MAKE) FC=$(MPIFC) CC=$(MPICC)

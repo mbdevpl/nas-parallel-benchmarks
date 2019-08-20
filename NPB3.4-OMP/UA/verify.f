@@ -10,7 +10,7 @@
       external         calc_norm
       character        class
       logical          verified
-       
+
 c.....tolerance level
       epsilon = 1.0d-08
 
@@ -34,7 +34,7 @@ c.....compute the temperature integral over the whole domain
         class = 'U'
         norm_ref = 1.d0
         verified = .false.
-      endif         
+      endif
 
       norm_dif = dabs((norm - norm_ref)/norm_ref)
 
@@ -49,13 +49,13 @@ c---------------------------------------------------------------------
  1990    format(' Verification being performed for class ', a)
          write (*,2000) epsilon
  2000    format(' accuracy setting for epsilon = ', E20.13)
-      else 
+      else
          write(*, 1995)
  1995    format(' Unknown class')
       endif
 
       if (class .ne. 'U') then
-         write (*,2001) 
+         write (*,2001)
       else
          write (*, 2005)
       endif
@@ -67,7 +67,7 @@ c---------------------------------------------------------------------
       else if ((.not.ieee_is_nan(norm_dif)) .and.
      &         norm_dif .le. epsilon) then
          write (*,2011) norm, norm_ref, norm_dif
-      else 
+      else
          verified = .false.
          write (*,2010) norm, norm_ref, norm_dif
       endif
@@ -75,7 +75,7 @@ c---------------------------------------------------------------------
  2010 format(' FAILURE: ', E20.13, E20.13, E20.13)
  2011 format('          ', E20.13, E20.13, E20.13)
  2015 format('          ', E20.13)
-        
+
       if (class .eq. 'U') then
         write(*, 2022)
         write(*, 2023)

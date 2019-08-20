@@ -36,7 +36,7 @@
 !TO REDUCE THE AMOUNT OF MEMORY REQUIRED BY THE BENCHMARK WE NO LONGER
 !STORE THE ENTIRE TIME EVOLUTION ARRAY "EX" FOR ALL TIME STEPS, BUT
 !JUST FOR THE FIRST. ALSO, IT IS STORED ONLY FOR THE PART OF THE GRID
-!FOR WHICH THE CALLING PROCESSOR IS RESPONSIBLE, SO THAT THE MEMORY 
+!FOR WHICH THE CALLING PROCESSOR IS RESPONSIBLE, SO THAT THE MEMORY
 !USAGE BECOMES SCALABLE. THIS NEW ARRAY IS CALLED "TWIDDLE" (SEE
 !NPB3.0-SER)
 
@@ -45,14 +45,14 @@
 !NTOTAL) AND SUBSEQUENTLY DIVIDING BY THE NUMBER OF PROCESSORS, WE
 !COMPUTE THE SIZE OF ARRAY PARTITIONS MORE CONSERVATIVELY AS
 !((NX*NY)/NP)*NZ, WHERE NX, NY, AND NZ ARE GRID DIMENSIONS AND NP IS
-!THE NUMBER OF PROCESSORS, THE RESULT IS STORED IN "NTDIVNP". FOR THE 
-!PERFORMANCE CALCULATION WE STORE THE TOTAL NUMBER OF GRID POINTS IN A 
+!THE NUMBER OF PROCESSORS, THE RESULT IS STORED IN "NTDIVNP". FOR THE
+!PERFORMANCE CALCULATION WE STORE THE TOTAL NUMBER OF GRID POINTS IN A
 !FLOATING POINT NUMBER "NTOTAL_F" INSTEAD OF AN INTEGER.
 !THIS FIX WILL FAIL IF THE NUMBER OF PROCESSORS IS SMALL.
 
 !UGLY HACK OF SUBROUTINE IPOW46: FOR VERY LARGE GRIDS THE SINGLE EXPONENT
 !FROM NPB2.3 MAY NOT FIT IN A 32-BIT INTEGER. HOWEVER, WE KNOW THAT THE
-!"EXPONENT" ARGUMENT OF THIS ROUTINE CAN ALWAYS BE FACTORED INTO A TERM 
+!"EXPONENT" ARGUMENT OF THIS ROUTINE CAN ALWAYS BE FACTORED INTO A TERM
 !DIVISIBLE BY NX (EXP_1) AND ANOTHER TERM (EXP_2). NX IS USUALLY A POWER
 !OF TWO, SO WE CAN KEEP HALVING IT UNTIL THE PRODUCT OF EXP_1
 !AND EXP_2 IS SMALL ENOUGH (NAMELY EXP_2 ITSELF). THIS UPDATED VERSION
@@ -97,9 +97,9 @@ c---------------------------------------------------------------------
       call MPI_Init(ierr)
 
 c---------------------------------------------------------------------
-c Run the entire problem once to make sure all data is touched. 
-c This reduces variable startup costs, which is important for such a 
-c short benchmark. The other NPB 2 implementations are similar. 
+c Run the entire problem once to make sure all data is touched.
+c This reduces variable startup costs, which is important for such a
+c short benchmark. The other NPB 2 implementations are similar.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -108,7 +108,7 @@ c---------------------------------------------------------------------
       call timer_start(T_init)
       call setup(class)
       call compute_indexmap(twiddle, dims(1,3), dims(2,3), dims(3,3))
-      call compute_initial_conditions(u1, dims(1,1), dims(2,1), 
+      call compute_initial_conditions(u1, dims(1,1), dims(2,1),
      >                                dims(3,1))
       call fft_init (dims(1,1))
       call fft(1, u1, u0)
@@ -120,7 +120,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c Start over from the beginning. Note that all operations must
-c be timed, in contrast to other benchmarks. 
+c be timed, in contrast to other benchmarks.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -131,7 +131,7 @@ c---------------------------------------------------------------------
       if (timers_enabled) call timer_start(T_setup)
 
       call compute_indexmap(twiddle, dims(1,3), dims(2,3), dims(3,3))
-      call compute_initial_conditions(u1, dims(1,1), dims(2,1), 
+      call compute_initial_conditions(u1, dims(1,1), dims(2,1),
      >                                dims(3,1))
       call fft_init (dims(1,1))
 
@@ -144,7 +144,7 @@ c---------------------------------------------------------------------
 
       do iter = 1, niter
          if (timers_enabled) call timer_start(T_evolve)
-         call evolve(u0, u1, twiddle, 
+         call evolve(u0, u1, twiddle,
      >               dims(1,1), dims(2,1), dims(3,1))
          if (timers_enabled) call timer_stop(T_evolve)
          if (timers_enabled) call timer_start(T_fft)
@@ -171,7 +171,7 @@ c---------------------------------------------------------------------
       endif
       if (me .eq. 0) then
          call print_results('FT', class, nx, ny, nz, niter, np_min, np,
-     >     total_time, mflops, '          floating point', verified, 
+     >     total_time, mflops, '          floating point', verified,
      >     npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6, cs7)
       endif
       if (timers_enabled) call print_timers()
@@ -222,8 +222,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c Fill in array u0 with initial conditions from 
-c random number generator 
+c Fill in array u0 with initial conditions from
+c random number generator
 c---------------------------------------------------------------------
 
       use ft_data
@@ -233,28 +233,28 @@ c---------------------------------------------------------------------
       double complex u0(d1, d2, d3)
       integer k
       double precision x0, start, an, dummy
-      
+
 c---------------------------------------------------------------------
 c 0-D and 1-D layouts are easy because each processor gets a contiguous
-c chunk of the array, in the Fortran ordering sense. 
+c chunk of the array, in the Fortran ordering sense.
 c For a 2-D layout, it's a bit more complicated. We always
-c have entire x-lines (contiguous) in processor. 
+c have entire x-lines (contiguous) in processor.
 c We can do ny/np1 of them at a time since we have
 c ny/np1 contiguous in y-direction. But then we jump
-c by z-planes (nz/np2 of them, total). 
+c by z-planes (nz/np2 of them, total).
 c For the 0-D and 1-D layouts we could do larger chunks, but
-c this turns out to have no measurable impact on performance. 
+c this turns out to have no measurable impact on performance.
 c---------------------------------------------------------------------
 
 
-      start = seed                                    
+      start = seed
 c---------------------------------------------------------------------
 c Jump to the starting element for our first plane.
 c---------------------------------------------------------------------
       call ipow46(a, 2*nx, (zstart(1)-1)*ny + (ystart(1)-1), an)
       dummy = randlc(start, an)
       call ipow46(a, 2*nx, ny, an)
-      
+
 c---------------------------------------------------------------------
 c Go through by z planes filling in one square at a time.
 c---------------------------------------------------------------------
@@ -312,7 +312,7 @@ c---------------------------------------------------------------------
       do while (n .gt. 1)
          n2 = n/2
          if (n2 * 2 .eq. n) then
-            dummy = randlc(q, q) 
+            dummy = randlc(q, q)
             n = n2
          else
             dummy = randlc(r, q)
@@ -341,7 +341,7 @@ c---------------------------------------------------------------------
       character class
       integer ierr, i, fstatus
       debug = .FALSE.
-      
+
       call MPI_Comm_size(MPI_COMM_WORLD, np, ierr)
       call MPI_Comm_rank(MPI_COMM_WORLD, me, ierr)
 
@@ -363,7 +363,7 @@ c---------------------------------------------------------------------
          open (unit=2,file='inputft.data',status='old', iostat=fstatus)
 
          if (fstatus .eq. 0) then
-            write(*,233) 
+            write(*,233)
  233        format(' Reading from input file inputft.data')
             read (2,*) niter
             read (2,*) layout_type
@@ -374,7 +374,7 @@ c---------------------------------------------------------------------
 c check to make sure input data is consistent
 c---------------------------------------------------------------------
 
-    
+
 c---------------------------------------------------------------------
 c 1. product of processor grid dims must equal number of processors
 c---------------------------------------------------------------------
@@ -395,7 +395,7 @@ c---------------------------------------------------------------------
      >          layout_type .ne. layout_1D .and.
      >          layout_type .ne. layout_2D) then
                write(*, 240)
- 240           format(' Layout type specified in inputft.data is 
+ 240           format(' Layout type specified in inputft.data is
      >                  invalid ')
                call MPI_Abort(MPI_COMM_WORLD, 1, ierr)
             endif
@@ -421,7 +421,7 @@ c---------------------------------------------------------------------
             endif
 
          else
-            write(*,234) 
+            write(*,234)
             niter = niter_default
             if (np_min .eq. 1) then
                np1 = 1
@@ -468,11 +468,11 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c Broadcast parameters 
+c Broadcast parameters
 c---------------------------------------------------------------------
       call MPI_BCAST(np1, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
       call MPI_BCAST(np2, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
-      call MPI_BCAST(layout_type, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, 
+      call MPI_BCAST(layout_type, 1, MPI_INTEGER, 0, MPI_COMM_WORLD,
      &               ierr)
       call MPI_BCAST(niter, 1, MPI_INTEGER, 0, MPI_COMM_WORLD, ierr)
       call MPI_BCAST(timers_enabled, 1, MPI_LOGICAL, 0, MPI_COMM_WORLD,
@@ -530,14 +530,14 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c Determine processor coordinates of this processor
-c Processor grid is np1xnp2. 
+c Processor grid is np1xnp2.
 c Arrays are always (n1, n2/np1, n3/np2)
-c Processor coords are zero-based. 
+c Processor coords are zero-based.
 c---------------------------------------------------------------------
       me2 = mod(me, np2)  ! goes from 0...np2-1
       me1 = me/np2        ! goes from 0...np1-1
 c---------------------------------------------------------------------
-c Communicators for rows/columns of processor grid. 
+c Communicators for rows/columns of processor grid.
 c commslice1 is communicator of all procs with same me1, ranked as me2
 c commslice2 is communicator of all procs with same me2, ranked as me1
 c mpi_comm_split(comm, color, key, ...)
@@ -550,7 +550,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c Determine which section of the grid is owned by this
-c processor. 
+c processor.
 c---------------------------------------------------------------------
       if (layout_type .eq. layout_0d) then
 
@@ -614,15 +614,15 @@ c---------------------------------------------------------------------
 c Set up info for blocking of ffts and transposes.  This improves
 c performance on cache-based systems. Blocking involves
 c working on a chunk of the problem at a time, taking chunks
-c along the first, second, or third dimension. 
+c along the first, second, or third dimension.
 c
 c - In cffts1 blocking is on 2nd dimension (with fft on 1st dim)
 c - In cffts2/3 blocking is on 1st dimension (with fft on 2nd and 3rd dims)
 
-c Since 1st dim is always in processor, we'll assume it's long enough 
+c Since 1st dim is always in processor, we'll assume it's long enough
 c (default blocking factor is 16 so min size for 1st dim is 16)
-c The only case we have to worry about is cffts1 in a 2d decomposition. 
-c so the blocking factor should not be larger than the 2nd dimension. 
+c The only case we have to worry about is cffts1 in a 2d decomposition.
+c so the blocking factor should not be larger than the 2nd dimension.
 c---------------------------------------------------------------------
 
       fftblock = fftblock_default
@@ -633,13 +633,13 @@ c---------------------------------------------------------------------
          if (dims(2, 2) .lt. fftblock) fftblock = dims(2, 2)
          if (dims(2, 3) .lt. fftblock) fftblock = dims(2, 3)
       endif
-      
+
       if (fftblock .ne. fftblock_default) fftblockpad = fftblock+3
 
       return
       end
 
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -649,8 +649,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2 
-c for time evolution exponent. 
+c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2
+c for time evolution exponent.
 c---------------------------------------------------------------------
 
       use ft_data
@@ -663,11 +663,11 @@ c---------------------------------------------------------------------
       double precision ap, twiddle(d1, d2, d3)
 
 c---------------------------------------------------------------------
-c this function is very different depending on whether 
-c we are in the 0d, 1d or 2d layout. Compute separately. 
-c basically we want to convert the fortran indices 
-c   1 2 3 4 5 6 7 8 
-c to 
+c this function is very different depending on whether
+c we are in the 0d, 1d or 2d layout. Compute separately.
+c basically we want to convert the fortran indices
+c   1 2 3 4 5 6 7 8
+c to
 c   0 1 2 3 -4 -3 -2 -1
 c The following magic formula does the trick:
 c mod(i-1+n/2, n) - n/2
@@ -688,7 +688,7 @@ c---------------------------------------------------------------------
                end do
             end do
          end do
-      else if (layout_type .eq. layout_1d) then ! zxy layout 
+      else if (layout_type .eq. layout_1d) then ! zxy layout
          do i = 1,dims(2,3)
             ii =  mod(i+xstart(3)-2+nx/2, nx) - nx/2
             ii2 = ii*ii
@@ -741,20 +741,20 @@ c---------------------------------------------------------------------
       character*25 tstrings(T_max+2)
       double precision t1(T_max+2), tsum(T_max+2),
      >                 tming(T_max+2), tmaxg(T_max+2)
-      data tstrings / '          total ', 
-     >                '          setup ', 
-     >                '            fft ', 
-     >                '         evolve ', 
-     >                '       checksum ', 
-     >                '         fftlow ', 
-     >                '        fftcopy ', 
-     >                '      transpose ', 
-     >                ' transpose1_loc ', 
-     >                ' transpose1_glo ', 
-     >                ' transpose1_fin ', 
-     >                ' transpose2_loc ', 
-     >                ' transpose2_glo ', 
-     >                ' transpose2_fin ', 
+      data tstrings / '          total ',
+     >                '          setup ',
+     >                '            fft ',
+     >                '         evolve ',
+     >                '       checksum ',
+     >                '         fftlow ',
+     >                '        fftcopy ',
+     >                '      transpose ',
+     >                ' transpose1_loc ',
+     >                ' transpose1_glo ',
+     >                ' transpose1_fin ',
+     >                ' transpose2_loc ',
+     >                ' transpose2_glo ',
+     >                ' transpose2_fin ',
      >                '           sync ',
      >                '           init ',
      >                '        totcomp ',
@@ -766,11 +766,11 @@ c---------------------------------------------------------------------
       t1(t_max+2) = t1(t_transxzglo) + t1(t_transxyglo) + t1(t_synch)
       t1(t_max+1) = t1(t_total) - t1(t_max+2)
 
-      call MPI_Reduce(t1, tsum,  t_max+2, MPI_DOUBLE_PRECISION, 
+      call MPI_Reduce(t1, tsum,  t_max+2, MPI_DOUBLE_PRECISION,
      >                MPI_SUM, 0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tming, t_max+2, MPI_DOUBLE_PRECISION, 
+      call MPI_Reduce(t1, tming, t_max+2, MPI_DOUBLE_PRECISION,
      >                MPI_MIN, 0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tmaxg, t_max+2, MPI_DOUBLE_PRECISION, 
+      call MPI_Reduce(t1, tmaxg, t_max+2, MPI_DOUBLE_PRECISION,
      >                MPI_MAX, 0, MPI_COMM_WORLD, ierr)
 
       if (me .ne. 0) return
@@ -780,7 +780,7 @@ c---------------------------------------------------------------------
             write(*, 810) i, tstrings(i), tming(i), tmaxg(i), tsum(i)/np
          endif
       end do
- 800  format(' nprocs =', i6, 19x, 'minimum', 5x, 'maximum', 
+ 800  format(' nprocs =', i6, 19x, 'minimum', 5x, 'maximum',
      >       5x, 'average')
  810  format(' timer ', i2, '(', A16, ') :', 3(2X,F10.4))
       return
@@ -815,66 +815,66 @@ c---------------------------------------------------------------------
 
       if (dir .eq. 1) then
          if (layout_type .eq. layout_0d) then
-            call cffts1(1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(1, dims(1,1), dims(2,1), dims(3,1),
      >                  x1, x1, scratch)
-            call cffts2(1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts2(1, dims(1,2), dims(2,2), dims(3,2),
      >                  x1, x1, scratch)
-            call cffts3(1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts3(1, dims(1,3), dims(2,3), dims(3,3),
      >                  x1, x2, scratch)
          else if (layout_type .eq. layout_1d) then
-            call cffts1(1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(1, dims(1,1), dims(2,1), dims(3,1),
      >                  x1, x1, scratch)
-            call cffts2(1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts2(1, dims(1,2), dims(2,2), dims(3,2),
      >                  x1, x1, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_xy_z(2, 3, x1, x2)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts1(1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts1(1, dims(1,3), dims(2,3), dims(3,3),
      >                  x2, x2, scratch)
          else if (layout_type .eq. layout_2d) then
-            call cffts1(1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(1, dims(1,1), dims(2,1), dims(3,1),
      >                  x1, x1, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_x_y(1, 2, x1, x2)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts1(1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts1(1, dims(1,2), dims(2,2), dims(3,2),
      >                  x2, x2, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_x_z(2, 3, x2, x1)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts1(1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts1(1, dims(1,3), dims(2,3), dims(3,3),
      >                  x1, x2, scratch)
          endif
       else
          if (layout_type .eq. layout_0d) then
-            call cffts3(-1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts3(-1, dims(1,3), dims(2,3), dims(3,3),
      >                  x1, x1, scratch)
-            call cffts2(-1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts2(-1, dims(1,2), dims(2,2), dims(3,2),
      >                  x1, x1, scratch)
-            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1),
      >                  x1, x2, scratch)
          else if (layout_type .eq. layout_1d) then
-            call cffts1(-1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts1(-1, dims(1,3), dims(2,3), dims(3,3),
      >                  x1, x1, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_x_yz(3, 2, x1, x2)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts2(-1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts2(-1, dims(1,2), dims(2,2), dims(3,2),
      >                  x2, x2, scratch)
-            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1),
      >                  x2, x2, scratch)
          else if (layout_type .eq. layout_2d) then
-            call cffts1(-1, dims(1,3), dims(2,3), dims(3,3), 
+            call cffts1(-1, dims(1,3), dims(2,3), dims(3,3),
      >                  x1, x1, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_x_z(3, 2, x1, x2)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts1(-1, dims(1,2), dims(2,2), dims(3,2), 
+            call cffts1(-1, dims(1,2), dims(2,2), dims(3,2),
      >                  x2, x2, scratch)
             if (timers_enabled) call timer_start(T_transpose)
             call transpose_x_y(2, 1, x2, x1)
             if (timers_enabled) call timer_stop(T_transpose)
-            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1), 
+            call cffts1(-1, dims(1,1), dims(2,1), dims(3,1),
      >                  x1, x2, scratch)
          endif
       endif
@@ -897,7 +897,7 @@ c---------------------------------------------------------------------
       integer is, d1, d2, d3, logd1
       double complex x(d1,d2,d3)
       double complex xout(d1,d2,d3)
-      double complex y(fftblockpad, d1, 2) 
+      double complex y(fftblockpad, d1, 2)
       integer i, j, k, jj
 
       logd1 = ilog2(d1)
@@ -911,7 +911,7 @@ c---------------------------------------------------------------------
                enddo
             enddo
             if (timers_enabled) call timer_stop(T_fftcopy)
-            
+
             if (timers_enabled) call timer_start(T_fftlow)
             call cfftz (is, logd1, d1, y, y(1,1,2))
             if (timers_enabled) call timer_stop(T_fftlow)
@@ -944,7 +944,7 @@ c---------------------------------------------------------------------
       integer is, d1, d2, d3, logd2
       double complex x(d1,d2,d3)
       double complex xout(d1,d2,d3)
-      double complex y(fftblockpad, d2, 2) 
+      double complex y(fftblockpad, d2, 2)
       integer i, j, k, ii
 
       logd2 = ilog2(d2)
@@ -991,7 +991,7 @@ c---------------------------------------------------------------------
       integer is, d1, d2, d3, logd3
       double complex x(d1,d2,d3)
       double complex xout(d1,d2,d3)
-      double complex y(fftblockpad, d3, 2) 
+      double complex y(fftblockpad, d3, 2)
       integer i, j, k, ii
 
       logd3 = ilog2(d3)
@@ -1033,7 +1033,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute the roots-of-unity array that will be used for subsequent FFTs. 
+c compute the roots-of-unity array that will be used for subsequent FFTs.
 c---------------------------------------------------------------------
 
       use ft_data
@@ -1055,16 +1055,16 @@ c---------------------------------------------------------------------
 
       do j = 1, m
          t = pi / ln
-         
+
          do i = 0, ln - 1
             ti = i * t
             u(i+ku) = dcmplx (cos (ti), sin(ti))
          enddo
-         
+
          ku = ku + ln
          ln = 2 * ln
       enddo
-      
+
       return
       end
 
@@ -1078,10 +1078,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c   Computes NY N-point complex-to-complex FFTs of X using an algorithm due
-c   to Swarztrauber.  X is both the input and the output array, while Y is a 
-c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to 
-c   perform FFTs, the array U must be initialized by calling CFFTZ with IS 
-c   set to 0 and M set to MX, where MX is the maximum value of M for any 
+c   to Swarztrauber.  X is both the input and the output array, while Y is a
+c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to
+c   perform FFTs, the array U must be initialized by calling CFFTZ with IS
+c   set to 0 and M set to MX, where MX is the maximum value of M for any
 c   subsequent call.
 c---------------------------------------------------------------------
 
@@ -1097,10 +1097,10 @@ c---------------------------------------------------------------------
 c   Check if input parameters are invalid.
 c---------------------------------------------------------------------
       mx = u(1)
-      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)    
+      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)
      >  then
         write (*, 1)  is, m, mx
- 1      format ('CFFTZ: Either U has not been initialized, or else'/    
+ 1      format ('CFFTZ: Either U has not been initialized, or else'/
      >    'one of the input parameters is invalid', 3I5)
         stop
       endif
@@ -1280,7 +1280,7 @@ c---------------------------------------------------------------------
 
       integer n1, n2
       double complex xin(n1, n2), xout(n2, n1)
-      
+
       double complex z(transblockpad, transblock)
 
       integer i, j, ii, jj
@@ -1288,14 +1288,14 @@ c---------------------------------------------------------------------
       if (timers_enabled) call timer_start(T_transxzloc)
 
 c---------------------------------------------------------------------
-c If possible, block the transpose for cache memory systems. 
+c If possible, block the transpose for cache memory systems.
 c How much does this help? Example: R8000 Power Challenge (90 MHz)
-c Blocked version decreases time spend in this routine 
+c Blocked version decreases time spend in this routine
 c from 14 seconds to 5.2 seconds on 8 nodes class A.
 c---------------------------------------------------------------------
 
       if (n1 .lt. transblock .or. n2 .lt. transblock) then
-         if (n1 .ge. n2) then 
+         if (n1 .ge. n2) then
             do j = 1, n2
                do i = 1, n1
                   xout(j, i) = xin(i, j)
@@ -1311,7 +1311,7 @@ c---------------------------------------------------------------------
       else
          do j = 0, n2-1, transblock
             do i = 0, n1-1, transblock
-               
+
 c---------------------------------------------------------------------
 c Note: compiler should be able to take j+jj out of inner loop
 c---------------------------------------------------------------------
@@ -1320,13 +1320,13 @@ c---------------------------------------------------------------------
                      z(jj,ii) = xin(i+ii, j+jj)
                   end do
                end do
-               
+
                do ii = 1, transblock
                   do jj = 1, transblock
                      xout(j+jj, i+ii) = z(jj,ii)
                   end do
                end do
-               
+
             end do
          end do
       endif
@@ -1350,7 +1350,7 @@ c---------------------------------------------------------------------
       implicit none
 
       double complex xin(ntdivnp)
-      double complex xout(ntdivnp) 
+      double complex xout(ntdivnp)
       integer ierr
 
 !      if (timers_enabled) call synchup()
@@ -1379,7 +1379,7 @@ c---------------------------------------------------------------------
 
       integer n1, n2, ioff
       double complex xin(n2, n1/np2, 0:np2-1), xout(n2*np2, n1/np2)
-      
+
       integer i, j, p
 
       if (timers_enabled) call timer_start(T_transxzfin)
@@ -1413,9 +1413,9 @@ c---------------------------------------------------------------------
 
       call transpose_x_z_local(dims(1,l1),dims(2,l1),dims(3,l1),
      >                         xin, xout)
-      call transpose_x_z_global(dims(1,l1),dims(2,l1),dims(3,l1), 
+      call transpose_x_z_global(dims(1,l1),dims(2,l1),dims(3,l1),
      >                          xout, xin)
-      call transpose_x_z_finish(dims(1,l2),dims(2,l2),dims(3,l2), 
+      call transpose_x_z_finish(dims(1,l2),dims(2,l2),dims(3,l2),
      >                          xin, xout)
       return
       end
@@ -1445,7 +1445,7 @@ c---------------------------------------------------------------------
       if (block3 .eq. 1)  goto 100
       if (block3 .gt. transblock) block3 = transblock
       block1 = d1
-      if (block1*block3 .gt. transblock*transblock) 
+      if (block1*block3 .gt. transblock*transblock)
      >          block1 = transblock*transblock/block3
 c---------------------------------------------------------------------
 c blocked transpose
@@ -1453,7 +1453,7 @@ c---------------------------------------------------------------------
       do j = 1, d2
          do kk = 0, d3-block3, block3
             do ii = 0, d1-block1, block1
-               
+
                do k = 1, block3
                   k1 = k + kk
                   do i = 1, block1
@@ -1472,13 +1472,13 @@ c---------------------------------------------------------------------
          end do
       end do
       goto 200
-      
+
 
 c---------------------------------------------------------------------
 c basic transpose
 c---------------------------------------------------------------------
  100  continue
-      
+
       do j = 1, d2
          do k = 1, d3
             do i = 1, d1
@@ -1493,7 +1493,7 @@ c---------------------------------------------------------------------
  200  continue
 
       if (timers_enabled) call timer_stop(T_transxzloc)
-      return 
+      return
       end
 
 
@@ -1527,7 +1527,7 @@ c---------------------------------------------------------------------
       if (timers_enabled) call timer_stop(T_transxzglo)
       return
       end
-      
+
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
@@ -1547,7 +1547,7 @@ c---------------------------------------------------------------------
       if (timers_enabled) call timer_start(T_transxzfin)
 c---------------------------------------------------------------------
 c this is the most straightforward way of doing it. the
-c calculation in the inner loop doesn't help. 
+c calculation in the inner loop doesn't help.
 c      do i = 1, d1/np2
 c         do j = 1, d2
 c            do k = 1, d3
@@ -1591,19 +1591,19 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c xy transpose is a little tricky, since we don't want
-c to touch 3rd axis. But alltoall must involve 3rd axis (most 
+c to touch 3rd axis. But alltoall must involve 3rd axis (most
 c slowly varying) to be efficient. So we do
 c (nx, ny/np1, nz/np2) -> (ny/np1, nz/np2, nx) (local)
 c (ny/np1, nz/np2, nx) -> ((ny/np1*nz/np2)*np1, nx/np1) (global)
-c then local finish. 
+c then local finish.
 c---------------------------------------------------------------------
 
 
       call transpose_x_y_local(dims(1,l1),dims(2,l1),dims(3,l1),
      >                         xin, xout)
-      call transpose_x_y_global(dims(1,l1),dims(2,l1),dims(3,l1), 
+      call transpose_x_y_global(dims(1,l1),dims(2,l1),dims(3,l1),
      >                          xout, xin)
-      call transpose_x_y_finish(dims(1,l2),dims(2,l2),dims(3,l2), 
+      call transpose_x_y_finish(dims(1,l2),dims(2,l2),dims(3,l2),
      >                          xin, xout)
 
       return
@@ -1635,7 +1635,7 @@ c---------------------------------------------------------------------
          end do
       end do
       if (timers_enabled) call timer_stop(T_transxyloc)
-      return 
+      return
       end
 
 
@@ -1673,7 +1673,7 @@ c---------------------------------------------------------------------
 
       return
       end
-      
+
 
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
@@ -1693,7 +1693,7 @@ c---------------------------------------------------------------------
       if (timers_enabled) call timer_start(T_transxyfin)
 c---------------------------------------------------------------------
 c this is the most straightforward way of doing it. the
-c calculation in the inner loop doesn't help. 
+c calculation in the inner loop doesn't help.
 c      do i = 1, d1/np1
 c         do j = 1, d2
 c            do k = 1, d3
@@ -1756,8 +1756,8 @@ c---------------------------------------------------------------------
       chk = chk/ntotal_f
 
       if (timers_enabled) call timer_start(T_synch)
-      call MPI_Reduce(chk, allchk, 1, dc_type, MPI_SUM, 
-     >                0, MPI_COMM_WORLD, ierr)      
+      call MPI_Reduce(chk, allchk, 1, dc_type, MPI_SUM,
+     >                0, MPI_COMM_WORLD, ierr)
       if (timers_enabled) call timer_stop(T_synch)
       if (me .eq. 0) then
             write (*, 30) i, allchk
@@ -1827,7 +1827,7 @@ c---------------------------------------------------------------------
      >    d3 .eq. 128 .and.
      >    nt .eq. 6) then
          class = 'A'
-      
+
       else if (d1 .eq. 512 .and.
      >    d2 .eq. 256 .and.
      >    d3 .eq. 256 .and.
@@ -1927,7 +1927,7 @@ c---------------------------------------------------------------------
          csum_ref(4) = dcmplx(5.077892868474D+02, 5.101336130759D+02)
          csum_ref(5) = dcmplx(5.085233095391D+02, 5.104914655194D+02)
          csum_ref(6) = dcmplx(5.091487099959D+02, 5.107917842803D+02)
-      
+
       else if ( class .eq. 'B' ) then
 c---------------------------------------------------------------------
 c   Class B size reference checksums
@@ -2089,16 +2089,16 @@ c---------------------------------------------------------------------
          write(*, 4012)
 c---------------------------------------------------------------------
 c multiple statements because some Fortran compilers have
-c problems with long strings. 
+c problems with long strings.
 c---------------------------------------------------------------------
- 4010    format( ' Warning: benchmark was compiled for ', i5, 
+ 4010    format( ' Warning: benchmark was compiled for ', i5,
      >           'processors')
  4011    format( ' Must be run on this many processors for official',
      >           ' verification')
  4012    format( ' so memory access is repeatable')
          verified = .false.
       endif
-         
+
       if (class .ne. 'U') then
          if (verified) then
             write(*,2000)

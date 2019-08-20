@@ -19,15 +19,15 @@ Changes in NPB3.4
    the distribution.  The same functionality can be achieved by
    the OpenMP version compiled with OpenMP disabled.
 
- - Version 3.4 uses Fortran modules and allocatable arrays to define 
-   and manage global data (to replace common blocks), and Fortran 2003 
+ - Version 3.4 uses Fortran modules and allocatable arrays to define
+   and manage global data (to replace common blocks), and Fortran 2003
    IEEE arithmetic function to catch the NaN condition during verification. .
 
    So, the version requires a compiler that supports these features.
    Examples of a few compilers that are known to work:
       Intel compiler v12+, GCC v5+, PGI v10+.
 
- - The environment variable NPB_TIMER_FLAG is now used to enable 
+ - The environment variable NPB_TIMER_FLAG is now used to enable
    additional timers.  This method supersedes the use of the file
    "timer.flag" in the working directory.
 
@@ -57,36 +57,36 @@ Changes in NPB3.4
 
 3. OMP version
 
- - Added the class E problem size for IS, and the class F problem 
+ - Added the class E problem size for IS, and the class F problem
    size for BT, LU, SP, CG, EP, FT, and MG.
 
  - Improved loop-level parallelism with the use of the OpenMP
-   COLLAPSE clause available since OpenMP 3.0.  This version 
+   COLLAPSE clause available since OpenMP 3.0.  This version
    requires an OpenMP compiler that supports this feature.
 
  - Changes specific to LU:
       * The thread synchronization in the pipelined version of LU was
         changed to use ATOMIC read/write available from OpenMP 3.0.
 
-      * Re-introduced the hyperplane implementation of LU in the 
+      * Re-introduced the hyperplane implementation of LU in the
         distribution, which is accessible via the VERSION=HP make
         option during compilation.
 
-      * Included a third version of LU that uses the DOACROSS feature 
-        of OpenMP 4.0.  This version requires an OpenMP compiler that 
+      * Included a third version of LU that uses the DOACROSS feature
+        of OpenMP 4.0.  This version requires an OpenMP compiler that
         supports this feature.
 
  - Changes specific to BT and SP:
       * Data access in RHS has been improved for better performance.
 
       * Included a version with blocking factor in the solver to
-        improve cache performance. This version can be selected via 
-        the VERSION=BLK make option during compilation and supersedes 
+        improve cache performance. This version can be selected via
+        the VERSION=BLK make option during compilation and supersedes
         the "vector" version that was introduced in version 3.3.
 
  - Changes specific to UA:
       * Included a version that uses array reduction for atomic updates.
-        This version is selectable via the VERSION=rd make option 
+        This version is selectable via the VERSION=rd make option
         during compilation.
 
 

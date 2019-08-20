@@ -7,9 +7,9 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     This function allocates space for a set of cells and fills the set     
+c     This function allocates space for a set of cells and fills the set
 c     such that communication between cells on different nodes is only
-c     nearest neighbor                                                   
+c     nearest neighbor
 c---------------------------------------------------------------------
 
       use bt_data
@@ -30,23 +30,23 @@ c---------------------------------------------------------------------
 c     this makes coding easier
 c---------------------------------------------------------------------
       p = ncells
-      
+
 c---------------------------------------------------------------------
-c     determine the location of the cell at the bottom of the 3D 
+c     determine the location of the cell at the bottom of the 3D
 c     array of cells
 c---------------------------------------------------------------------
-      cell_coord(1,1) = mod(node,p) 
-      cell_coord(2,1) = node/p 
+      cell_coord(1,1) = mod(node,p)
+      cell_coord(2,1) = node/p
       cell_coord(3,1) = 0
 
 c---------------------------------------------------------------------
-c     set the cell_coords for cells in the rest of the z-layers; 
+c     set the cell_coords for cells in the rest of the z-layers;
 c     this comes down to a simple linear numbering in the z-direct-
-c     ion, and to the doubly-cyclic numbering in the other dirs     
+c     ion, and to the doubly-cyclic numbering in the other dirs
 c---------------------------------------------------------------------
       do c=2, p
-         cell_coord(1,c) = mod(cell_coord(1,c-1)+1,p) 
-         cell_coord(2,c) = mod(cell_coord(2,c-1)-1+p,p) 
+         cell_coord(1,c) = mod(cell_coord(1,c-1)+1,p)
+         cell_coord(2,c) = mod(cell_coord(2,c-1)-1+p,p)
          cell_coord(3,c) = c-1
       end do
 
@@ -58,7 +58,7 @@ c---------------------------------------------------------------------
             cell_coord(dir,c) = cell_coord(dir,c) + 1
          end do
       end do
-      
+
 c---------------------------------------------------------------------
 c     slice(dir,n) contains the sequence number of the cell that is in
 c     coordinate plane n in the dir direction
@@ -71,8 +71,8 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c     fill the predecessor and successor entries, using the indices 
-c     of the bottom cells (they are the same at each level of k 
+c     fill the predecessor and successor entries, using the indices
+c     of the bottom cells (they are the same at each level of k
 c     anyway) acting as if full periodicity pertains; note that p is
 c     added to those arguments to the mod functions that might
 c     otherwise return wrong values when using the modulo function
@@ -88,11 +88,11 @@ c---------------------------------------------------------------------
       successor(3)   = mod(i-1+p,p) + p*mod(j+1,p)
 
 c---------------------------------------------------------------------
-c     now compute the sizes of the cells                                    
+c     now compute the sizes of the cells
 c---------------------------------------------------------------------
       do dir= 1, 3
 c---------------------------------------------------------------------
-c     set cell_coord range for each direction                            
+c     set cell_coord range for each direction
 c---------------------------------------------------------------------
          size   = grid_points(dir)/p
          excess = mod(grid_points(dir),p)
@@ -101,7 +101,7 @@ c---------------------------------------------------------------------
                cell_size(dir,c) = size+1
                cell_low(dir,c) = (cell_coord(dir,c)-1)*(size+1)
                cell_high(dir,c) = cell_low(dir,c)+size
-            else 
+            else
                cell_size(dir,c) = size
                cell_low(dir,c)  = excess*(size+1)+
      >              (cell_coord(dir,c)-excess-1)*size

@@ -36,7 +36,7 @@ void nodeShow(DGNode* nd){
 /*
   if(nd->verified==1) fprintf(stderr,"%ld.%s\t: usable.",nd->id,nd->name);
   else if(nd->verified==0)  fprintf(stderr,"%ld.%s\t: unusable.",nd->id,nd->name);
-  else  fprintf(stderr,"%ld.%s\t: notverified.",nd->id,nd->name);   
+  else  fprintf(stderr,"%ld.%s\t: notverified.",nd->id,nd->name);
 */
 }
 
@@ -93,8 +93,8 @@ int AttachNode(DGraph* dg, DGNode* nd) {
 	    }			
 	    memcpy( &(tmpnd->outArc[tmpnd->outDegree]),nd->outArc,nd->outDegree*sizeof( DGArc *));
 	    tmpnd->outDegree += nd->outDegree;
-	  } 
-	  free(nd); 
+	  }
+	  free(nd);
 	  return i;
 	}
 	nd->id = dg->numNodes;
@@ -106,7 +106,7 @@ int AttachArc(DGraph *dg,DGArc* nar){
 int	arcId = -1;
 int i=0,newNumber=0;
 DGNode	*head = nar->head,
-	*tail = nar->tail; 
+	*tail = nar->tail;
 DGArc **ars=NULL,*probe=NULL;
 /*fprintf(stderr,"AttachArc %ld\n",dg->numArcs); */
 	if ( !tail || !head ) return arcId;
@@ -124,7 +124,7 @@ DGArc **ars=NULL,*probe=NULL;
 	     probe->length == nar->length
             ){
             free(nar);
-	    return probe->id;   
+	    return probe->id;
 	  }
 	}
 	

@@ -28,10 +28,10 @@ c---------------------------------------------------------------------
       integer nx, ny, nz
       double precision  omega
 c---------------------------------------------------------------------
-c   To improve cache performance, second two dimensions padded by 1 
+c   To improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.  Only needed in v.
 c---------------------------------------------------------------------
-      double precision  v( 5,ldmx/2*2+1, ldmy/2*2+1, ldmz), 
+      double precision  v( 5,ldmx/2*2+1, ldmy/2*2+1, ldmz),
      >        d  ( 5, 5, ldmx ),
      >        udx( 5, 5, ldmx ),
      >        udy( 5, 5, ldmx ),
@@ -48,7 +48,7 @@ c---------------------------------------------------------------------
 
          do i = iend, ist, -1
             do m = 1, 5
-                  tv( m ) = 
+                  tv( m ) =
      >      omega * (  udz( m, 1, i ) * v( 1, i, j, k+1 )
      >               + udz( m, 2, i ) * v( 2, i, j, k+1 )
      >               + udz( m, 3, i ) * v( 3, i, j, k+1 )
@@ -229,6 +229,6 @@ c---------------------------------------------------------------------
 
         enddo
 
- 
+
       return
       end

@@ -42,12 +42,12 @@ c---------------------------------------------------------------------
       integer nz
 
       ! partit_size
-      integer naa, nzz, 
+      integer naa, nzz,
      >        npcols, nprows,
      >        proc_col, proc_row,
-     >        firstrow, 
-     >        lastrow, 
-     >        firstcol, 
+     >        firstrow,
+     >        lastrow,
+     >        firstcol,
      >        lastcol,
      >        exch_proc,
      >        exch_recv_length,

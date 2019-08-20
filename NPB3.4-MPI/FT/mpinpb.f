@@ -16,7 +16,7 @@ c--------------------------------------------------------------------
       integer np_min, np
 
 c we need a bunch of logic to keep track of how
-c arrays are laid out. 
+c arrays are laid out.
 c coords of this processor
       integer me, me1, me2
 

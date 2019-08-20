@@ -6,16 +6,16 @@ mortar points.  Parallelization of these loops requires atomic update
 of memory references by mortar points.  The first implementation
 uses the ATOMIC directive to perform the job.  However, in some systems
 where atomic update of memory references is not available, the ATOMIC
-directive could be implemented as a critical section, which would be 
+directive could be implemented as a critical section, which would be
 very expensive.
 
 The second approach is to use thread-local arrays to perform local updates,
-followed by a global reduction. This implementation uses array reduction 
-to achieve the goal. The disadvantage of this version is the increased use 
+followed by a global reduction. This implementation uses array reduction
+to achieve the goal. The disadvantage of this version is the increased use
 of memory, which could have a negative impact on performance.
 
-The third approach is to use locks to guard atomic updates.  This 
-implementation scales reasonably well.  However, the overhead associated 
+The third approach is to use locks to guard atomic updates.  This
+implementation scales reasonably well.  However, the overhead associated
 with calling lock routines deep inside loop nests could be large.
 
 Three implementations:

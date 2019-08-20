@@ -35,16 +35,16 @@ c---------------------------------------------------------------------
             call lhsinit(nx2+1, lhs, lhsp, lhsm)
 
 c---------------------------------------------------------------------
-c Computes the left hand side for the three x-factors  
+c Computes the left hand side for the three x-factors
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c      first fill the lhs for the u-eigenvalue                   
+c      first fill the lhs for the u-eigenvalue
 c---------------------------------------------------------------------
              do  i = 0, grid_points(1)-1
                 ru1 = c3c4*rho_i(i,j,k)
                 cv(i) = us(i,j,k)
-                rhov(i) = dmax1(dx2+con43*ru1, 
+                rhov(i) = dmax1(dx2+con43*ru1,
      >                          dx5+c1c5*ru1,
      >                          dxmax+ru1,
      >                          dx1)
@@ -59,14 +59,14 @@ c---------------------------------------------------------------------
              end do
 
 c---------------------------------------------------------------------
-c      add fourth order dissipation                             
+c      add fourth order dissipation
 c---------------------------------------------------------------------
 
              i = 1
              lhs(3,i) = lhs(3,i) + comz5
              lhs(4,i) = lhs(4,i) - comz4
              lhs(5,i) = lhs(5,i) + comz1
-  
+
              lhs(2,i+1) = lhs(2,i+1) - comz4
              lhs(3,i+1) = lhs(3,i+1) + comz6
              lhs(4,i+1) = lhs(4,i+1) - comz4
@@ -91,32 +91,32 @@ c---------------------------------------------------------------------
              lhs(3,i+1) = lhs(3,i+1) + comz5
 
 c---------------------------------------------------------------------
-c      subsequently, fill the other factors (u+c), (u-c) by adding to 
-c      the first  
+c      subsequently, fill the other factors (u+c), (u-c) by adding to
+c      the first
 c---------------------------------------------------------------------
              do   i = 1, nx2
                 lhsp(1,i) = lhs(1,i)
-                lhsp(2,i) = lhs(2,i) - 
+                lhsp(2,i) = lhs(2,i) -
      >                            dttx2 * speed(i-1,j,k)
                 lhsp(3,i) = lhs(3,i)
-                lhsp(4,i) = lhs(4,i) + 
+                lhsp(4,i) = lhs(4,i) +
      >                            dttx2 * speed(i+1,j,k)
                 lhsp(5,i) = lhs(5,i)
                 lhsm(1,i) = lhs(1,i)
-                lhsm(2,i) = lhs(2,i) + 
+                lhsm(2,i) = lhs(2,i) +
      >                            dttx2 * speed(i-1,j,k)
                 lhsm(3,i) = lhs(3,i)
-                lhsm(4,i) = lhs(4,i) - 
+                lhsm(4,i) = lhs(4,i) -
      >                            dttx2 * speed(i+1,j,k)
                 lhsm(5,i) = lhs(5,i)
              end do
 
 c---------------------------------------------------------------------
-c                          FORWARD ELIMINATION  
+c                          FORWARD ELIMINATION
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c      perform the Thomas algorithm; first, FORWARD ELIMINATION     
+c      perform the Thomas algorithm; first, FORWARD ELIMINATION
 c---------------------------------------------------------------------
 
              do    i = 0, grid_points(1)-3
@@ -147,7 +147,7 @@ c---------------------------------------------------------------------
              end do
 
 c---------------------------------------------------------------------
-c      The last two rows in this grid block are a bit different, 
+c      The last two rows in this grid block are a bit different,
 c      since they do not have two more rows available for the
 c      elimination of off-diagonal entries
 c---------------------------------------------------------------------
@@ -169,7 +169,7 @@ c---------------------------------------------------------------------
      >                      lhs(2,i1)*rhs(m,i,j,k)
              end do
 c---------------------------------------------------------------------
-c            scale the last row immediately 
+c            scale the last row immediately
 c---------------------------------------------------------------------
              fac2             = 1.d0/lhs(3,i1)
              do    m = 1, 3
@@ -177,7 +177,7 @@ c---------------------------------------------------------------------
              end do
 
 c---------------------------------------------------------------------
-c      do the u+c and the u-c factors                 
+c      do the u+c and the u-c factors
 c---------------------------------------------------------------------
 
              do    i = 0, grid_points(1)-3
@@ -254,7 +254,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c                         BACKSUBSTITUTION 
+c                         BACKSUBSTITUTION
 c---------------------------------------------------------------------
 
 
@@ -277,7 +277,7 @@ c---------------------------------------------------------------------
                 i1 = i  + 1
                 i2 = i  + 2
                 do   m = 1, 3
-                   rhs(m,i,j,k) = rhs(m,i,j,k) - 
+                   rhs(m,i,j,k) = rhs(m,i,j,k) -
      >                          lhs(4,i)*rhs(m,i1,j,k) -
      >                          lhs(5,i)*rhs(m,i2,j,k)
                 end do
@@ -285,10 +285,10 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 c      And the remaining two
 c---------------------------------------------------------------------
-                rhs(4,i,j,k) = rhs(4,i,j,k) - 
+                rhs(4,i,j,k) = rhs(4,i,j,k) -
      >                          lhsp(4,i)*rhs(4,i1,j,k) -
      >                          lhsp(5,i)*rhs(4,i2,j,k)
-                rhs(5,i,j,k) = rhs(5,i,j,k) - 
+                rhs(5,i,j,k) = rhs(5,i,j,k) -
      >                          lhsm(4,i)*rhs(5,i1,j,k) -
      >                          lhsm(5,i)*rhs(5,i2,j,k)
              end do
@@ -298,7 +298,7 @@ c---------------------------------------------------------------------
        if (timeron) call timer_stop(t_xsolve)
 
 c---------------------------------------------------------------------
-c      Do the block-diagonal inversion          
+c      Do the block-diagonal inversion
 c---------------------------------------------------------------------
        call ninvr
 

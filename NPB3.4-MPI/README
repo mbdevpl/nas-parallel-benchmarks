@@ -1,7 +1,7 @@
 The MPI implementation of NPB 3.4 (NPB3.4-MPI)
 --------------------------------------------------
 
-For problem reports and suggestions on the implementation, 
+For problem reports and suggestions on the implementation,
 please contact:
 
    NAS Parallel Benchmark Team
@@ -32,21 +32,21 @@ New features in NPB3.4-MPI:
     counts are no longer necessary.  The number of processes is solely
     determined and checked at runtime.
 
-  * The version uses Fortran modules to define global data (to replace 
+  * The version uses Fortran modules to define global data (to replace
     common blocks) and Fortran 2003 IEEE arithmetic function to catch
     the NaN condition during verification.
 
     The version requires a compiler that supports features available
-    in Fortran 90 and 2003. Because of these changes, the MPIF77 flag 
+    in Fortran 90 and 2003. Because of these changes, the MPIF77 flag
     in make.def is renamed to MPIFC.
 
-  * The environment variable NPB_TIMER_FLAG is now used to enable 
+  * The environment variable NPB_TIMER_FLAG is now used to enable
     additional timers.
 
   * The vector codes for the BT and LU benchmarks have been removed
     due to the fact that these implementations were not portable and
     successful vectorization highly depends on the compiler used.
 
-  * Potential performance improvement of the LU benchmark as a result of 
+  * Potential performance improvement of the LU benchmark as a result of
     reduced memory usage for working arrays in the solver.
 

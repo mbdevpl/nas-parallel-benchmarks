@@ -7,7 +7,7 @@ c---------------------------------------------------------------------
       module lu_data
 
 c---------------------------------------------------------------------
-c   npbparams.h defines parameters that depend on the class and 
+c   npbparams.h defines parameters that depend on the class and
 c   number of nodes
 c---------------------------------------------------------------------
 
@@ -24,10 +24,10 @@ c---------------------------------------------------------------------
       parameter (ipr_default = 1)
       double precision omega_default
       parameter (omega_default = 1.2d0)
-      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def, 
+      double precision tolrsd1_def, tolrsd2_def, tolrsd3_def,
      >                 tolrsd4_def, tolrsd5_def
-      parameter (tolrsd1_def=1.0e-08, 
-     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08, 
+      parameter (tolrsd1_def=1.0e-08,
+     >          tolrsd2_def=1.0e-08, tolrsd3_def=1.0e-08,
      >          tolrsd4_def=1.0e-08, tolrsd5_def=1.0e-08)
 
       double precision c1, c2, c3, c4, c5
@@ -144,13 +144,13 @@ c---------------------------------------------------------------------
       integer ios
 
 c---------------------------------------------------------------------
-c   to improve cache performance, second two dimensions padded by 1 
+c   to improve cache performance, second two dimensions padded by 1
 c   for even number sizes only.
-c   Note: corresponding array (called "v") in routines blts, buts, 
+c   Note: corresponding array (called "v") in routines blts, buts,
 c   and l2norm are similarly padded
 c---------------------------------------------------------------------
 
-      allocate ( 
+      allocate (
      >          u   (5,isiz1/2*2+1,isiz2/2*2+1,isiz3),
      >          rsd (5,isiz1/2*2+1,isiz2/2*2+1,isiz3),
      >          frct(5,isiz1/2*2+1,isiz2/2*2+1,isiz3),

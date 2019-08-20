@@ -3,7 +3,7 @@ This directory contains two versions of the SP implementation:
 - the standard version that has better cache utilization
 - the "blocking" version that contains codes for better vectorization
 
-For most platforms, the standard version gives reasonable performance. 
+For most platforms, the standard version gives reasonable performance.
 To access the blocking version, use the VERSION=BLK make flag, such as,
    make CLASS=A VERSION=BLK
 

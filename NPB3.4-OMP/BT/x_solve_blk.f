@@ -8,15 +8,15 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c     
+c
 c     Performs line solves in X direction by first factoring
-c     the block-tridiagonal matrix into an upper triangular matrix, 
+c     the block-tridiagonal matrix into an upper triangular matrix,
 c     and then performing back substitution to solve for the unknow
-c     vectors of each line.  
-c     
+c     vectors of each line.
+c
 c     Make sure we treat elements zero to cell_size in the direction
 c     of the sweep.
-c     
+c
 c---------------------------------------------------------------------
 
       use bt_data
@@ -84,7 +84,7 @@ c---------------------------------------------------------------------
                tmp2 = tmp1 * tmp1
                tmp3 = tmp1 * tmp2
 c---------------------------------------------------------------------
-c     
+c
 c---------------------------------------------------------------------
                fjac(jb,1,1,ip) = 0.0d+00
                fjac(jb,1,2,ip) = 1.0d+00
@@ -92,7 +92,7 @@ c---------------------------------------------------------------------
                fjac(jb,1,4,ip) = 0.0d+00
                fjac(jb,1,5,ip) = 0.0d+00
 
-               fjac(jb,2,1,ip) = -(u(2,i,j,k) * tmp2 * 
+               fjac(jb,2,1,ip) = -(u(2,i,j,k) * tmp2 *
      >              u(2,i,j,k))
      >              + c2 * qs(i,j,k)
                fjac(jb,2,2,ip) = ( 2.0d+00 - c2 )
@@ -116,7 +116,7 @@ c---------------------------------------------------------------------
                fjac(jb,5,1,ip) = ( c2 * 2.0d0 * square(i,j,k)
      >              - c1 * u(5,i,j,k) )
      >              * ( u(2,i,j,k) * tmp2 )
-               fjac(jb,5,2,ip) = c1 *  u(5,i,j,k) * tmp1 
+               fjac(jb,5,2,ip) = c1 *  u(5,i,j,k) * tmp1
      >              - c2
      >              * ( u(2,i,j,k)*u(2,i,j,k) * tmp2
      >              + qs(i,j,k) )
@@ -145,7 +145,7 @@ c---------------------------------------------------------------------
                njac(jb,3,5,ip) =   0.0d+00
 
                njac(jb,4,1,ip) = - c3c4 * tmp2 * u(4,i,j,k)
-               njac(jb,4,2,ip) =   0.0d+00 
+               njac(jb,4,2,ip) =   0.0d+00
                njac(jb,4,3,ip) =   0.0d+00
                njac(jb,4,4,ip) =   c3c4 * tmp1
                njac(jb,4,5,ip) =   0.0d+00
@@ -178,7 +178,7 @@ c---------------------------------------------------------------------
 
                lhsa(jb,1,1,1) = - tmp2 * fjac(jb,1,1,im)
      >              - tmp1 * njac(jb,1,1,im)
-     >              - tmp1 * dx1 
+     >              - tmp1 * dx1
                lhsa(jb,1,2,1) = - tmp2 * fjac(jb,1,2,im)
      >              - tmp1 * njac(jb,1,2,im)
                lhsa(jb,1,3,1) = - tmp2 * fjac(jb,1,3,im)
@@ -206,7 +206,7 @@ c---------------------------------------------------------------------
      >              - tmp1 * njac(jb,3,2,im)
                lhsa(jb,3,3,1) = - tmp2 * fjac(jb,3,3,im)
      >              - tmp1 * njac(jb,3,3,im)
-     >              - tmp1 * dx3 
+     >              - tmp1 * dx3
                lhsa(jb,3,4,1) = - tmp2 * fjac(jb,3,4,im)
      >              - tmp1 * njac(jb,3,4,im)
                lhsa(jb,3,5,1) = - tmp2 * fjac(jb,3,5,im)
@@ -343,10 +343,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     performs guaussian elimination on this cell.
-c     
-c     assumes that unpacking routines for non-first cells 
+c
+c     assumes that unpacking routines for non-first cells
 c     preload C' and rhs' from previous cell.
-c     
+c
 c     assumed send happens outside this routine, but that
 c     c'(IMAX) and rhs'(IMAX) will be sent to next cell
 c---------------------------------------------------------------------
@@ -368,7 +368,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c     begin inner most do loop
-c     do all the elements of the cell unless last 
+c     do all the elements of the cell unless last
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -432,7 +432,7 @@ c---------------------------------------------------------------------
                do m=1,BLOCK_SIZE
 !dir$ unroll
                   do n=1,BLOCK_SIZE
-                     rhsx(jb,m,i) = rhsx(jb,m,i) 
+                     rhsx(jb,m,i) = rhsx(jb,m,i)
      >                    - lhsc(jb,m,n,i)*rhsx(jb,n,i+1)
                   enddo
                enddo

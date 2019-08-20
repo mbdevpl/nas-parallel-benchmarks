@@ -77,18 +77,18 @@ c---------------------------------------------------------------------
                do m = 1, 5
                   add = rhs(m,i,j,k)
                   rms(m) = rms(m) + add*add
-               enddo 
-            enddo 
-         enddo 
-      enddo 
+               enddo
+            enddo
+         enddo
+      enddo
 !$omp end parallel do
 
       do m = 1, 5
          do d = 1, 3
             rms(m) = rms(m) / dble(grid_points(d)-2)
-         enddo 
+         enddo
          rms(m) = dsqrt(rms(m))
-      enddo 
+      enddo
 
       return
       end

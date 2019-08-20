@@ -5,8 +5,8 @@ NAS Parallel Benchmarks Version 3.4 (NPB3.4)
   NASA Ames Research Center
   Moffett Field, CA   94035-1000
 
-  E-mail:  npb@nas.nasa.gov                                      
-  Fax:     (650) 604-3957                                        
+  E-mail:  npb@nas.nasa.gov
+  Fax:     (650) 604-3957
   http://www.nas.nasa.gov/Software/NPB/
 
 
@@ -20,11 +20,11 @@ INSTALLATION
 ================================================
 BACKGROUND
 
-  Information on NPB 3.4, including the technical reports, the          
-  original specifications, source code, results and information        
-  on how to submit new results, is available at:                       
+  Information on NPB 3.4, including the technical reports, the
+  original specifications, source code, results and information
+  on how to submit new results, is available at:
 
-     http://www.nas.nasa.gov/Software/NPB/                              
+     http://www.nas.nasa.gov/Software/NPB/
 
 
 ================================================
@@ -35,22 +35,22 @@ Summary of New Features and Improvements
  in NPB3.4 from NPB3.3.1:
 
   - General changes applied to both MPI and OMP versions
-      * Added the class E problem size for IS, and the class F problem 
+      * Added the class E problem size for IS, and the class F problem
         size for BT, LU, SP, CG, EP, FT, and MG.
 
       * Use Fortran modules and allocatable arrays to define and
-        manage global data (to replace common blocks) and Fortran 2003 
-        IEEE arithmetic function to catch the NaN condition during 
+        manage global data (to replace common blocks) and Fortran 2003
+        IEEE arithmetic function to catch the NaN condition during
         verification.
 
-      * The environment variable NPB_TIMER_FLAG is now used to enable 
+      * The environment variable NPB_TIMER_FLAG is now used to enable
         additional timers.
 
       * Make flag change: from MPIF77 or F77 to MPIFC or FC.
 
   - MPI version improvement
-      * MPI codes use Fortran 90 dynamic memory allocation for space 
-        allocation to simplify compilation process.  The number of 
+      * MPI codes use Fortran 90 dynamic memory allocation for space
+        allocation to simplify compilation process.  The number of
         processes is solely determined and checked at runtime.
 
       * Performance improvement of the LU benchmark.
@@ -84,7 +84,7 @@ Summary of New Features and Improvements
  in NPB3.3 from NPB3.2.1:
 
   - Introduction of the Class E problem in seven of the benchmarks
-    (BT, SP, LU, CG, MG, FT, and EP) to stress larger size parallel 
+    (BT, SP, LU, CG, MG, FT, and EP) to stress larger size parallel
     computers.
 
   - Class D added to the IS benchmark in all three implementations.
@@ -99,13 +99,13 @@ Summary of New Features and Improvements
   - Merge the vector codes for the BT and LU benchmarks into this
     release.
 
-  - The hyperplane version of LU (LU-HP) is no longer included 
+  - The hyperplane version of LU (LU-HP) is no longer included
     in the distribution.  Download NPB3.2.1 if needed.
 
 
  in NPB3.2.1 from NPB3.2:
 
-  - A number of bug fixes for the MPI versions of {FT, LU, MG, BT} and 
+  - A number of bug fixes for the MPI versions of {FT, LU, MG, BT} and
     the OpenMP version of LU
 
   - Improvements on the OpenMP versions of {EP, IS, UA}

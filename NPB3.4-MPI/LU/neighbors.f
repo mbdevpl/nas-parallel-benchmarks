@@ -39,7 +39,7 @@ c---------------------------------------------------------------------
 
       if (col.lt.ydim) then
               east = id + xdim
-      else 
+      else
               east = -1
       end if
 

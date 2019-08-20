@@ -38,7 +38,7 @@ c---------------------------------------------------------------------
           jm = min(bsize, ny2 - jj + 1)
 
 c---------------------------------------------------------------------
-c To improve cache utilization, copy a slab of rhs to temp array  
+c To improve cache utilization, copy a slab of rhs to temp array
 c---------------------------------------------------------------------
           do  i = 0, grid_points(1)-1
              do  jb = 1, bsize
@@ -52,18 +52,18 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c Computes the left hand side for the three x-factors  
+c Computes the left hand side for the three x-factors
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c      first fill the lhs for the u-eigenvalue                   
+c      first fill the lhs for the u-eigenvalue
 c---------------------------------------------------------------------
           do  i = 0, grid_points(1)-1
              do  jb = 1, bsize
                 j = min(jb,jm) + jj - 1
                 ru1 = c3c4*rho_i(i,j,k)
                 cv(jb,i) = us(i,j,k)
-                rhov(jb,i) = dmax1(dx2+con43*ru1, 
+                rhov(jb,i) = dmax1(dx2+con43*ru1,
      >                          dx5+c1c5*ru1,
      >                          dxmax+ru1,
      >                          dx1)
@@ -81,7 +81,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      add fourth order dissipation                             
+c      add fourth order dissipation
 c---------------------------------------------------------------------
 
           do  jb = 1, bsize
@@ -89,7 +89,7 @@ c---------------------------------------------------------------------
              lhs(jb,3,i) = lhs(jb,3,i) + comz5
              lhs(jb,4,i) = lhs(jb,4,i) - comz4
              lhs(jb,5,i) = lhs(jb,5,i) + comz1
-  
+
              i = 2
              lhs(jb,2,i) = lhs(jb,2,i) - comz4
              lhs(jb,3,i) = lhs(jb,3,i) + comz6
@@ -121,35 +121,35 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      subsequently, fill the other factors (u+c), (u-c) by adding to 
-c      the first  
+c      subsequently, fill the other factors (u+c), (u-c) by adding to
+c      the first
 c---------------------------------------------------------------------
           do   i = 1, nx2
              do  jb = 1, bsize
                 j = min(jb,jm) + jj - 1
                 lhsp(jb,1,i) = lhs(jb,1,i)
-                lhsp(jb,2,i) = lhs(jb,2,i) - 
+                lhsp(jb,2,i) = lhs(jb,2,i) -
      >                            dttx2 * speed(i-1,j,k)
                 lhsp(jb,3,i) = lhs(jb,3,i)
-                lhsp(jb,4,i) = lhs(jb,4,i) + 
+                lhsp(jb,4,i) = lhs(jb,4,i) +
      >                            dttx2 * speed(i+1,j,k)
                 lhsp(jb,5,i) = lhs(jb,5,i)
                 lhsm(jb,1,i) = lhs(jb,1,i)
-                lhsm(jb,2,i) = lhs(jb,2,i) + 
+                lhsm(jb,2,i) = lhs(jb,2,i) +
      >                            dttx2 * speed(i-1,j,k)
                 lhsm(jb,3,i) = lhs(jb,3,i)
-                lhsm(jb,4,i) = lhs(jb,4,i) - 
+                lhsm(jb,4,i) = lhs(jb,4,i) -
      >                            dttx2 * speed(i+1,j,k)
                 lhsm(jb,5,i) = lhs(jb,5,i)
              end do
           end do
 
 c---------------------------------------------------------------------
-c                          FORWARD ELIMINATION  
+c                          FORWARD ELIMINATION
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c      perform the Thomas algorithm; first, FORWARD ELIMINATION     
+c      perform the Thomas algorithm; first, FORWARD ELIMINATION
 c---------------------------------------------------------------------
 
           do    i = 0, grid_points(1)-3
@@ -186,7 +186,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      The last two rows in this grid block are a bit different, 
+c      The last two rows in this grid block are a bit different,
 c      since they do not have two more rows available for the
 c      elimination of off-diagonal entries
 c---------------------------------------------------------------------
@@ -211,7 +211,7 @@ c---------------------------------------------------------------------
              rhsx(jb,3,i1) = rhsx(jb,3,i1) -
      >                      lhs(jb,2,i1)*rhsx(jb,3,i)
 c---------------------------------------------------------------------
-c            scale the last row immediately 
+c            scale the last row immediately
 c---------------------------------------------------------------------
              fac2             = 1.d0/lhs(jb,3,i1)
              rhsx(jb,1,i1) = fac2*rhsx(jb,1,i1)
@@ -220,7 +220,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      do the u+c and the u-c factors                 
+c      do the u+c and the u-c factors
 c---------------------------------------------------------------------
 
           do    i = 0, grid_points(1)-3
@@ -297,7 +297,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c                         BACKSUBSTITUTION 
+c                         BACKSUBSTITUTION
 c---------------------------------------------------------------------
 
 
@@ -324,23 +324,23 @@ c---------------------------------------------------------------------
              i1 = i  + 1
              i2 = i  + 2
              do  jb = 1, bsize
-                rhsx(jb,1,i) = rhsx(jb,1,i) - 
+                rhsx(jb,1,i) = rhsx(jb,1,i) -
      >                          lhs(jb,4,i)*rhsx(jb,1,i1) -
      >                          lhs(jb,5,i)*rhsx(jb,1,i2)
-                rhsx(jb,2,i) = rhsx(jb,2,i) - 
+                rhsx(jb,2,i) = rhsx(jb,2,i) -
      >                          lhs(jb,4,i)*rhsx(jb,2,i1) -
      >                          lhs(jb,5,i)*rhsx(jb,2,i2)
-                rhsx(jb,3,i) = rhsx(jb,3,i) - 
+                rhsx(jb,3,i) = rhsx(jb,3,i) -
      >                          lhs(jb,4,i)*rhsx(jb,3,i1) -
      >                          lhs(jb,5,i)*rhsx(jb,3,i2)
 
 c---------------------------------------------------------------------
 c      And the remaining two
 c---------------------------------------------------------------------
-                rhsx(jb,4,i) = rhsx(jb,4,i) - 
+                rhsx(jb,4,i) = rhsx(jb,4,i) -
      >                          lhsp(jb,4,i)*rhsx(jb,4,i1) -
      >                          lhsp(jb,5,i)*rhsx(jb,4,i2)
-                rhsx(jb,5,i) = rhsx(jb,5,i) - 
+                rhsx(jb,5,i) = rhsx(jb,5,i) -
      >                          lhsm(jb,4,i)*rhsx(jb,5,i1) -
      >                          lhsm(jb,5,i)*rhsx(jb,5,i2)
              end do
@@ -364,7 +364,7 @@ c---------------------------------------------------------------------
        if (timeron) call timer_stop(t_xsolve)
 
 c---------------------------------------------------------------------
-c      Do the block-diagonal inversion          
+c      Do the block-diagonal inversion
 c---------------------------------------------------------------------
        call ninvr
 

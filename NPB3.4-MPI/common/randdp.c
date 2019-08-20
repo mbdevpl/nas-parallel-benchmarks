@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-//   This function is C verson of random number generator randdp.f 
+//   This function is C verson of random number generator randdp.f
 //---------------------------------------------------------------------
 
 double	randlc(X, A)
@@ -16,13 +16,13 @@ double *A;
       double		Z;
       int     		i, j;
 
-      if (KS == 0) 
+      if (KS == 0)
       {
         R23 = 1.0;
         R46 = 1.0;
         T23 = 1.0;
         T46 = 1.0;
-    
+
         for (i=1; i<=23; i++)
         {
           R23 = 0.50 * R23;
@@ -52,7 +52,7 @@ double *A;
       X1 = j;
       X2 = *X - T23 * X1;
       T1 = A1 * X2 + A2 * X1;
-      
+
       j  = R23 * T1;
       T2 = j;
       Z = T1 - T23 * T2;
@@ -61,4 +61,4 @@ double *A;
       T4 = j;
       *X = T3 - T46 * T4;
       return(R46 * *X);
-} 
+}

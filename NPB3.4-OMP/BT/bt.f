@@ -88,14 +88,14 @@ c---------------------------------------------------------------------
        open (unit=2,file='inputbt.data',status='old', iostat=fstatus)
 
        if (fstatus .eq. 0) then
-         write(*,233) 
+         write(*,233)
  233     format(' Reading from input file inputbt.data')
          read (2,*) niter
          read (2,*) dt
          read (2,*) grid_points(1), grid_points(2), grid_points(3)
          close(2)
        else
-         write(*,234) 
+         write(*,234)
          niter = niter_default
          dt    = dt_default
          grid_points(1) = problem_size
@@ -150,7 +150,7 @@ c---------------------------------------------------------------------
 
        do  step = 1, niter
 
-          if (mod(step, 20) .eq. 0 .or. 
+          if (mod(step, 20) .eq. 0 .or.
      >        step .eq. 1) then
              write(*, 200) step
  200         format(' Time step ', i4)
@@ -162,7 +162,7 @@ c---------------------------------------------------------------------
 
        call timer_stop(1)
        tmax = timer_read(1)
-       
+
        call verify(niter, class, verified)
 
        n3 = dble(grid_points(1))*grid_points(2)*grid_points(3)
@@ -174,10 +174,10 @@ c---------------------------------------------------------------------
        else
           mflops = 0.d0
        endif
-       call print_results('BT', class, grid_points(1), 
+       call print_results('BT', class, grid_points(1),
      >  grid_points(2), grid_points(3), niter,
-     >  tmax, mflops, '          floating point', 
-     >  verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5, 
+     >  tmax, mflops, '          floating point',
+     >  verified, npbversion,compiletime, cs1, cs2, cs3, cs4, cs5,
      >  cs6, '(none)')
 
 c---------------------------------------------------------------------

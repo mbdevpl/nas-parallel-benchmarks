@@ -59,8 +59,8 @@ clean:
 	- rm -f btio.*.out*
 
 veryclean: clean
-	- rm -f config/make.def config/suite.def 
-	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.* 
+	- rm -f config/make.def config/suite.def
+	- rm -f bin/sp.* bin/lu.* bin/mg.* bin/ft.* bin/bt.* bin/is.*
 	- rm -f bin/ep.* bin/cg.* bin/dt.*
 
 header:

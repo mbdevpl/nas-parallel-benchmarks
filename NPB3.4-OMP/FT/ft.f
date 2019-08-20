@@ -75,9 +75,9 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c Run the entire problem once to make sure all data is touched. 
-c This reduces variable startup costs, which is important for such a 
-c short benchmark. The other NPB 2 implementations are similar. 
+c Run the entire problem once to make sure all data is touched.
+c This reduces variable startup costs, which is important for such a
+c short benchmark. The other NPB 2 implementations are similar.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -94,7 +94,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c Start over from the beginning. Note that all operations must
-c be timed, in contrast to other benchmarks. 
+c be timed, in contrast to other benchmarks.
 c---------------------------------------------------------------------
       do i = 1, t_max
          call timer_clear(i)
@@ -142,7 +142,7 @@ c         call checksum(iter, u2, dims(1), dims(2), dims(3))
          mflops = 0.0
       endif
       call print_results('FT', class, nx, ny, nz, niter,
-     >  total_time, mflops, '          floating point', verified, 
+     >  total_time, mflops, '          floating point', verified,
      >  npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6, cs7)
       if (timers_enabled) call print_timers()
 
@@ -225,8 +225,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c Fill in array u0 with initial conditions from 
-c random number generator 
+c Fill in array u0 with initial conditions from
+c random number generator
 c---------------------------------------------------------------------
 
       use ft_data
@@ -236,7 +236,7 @@ c---------------------------------------------------------------------
       double complex u0(d1+1, d2, d3)
       integer k, j
       double precision x0, start, an, dummy, starts(nz)
-      
+
 
       start = seed
 c---------------------------------------------------------------------
@@ -251,14 +251,14 @@ c---------------------------------------------------------------------
          dummy = randlc(start, an)
          starts(k) = start
       end do
-      
+
 c---------------------------------------------------------------------
 c Go through by z planes filling in one square at a time.
 c---------------------------------------------------------------------
 !$omp parallel do default(shared) private(k,j,x0)
-      do k = 1, dims(3) 
+      do k = 1, dims(3)
          x0 = starts(k)
-         do j = 1, dims(2) 
+         do j = 1, dims(2)
             call vranlc(2*nx, x0, a, u0(1, j, k))
          end do
       end do
@@ -299,7 +299,7 @@ c---------------------------------------------------------------------
       do while (n .gt. 1)
          n2 = n/2
          if (n2 * 2 .eq. n) then
-            dummy = randlc(q, q) 
+            dummy = randlc(q, q)
             n = n2
          else
             dummy = randlc(r, q)
@@ -354,15 +354,15 @@ c---------------------------------------------------------------------
 c Set up info for blocking of ffts and transposes.  This improves
 c performance on cache-based systems. Blocking involves
 c working on a chunk of the problem at a time, taking chunks
-c along the first, second, or third dimension. 
+c along the first, second, or third dimension.
 c
 c - In cffts1 blocking is on 2nd dimension (with fft on 1st dim)
 c - In cffts2/3 blocking is on 1st dimension (with fft on 2nd and 3rd dims)
 
-c Since 1st dim is always in processor, we'll assume it's long enough 
+c Since 1st dim is always in processor, we'll assume it's long enough
 c (default blocking factor is 16 so min size for 1st dim is 16)
-c The only case we have to worry about is cffts1 in a 2d decomposition. 
-c so the blocking factor should not be larger than the 2nd dimension. 
+c The only case we have to worry about is cffts1 in a 2d decomposition.
+c so the blocking factor should not be larger than the 2nd dimension.
 c---------------------------------------------------------------------
 
       fftblock = fftblock_default
@@ -373,7 +373,7 @@ c---------------------------------------------------------------------
       return
       end
 
-      
+
 c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
@@ -383,8 +383,8 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2 
-c for time evolution exponent. 
+c compute function from local (i,j,k) to ibar^2+jbar^2+kbar^2
+c for time evolution exponent.
 c---------------------------------------------------------------------
 
       use ft_data
@@ -396,9 +396,9 @@ c---------------------------------------------------------------------
       double precision ap
 
 c---------------------------------------------------------------------
-c basically we want to convert the fortran indices 
-c   1 2 3 4 5 6 7 8 
-c to 
+c basically we want to convert the fortran indices
+c   1 2 3 4 5 6 7 8
+c to
 c   0 1 2 3 -4 -3 -2 -1
 c The following magic formula does the trick:
 c mod(i-1+n/2, n) - n/2
@@ -440,13 +440,13 @@ c---------------------------------------------------------------------
       integer i
       double precision t, t_m
       character*25 tstrings(T_max)
-      data tstrings / '          total ', 
-     >                '          setup ', 
-     >                '            fft ', 
-     >                '         evolve ', 
-     >                '       checksum ', 
-     >                '           fftx ', 
-     >                '           ffty ', 
+      data tstrings / '          total ',
+     >                '          setup ',
+     >                '            fft ',
+     >                '         evolve ',
+     >                '       checksum ',
+     >                '           fftx ',
+     >                '           ffty ',
      >                '           fftz ' /
 
       t_m = timer_read(T_total)
@@ -530,7 +530,7 @@ c---------------------------------------------------------------------
                   y1(j,i) = x(i,j+jj,k)
                enddo
             enddo
-            
+
             call cfftz (is, logd1, d1, y1, y2)
 
 
@@ -580,7 +580,7 @@ c---------------------------------------------------------------------
            enddo
 
            call cfftz (is, logd2, d2, y1, y2)
-           
+
            do j = 1, d2
               do i = 1, fftblock
                  xout(i+ii,j,k) = y1(i,j)
@@ -650,7 +650,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c compute the roots-of-unity array that will be used for subsequent FFTs. 
+c compute the roots-of-unity array that will be used for subsequent FFTs.
 c---------------------------------------------------------------------
 
       use ft_data
@@ -672,16 +672,16 @@ c---------------------------------------------------------------------
 
       do j = 1, m
          t = pi / ln
-         
+
          do i = 0, ln - 1
             ti = i * t
             u(i+ku) = dcmplx (cos (ti), sin(ti))
          enddo
-         
+
          ku = ku + ln
          ln = 2 * ln
       enddo
-      
+
       return
       end
 
@@ -695,10 +695,10 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c   Computes NY N-point complex-to-complex FFTs of X using an algorithm due
-c   to Swarztrauber.  X is both the input and the output array, while Y is a 
-c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to 
-c   perform FFTs, the array U must be initialized by calling CFFTZ with IS 
-c   set to 0 and M set to MX, where MX is the maximum value of M for any 
+c   to Swarztrauber.  X is both the input and the output array, while Y is a
+c   scratch array.  It is assumed that N = 2^M.  Before calling CFFTZ to
+c   perform FFTs, the array U must be initialized by calling CFFTZ with IS
+c   set to 0 and M set to MX, where MX is the maximum value of M for any
 c   subsequent call.
 c---------------------------------------------------------------------
 
@@ -714,10 +714,10 @@ c---------------------------------------------------------------------
 c   Check if input parameters are invalid.
 c---------------------------------------------------------------------
       mx = u(1)
-      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)    
+      if ((is .ne. 1 .and. is .ne. -1) .or. m .lt. 1 .or. m .gt. mx)
      >  then
         write (*, 1)  is, m, mx
- 1      format ('CFFTZ: Either U has not been initialized, or else'/    
+ 1      format ('CFFTZ: Either U has not been initialized, or else'/
      >    'one of the input parameters is invalid', 3I5)
         stop
       endif
@@ -857,7 +857,7 @@ c---------------------------------------------------------------------
       end do
 
       chk = chk/ntotal_f
-      
+
       write (*, 30) i, chk
  30   format (' T =',I5,5X,'Checksum =',1P2D22.12)
       sums(i) = chk
@@ -940,7 +940,7 @@ c---------------------------------------------------------------------
          csum_ref(4) = dcmplx(5.077892868474D+02, 5.101336130759D+02)
          csum_ref(5) = dcmplx(5.085233095391D+02, 5.104914655194D+02)
          csum_ref(6) = dcmplx(5.091487099959D+02, 5.107917842803D+02)
-      
+
       else if (d1 .eq. 512 .and.
      >    d2 .eq. 256 .and.
      >    d3 .eq. 256 .and.
@@ -1115,7 +1115,7 @@ c---------------------------------------------------------------------
 
       endif
 
-         
+
       if (class .ne. 'U') then
          if (verified) then
             write(*,2000)

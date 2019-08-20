@@ -27,7 +27,7 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c Prepare for z-solve, array redistribution   
+c Prepare for z-solve, array redistribution
 c---------------------------------------------------------------------
 
        if (timeron) call timer_start(t_zsolve)
@@ -53,11 +53,11 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c Computes the left hand side for the three z-factors   
+c Computes the left hand side for the three z-factors
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c first fill the lhs for the u-eigenvalue                          
+c first fill the lhs for the u-eigenvalue
 c---------------------------------------------------------------------
 
           do   k = 0, nz2 + 1
@@ -83,7 +83,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      add fourth order dissipation                                  
+c      add fourth order dissipation
 c---------------------------------------------------------------------
 
           do  ib = 1, bsize
@@ -124,23 +124,23 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c      subsequently, fill the other factors (u+c), (u-c) 
+c      subsequently, fill the other factors (u+c), (u-c)
 c---------------------------------------------------------------------
           do    k = 1, nz2
              do  ib = 1, bsize
                 i = min(ib,im) + ii - 1
                 lhsp(ib,1,k) = lhs(ib,1,k)
-                lhsp(ib,2,k) = lhs(ib,2,k) - 
+                lhsp(ib,2,k) = lhs(ib,2,k) -
      >                            dttz2 * speed(i,j,k-1)
                 lhsp(ib,3,k) = lhs(ib,3,k)
-                lhsp(ib,4,k) = lhs(ib,4,k) + 
+                lhsp(ib,4,k) = lhs(ib,4,k) +
      >                            dttz2 * speed(i,j,k+1)
                 lhsp(ib,5,k) = lhs(ib,5,k)
                 lhsm(ib,1,k) = lhs(ib,1,k)
-                lhsm(ib,2,k) = lhs(ib,2,k) + 
+                lhsm(ib,2,k) = lhs(ib,2,k) +
      >                            dttz2 * speed(i,j,k-1)
                 lhsm(ib,3,k) = lhs(ib,3,k)
-                lhsm(ib,4,k) = lhs(ib,4,k) - 
+                lhsm(ib,4,k) = lhs(ib,4,k) -
      >                            dttz2 * speed(i,j,k+1)
                 lhsm(ib,5,k) = lhs(ib,5,k)
              end do
@@ -148,7 +148,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c                          FORWARD ELIMINATION  
+c                          FORWARD ELIMINATION
 c---------------------------------------------------------------------
 
           do    k = 0, grid_points(3)-3
@@ -185,7 +185,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      The last two rows in this grid block are a bit different, 
+c      The last two rows in this grid block are a bit different,
 c      since they do not have two more rows available for the
 c      elimination of off-diagonal entries
 c---------------------------------------------------------------------
@@ -218,7 +218,7 @@ c---------------------------------------------------------------------
           end do
 
 c---------------------------------------------------------------------
-c      do the u+c and the u-c factors               
+c      do the u+c and the u-c factors
 c---------------------------------------------------------------------
           do    k = 0, grid_points(3)-3
              k1 = k  + 1
@@ -295,7 +295,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c                         BACKSUBSTITUTION 
+c                         BACKSUBSTITUTION
 c---------------------------------------------------------------------
 
           k  = grid_points(3)-2
@@ -316,7 +316,7 @@ c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
 c      Whether or not this is the last processor, we always have
-c      to complete the back-substitution 
+c      to complete the back-substitution
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
@@ -326,23 +326,23 @@ c---------------------------------------------------------------------
              k1 = k  + 1
              k2 = k  + 2
              do  ib = 1, bsize
-                rhsx(ib,1,k) = rhsx(ib,1,k) - 
+                rhsx(ib,1,k) = rhsx(ib,1,k) -
      >                          lhs(ib,4,k)*rhsx(ib,1,k1) -
      >                          lhs(ib,5,k)*rhsx(ib,1,k2)
-                rhsx(ib,2,k) = rhsx(ib,2,k) - 
+                rhsx(ib,2,k) = rhsx(ib,2,k) -
      >                          lhs(ib,4,k)*rhsx(ib,2,k1) -
      >                          lhs(ib,5,k)*rhsx(ib,2,k2)
-                rhsx(ib,3,k) = rhsx(ib,3,k) - 
+                rhsx(ib,3,k) = rhsx(ib,3,k) -
      >                          lhs(ib,4,k)*rhsx(ib,3,k1) -
      >                          lhs(ib,5,k)*rhsx(ib,3,k2)
 
 c---------------------------------------------------------------------
 c      And the remaining two
 c---------------------------------------------------------------------
-                rhsx(ib,4,k) = rhsx(ib,4,k) - 
+                rhsx(ib,4,k) = rhsx(ib,4,k) -
      >                          lhsp(ib,4,k)*rhsx(ib,4,k1) -
      >                          lhsp(ib,5,k)*rhsx(ib,4,k2)
-                rhsx(ib,5,k) = rhsx(ib,5,k) - 
+                rhsx(ib,5,k) = rhsx(ib,5,k) -
      >                          lhsm(ib,4,k)*rhsx(ib,5,k1) -
      >                          lhsm(ib,5,k)*rhsx(ib,5,k2)
              end do

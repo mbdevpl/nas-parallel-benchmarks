@@ -20,7 +20,7 @@ cg_data.o:	cg_data.f mpinpb.o npbparams.h
 mpinpb.o:	mpinpb.f
 
 clean:
-	- rm -f *.o *.mod *~ 
+	- rm -f *.o *.mod *~
 	- rm -f npbparams.h core
 
 

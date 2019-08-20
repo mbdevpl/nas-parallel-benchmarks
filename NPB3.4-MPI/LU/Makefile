@@ -34,7 +34,7 @@ exchange_3.o:	exchange_3.f lu_data.o mpinpb.o
 exchange_4.o:	exchange_4.f lu_data.o mpinpb.o
 exchange_5.o:	exchange_5.f lu_data.o mpinpb.o
 exchange_6.o:	exchange_6.f lu_data.o mpinpb.o
-init_comm.o:	init_comm.f lu_data.o mpinpb.o 
+init_comm.o:	init_comm.f lu_data.o mpinpb.o
 jacld.o:	jacld.f lu_data.o
 jacu.o:		jacu.f lu_data.o
 l2norm.o:	l2norm.f lu_data.o mpinpb.o
@@ -50,7 +50,7 @@ setcoeff.o:	setcoeff.f lu_data.o
 ssor.o:		ssor.f lu_data.o mpinpb.o
 subdomain.o:	subdomain.f lu_data.o mpinpb.o
 verify.o:	verify.f lu_data.o
-lu_data.o:      lu_data.f mpinpb.o npbparams.h 
+lu_data.o:      lu_data.f mpinpb.o npbparams.h
 mpinpb.o:       mpinpb.f
 
 clean:

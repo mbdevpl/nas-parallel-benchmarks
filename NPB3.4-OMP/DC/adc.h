@@ -1,7 +1,7 @@
 #if !adc_h
 #define adc_h 1
 
-/* For checking of L2-cache performance influence */ 
+/* For checking of L2-cache performance influence */
 /*#define IN_CORE_*/
 /*#define VIEW_FILE_OUTPUT*/ /* it can be used with IN_CORE only */
 
@@ -56,7 +56,7 @@ typedef struct {
    char   clss;
    char          adcName[MAX_FILE_FULL_PATH_SIZE];
    char   adcInpFileName[MAX_FILE_FULL_PATH_SIZE];
-   uint32 nd; 
+   uint32 nd;
    uint32 nm;
    uint32 nInputRecs;
    uint32 memoryLimit;
@@ -64,11 +64,11 @@ typedef struct {
    /*  FILE *statf; */
 } ADC_VIEW_PARS;
 
-typedef struct job_pool{ 
-   uint32 grpb; 
+typedef struct job_pool{
+   uint32 grpb;
    uint32 nv;
-   uint32 nRows; 
-    int64 viewOffset; 
+   uint32 nRows;
+    int64 viewOffset;
 } JOB_POOL;
 
 typedef struct layer{
@@ -104,12 +104,12 @@ typedef struct {
     int32 ndid;
 
    uint32 nTopDims; /* given number of dimension attributes */
-   uint32 nm;       /* number of measures */ 
+   uint32 nm;       /* number of measures */
    uint32 nd;       /* number of parent's dimensions */
    uint32 nv;       /* number of child's dimensions */
 
    uint32 nInputRecs;
-   uint32 nViewRows; 
+   uint32 nViewRows;
    uint32 totalOfViewRows;
    uint32 nParentViewRows;
 
@@ -138,12 +138,12 @@ typedef struct {
 
      FILE *logf;
      FILE *inpf;
-     FILE *viewFile;   
+     FILE *viewFile;
      FILE *fileOfChunks;
      FILE *groupbyFile;
      FILE *adcViewSizesFile;
      FILE *viewSizesFile;
-   
+
     int64     mSums[MAX_NUM_OF_MEAS];
    uint32 selection[MAX_NUM_OF_DIMS];
     int64 checksums[MAX_NUM_OF_MEAS]; /* view checksums */

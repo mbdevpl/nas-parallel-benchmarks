@@ -8,23 +8,23 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c This subroutine initializes the field variable u using 
-c tri-linear transfinite interpolation of the boundary values     
+c This subroutine initializes the field variable u using
+c tri-linear transfinite interpolation of the boundary values
 c---------------------------------------------------------------------
 
        use sp_data
        implicit none
-  
+
        integer c, i, j, k, m, ii, jj, kk, ix, iy, iz
-       double precision  xi, eta, zeta, Pface(5,3,2), Pxi, Peta, 
+       double precision  xi, eta, zeta, Pface(5,3,2), Pxi, Peta,
      >                   Pzeta, temp(5)
 
 
 c---------------------------------------------------------------------
-c  Later (in compute_rhs) we compute 1/u for every element. A few of 
-c  the corner elements are not used, but it convenient (and faster) 
-c  to compute the whole thing with a simple loop. Make sure those 
-c  values are nonzero by initializing the whole thing here. 
+c  Later (in compute_rhs) we compute 1/u for every element. A few of
+c  the corner elements are not used, but it convenient (and faster)
+c  to compute the whole thing with a simple loop. Make sure those
+c  values are nonzero by initializing the whole thing here.
 c---------------------------------------------------------------------
       do c = 1, ncells
          do kk = -1, IMAX
@@ -41,7 +41,7 @@ c---------------------------------------------------------------------
       end do
 
 c---------------------------------------------------------------------
-c first store the "interpolated" values everywhere on the grid    
+c first store the "interpolated" values everywhere on the grid
 c---------------------------------------------------------------------
        do  c=1, ncells
           kk = 0
@@ -53,32 +53,32 @@ c---------------------------------------------------------------------
                 ii = 0
                 do   i = cell_low(1,c), cell_high(1,c)
                    xi = dble(i) * dnxm1
-                  
+
                    do ix = 1, 2
-                      call exact_solution(dble(ix-1), eta, zeta, 
+                      call exact_solution(dble(ix-1), eta, zeta,
      >                                    Pface(1,1,ix))
                    end do
 
                    do    iy = 1, 2
-                      call exact_solution(xi, dble(iy-1) , zeta, 
+                      call exact_solution(xi, dble(iy-1) , zeta,
      >                                    Pface(1,2,iy))
                    end do
 
                    do    iz = 1, 2
-                      call exact_solution(xi, eta, dble(iz-1),   
+                      call exact_solution(xi, eta, dble(iz-1),
      >                                    Pface(1,3,iz))
                    end do
 
                    do   m = 1, 5
-                      Pxi   = xi   * Pface(m,1,2) + 
+                      Pxi   = xi   * Pface(m,1,2) +
      >                        (1.0d0-xi)   * Pface(m,1,1)
-                      Peta  = eta  * Pface(m,2,2) + 
+                      Peta  = eta  * Pface(m,2,2) +
      >                        (1.0d0-eta)  * Pface(m,2,1)
-                      Pzeta = zeta * Pface(m,3,2) + 
+                      Pzeta = zeta * Pface(m,3,2) +
      >                        (1.0d0-zeta) * Pface(m,3,1)
- 
-                      u(ii,jj,kk,m,c) = Pxi + Peta + Pzeta - 
-     >                          Pxi*Peta - Pxi*Pzeta - Peta*Pzeta + 
+
+                      u(ii,jj,kk,m,c) = Pxi + Peta + Pzeta -
+     >                          Pxi*Peta - Pxi*Pzeta - Peta*Pzeta +
      >                          Pxi*Peta*Pzeta
 
                    end do
@@ -91,11 +91,11 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c now store the exact values on the boundaries        
+c now store the exact values on the boundaries
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c west face                                                  
+c west face
 c---------------------------------------------------------------------
        c = slice(1,1)
        ii = 0
@@ -116,7 +116,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c east face                                                      
+c east face
 c---------------------------------------------------------------------
        c  = slice(1,ncells)
        ii = cell_size(1,c)-1
@@ -137,7 +137,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c south face                                                 
+c south face
 c---------------------------------------------------------------------
        c = slice(2,1)
        jj = 0
@@ -159,7 +159,7 @@ c---------------------------------------------------------------------
 
 
 c---------------------------------------------------------------------
-c north face                                    
+c north face
 c---------------------------------------------------------------------
        c = slice(2,ncells)
        jj = cell_size(2,c)-1
@@ -180,7 +180,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c bottom face                                       
+c bottom face
 c---------------------------------------------------------------------
        c = slice(3,1)
        kk = 0
@@ -201,7 +201,7 @@ c---------------------------------------------------------------------
        end do
 
 c---------------------------------------------------------------------
-c top face     
+c top face
 c---------------------------------------------------------------------
        c = slice(3,ncells)
        kk = cell_size(3,c)-1
@@ -229,11 +229,11 @@ c---------------------------------------------------------------------
 
        use sp_data
        implicit none
-       
+
        integer i, j, k, d, c, n
 
 c---------------------------------------------------------------------
-c loop over all cells                                       
+c loop over all cells
 c---------------------------------------------------------------------
        do  c = 1, ncells
 
@@ -243,7 +243,7 @@ c---------------------------------------------------------------------
           do  d = 1, 3
              if (cell_coord(d,c) .eq. 1) then
                 start(d,c) = 1
-             else 
+             else
                 start(d,c) = 0
              endif
              if (cell_coord(d,c) .eq. ncells) then

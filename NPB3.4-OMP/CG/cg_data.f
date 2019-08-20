@@ -35,10 +35,10 @@ c ... main_flt_mem
      >                         r(:)
 
 c ... partition size
-      integer                  naa, nzz, 
-     >                         firstrow, 
-     >                         lastrow, 
-     >                         firstcol, 
+      integer                  naa, nzz,
+     >                         firstrow,
+     >                         lastrow,
+     >                         firstcol,
      >                         lastcol
 
       double precision         amult, tran
@@ -94,7 +94,7 @@ c---------------------------------------------------------------------
       integer ios
 
 
-      allocate ( 
+      allocate (
      >          colidx(nz), rowstr(na+1),
      >          iv(nz+na),  arow(na), acol(naz),
      >          v(nz), aelt(naz), a(nz),

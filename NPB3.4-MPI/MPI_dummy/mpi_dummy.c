@@ -77,7 +77,7 @@ int   MPI_Init( int  *argc,
 
 
 
-int   MPI_Comm_rank( MPI_Comm comm, 
+int   MPI_Comm_rank( MPI_Comm comm,
                      int      *rank )
 {
     *rank = 0;
@@ -87,7 +87,7 @@ int   MPI_Comm_rank( MPI_Comm comm,
 
 
 
-int   MPI_Comm_size( MPI_Comm comm, 
+int   MPI_Comm_size( MPI_Comm comm,
                      int      *size )
 {
     *size = 1;
@@ -148,30 +148,30 @@ int  MPI_Allreduce( void         *sendbuf,
     if( type == MPI_INT )
     {
         int *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (int *) sendbuf;    
-        pd_recvbuf = (int *) recvbuf;    
+        pd_sendbuf = (int *) sendbuf;
+        pd_recvbuf = (int *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     if( type == MPI_LONG )
     {
         long *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (long *) sendbuf;    
-        pd_recvbuf = (long *) recvbuf;    
+        pd_sendbuf = (long *) sendbuf;
+        pd_recvbuf = (long *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     if( type == MPI_DOUBLE )
     {
         double *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (double *) sendbuf;    
-        pd_recvbuf = (double *) recvbuf;    
+        pd_sendbuf = (double *) sendbuf;
+        pd_recvbuf = (double *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     return( MPI_SUCCESS );
 }
-  
+
 
 
 
@@ -187,30 +187,30 @@ int  MPI_Reduce( void         *sendbuf,
     if( type == MPI_INT )
     {
         int *pi_sendbuf, *pi_recvbuf;
-        pi_sendbuf = (int *) sendbuf;    
-        pi_recvbuf = (int *) recvbuf;    
+        pi_sendbuf = (int *) sendbuf;
+        pi_recvbuf = (int *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pi_recvbuf+i) = *(pi_sendbuf+i);
     }
     if( type == MPI_LONG )
     {
         long *pi_sendbuf, *pi_recvbuf;
-        pi_sendbuf = (long *) sendbuf;    
-        pi_recvbuf = (long *) recvbuf;    
+        pi_sendbuf = (long *) sendbuf;
+        pi_recvbuf = (long *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pi_recvbuf+i) = *(pi_sendbuf+i);
     }
     if( type == MPI_DOUBLE )
     {
         double *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (double *) sendbuf;    
-        pd_recvbuf = (double *) recvbuf;    
+        pd_sendbuf = (double *) sendbuf;
+        pd_recvbuf = (double *) recvbuf;
         for( i=0; i<nitems; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     return( MPI_SUCCESS );
 }
-  
+
 
 
 
@@ -226,22 +226,22 @@ int  MPI_Alltoall( void         *sendbuf,
     if( recvtype == MPI_INT )
     {
         int *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (int *) sendbuf;    
-        pd_recvbuf = (int *) recvbuf;    
+        pd_sendbuf = (int *) sendbuf;
+        pd_recvbuf = (int *) recvbuf;
         for( i=0; i<sendcount; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     if( recvtype == MPI_LONG )
     {
         long *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (long *) sendbuf;    
-        pd_recvbuf = (long *) recvbuf;    
+        pd_sendbuf = (long *) sendbuf;
+        pd_recvbuf = (long *) recvbuf;
         for( i=0; i<sendcount; i++ )
             *(pd_recvbuf+i) = *(pd_sendbuf+i);
     }
     return( MPI_SUCCESS );
 }
-  
+
 
 
 
@@ -259,22 +259,22 @@ int  MPI_Alltoallv( void         *sendbuf,
     if( recvtype == MPI_INT )
     {
         int *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (int *) sendbuf;    
-        pd_recvbuf = (int *) recvbuf;    
+        pd_sendbuf = (int *) sendbuf;
+        pd_recvbuf = (int *) recvbuf;
         for( i=0; i<sendcounts[0]; i++ )
             *(pd_recvbuf+i+recvdispl[0]) = *(pd_sendbuf+i+senddispl[0]);
     }
     if( recvtype == MPI_LONG )
     {
         long *pd_sendbuf, *pd_recvbuf;
-        pd_sendbuf = (long *) sendbuf;    
-        pd_recvbuf = (long *) recvbuf;    
+        pd_sendbuf = (long *) sendbuf;
+        pd_recvbuf = (long *) recvbuf;
         for( i=0; i<sendcounts[0]; i++ )
             *(pd_recvbuf+i+recvdispl[0]) = *(pd_sendbuf+i+senddispl[0]);
     }
     return( MPI_SUCCESS );
 }
-  
+
 
 
 

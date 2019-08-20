@@ -10,7 +10,7 @@ c---------------------------------------------------------------------
 
       include 'npbparams.h'
 
-c.....Array dimensions     
+c.....Array dimensions
       integer lx1, lnje, nsides, nxyz
       parameter(lx1=5, lnje=2, nsides=6,  nxyz=lx1*lx1*lx1)
 
@@ -29,42 +29,42 @@ c.....Array dimensions
 c.....double precision arrays associated with collocation points
       double precision, allocatable ::
      &       ta1  (:,:,:,:), ta2   (:,:,:,:),
-     &       trhs (:,:,:,:), t     (:,:,:,:), 
-     &       tmult(:,:,:,:), dpcelm(:,:,:,:), 
+     &       trhs (:,:,:,:), t     (:,:,:,:),
+     &       tmult(:,:,:,:), dpcelm(:,:,:,:),
      &       pdiff(:,:,:,:), pdiffp(:,:,:,:)
 
 c.....double precision arays associated with mortar points
       double precision, allocatable ::
-     &       umor(:), tmmor (:), 
-     &       rmor(:), dpcmor(:), pmorx(:), ppmor(:) 
+     &       umor(:), tmmor (:),
+     &       rmor(:), dpcmor(:), pmorx(:), ppmor(:)
       double precision, allocatable, target ::
      &       mormult(:), tmort(:)
 
 c.... integer arrays associated with element faces
       integer, allocatable ::
-     &        idmo    (:,:,:,:,:,:), 
-     &        idel    (:,:,    :,:), 
-     &        sje     (:,:,    :,:), 
+     &        idmo    (:,:,:,:,:,:),
+     &        idel    (:,:,    :,:),
+     &        sje     (:,:,    :,:),
      &        sje_new (:,:,    :,:),
-     &        ijel    (:,      :,:), 
+     &        ijel    (:,      :,:),
      &        ijel_new(:,      :,:),
-     &        cbc     (        :,:), 
-     &        cbc_new (        :,:) 
+     &        cbc     (        :,:),
+     &        cbc_new (        :,:)
 
 c.....integer array associated with vertices
-      integer, allocatable :: vassign (:,:), emo(:,:,:),   
+      integer, allocatable :: vassign (:,:), emo(:,:,:),
      &        nemo (:)
 
 c.....integer array associated with element edges
-      integer, allocatable :: diagn  (:,:,:) 
+      integer, allocatable :: diagn  (:,:,:)
 
 c.... integer arrays associated with elements
       integer, allocatable ::
-     &        tree (:), mt_to_id    (:),                   
+     &        tree (:), mt_to_id    (:),
      &        newc (:), mt_to_id_old(:),
-     &        newi (:), id_to_mt    (:), 
+     &        newi (:), id_to_mt    (:),
      &        newe (:), ref_front_id(:),
-     &        front(:), action      (:), 
+     &        front(:), action      (:),
      &        ich  (:), size_e      (:),
      &        treenew(:)
 
@@ -73,14 +73,14 @@ c.....logical arrays associated with vertices
 
 c.....logical arrays associated with edge
       logical, allocatable ::
-     &        eassign  (:,:), if_1_edge(:,:), 
+     &        eassign  (:,:), if_1_edge(:,:),
      &        ncon_edge(:,:)
 
 c.....logical arrays associated with elements
       logical, allocatable :: skip(:), ifcoa(:), ifcoa_id(:)
 
 c.....logical arrays associated with element faces
-      logical, allocatable :: fassign(:,:), edgevis(:,:,:)      
+      logical, allocatable :: fassign(:,:), edgevis(:,:,:)
 
 c.....small arrays
       double precision qbnew(lx1-2,lx1,2), bqnew(lx1-2,lx1-2,2)
@@ -104,7 +104,7 @@ c.....coordinate of element vertices
      $       xc_new(:,:),yc_new(:,:),zc_new(:,:)
 
 c.....dr/dx, dx/dr  and Jacobian
-      double precision jacm1_s(lx1,lx1,lx1,refine_max), 
+      double precision jacm1_s(lx1,lx1,lx1,refine_max),
      $       rxm1_s(lx1,lx1,lx1,refine_max),
      $       xrm1_s(lx1,lx1,lx1,refine_max)
 
@@ -116,7 +116,7 @@ c.....dertivative matrices d/dr
 
 c.....interpolation operators
       double precision
-     $       ixm31(lx1,lx1*2-1), ixtm31(lx1*2-1,lx1), ixmc1(lx1,lx1),  
+     $       ixm31(lx1,lx1*2-1), ixtm31(lx1*2-1,lx1), ixmc1(lx1,lx1),
      $       ixtmc1(lx1,lx1), ixmc2(lx1,lx1),  ixtmc2(lx1,lx1),
      $       map2(lx1),map4(lx1)
 
@@ -124,11 +124,11 @@ c.....collocation location within an element
       double precision xfrac(lx1)
 
 c.....used in laplacian operator
-      double precision g1m1_s(lx1,lx1,lx1,refine_max), 
+      double precision g1m1_s(lx1,lx1,lx1,refine_max),
      $       g4m1_s(lx1,lx1,lx1,refine_max),
      $       g5m1_s(lx1,lx1,lx1,refine_max),
      $       g6m1_s(lx1,lx1,lx1,refine_max)
-      
+
 c.....We store some tables of useful topological constants
 c     These constants are intialized as a block data below
       integer f_e_ef(4,6)
@@ -191,30 +191,30 @@ c     the elements are the eight children elements ordered as 1 to 8.
 c.....returns the opposite local corner index: 1-4,2-3
       data oplc /4,3,2,1/
 
-c.....cal_iijj(i,n) returns the location of local corner number n on a face 
+c.....cal_iijj(i,n) returns the location of local corner number n on a face
 c     i =1  to get ii, i=2 to get jj
 c     (ii,jj) is defined the same as in mortar location (ii,jj)
       data cal_iijj /1,1, 1,2, 2,1, 2,2/
 
 c.....returns the adjacent(neighbored by a face) element's children,
-c     assumming a vertex is shared by eight child elements 1-8. 
-c     index n is local corner number on the face which is being 
+c     assumming a vertex is shared by eight child elements 1-8.
+c     index n is local corner number on the face which is being
 c     assigned the mortar index number
-      data cal_intempx /8,6,4,2, 7,5,3,1, 8,7,4,3, 
+      data cal_intempx /8,6,4,2, 7,5,3,1, 8,7,4,3,
      $                  6,5,2,1, 8,7,6,5, 4,3,2,1/
 
 c.....c_f(i,f) returns the vertex number of i'th local corner on face f
       data c_f /2,4,6,8, 1,3,5,7, 3,4,7,8, 1,2,5,6, 5,6,7,8, 1,2,3,4/
 
 c.....on each face of the parent element, there are four children element.
-c     le_arr(i,j,n) returns the i'th elements among the four children elements 
-c     n refers to the direction: 1 for x, 2 for y and 3 for z direction. 
+c     le_arr(i,j,n) returns the i'th elements among the four children elements
+c     n refers to the direction: 1 for x, 2 for y and 3 for z direction.
 c     j refers to positive(0) or negative(1) direction on x, y or z direction.
 c     n=1,j=0 refers to face 1 and n=1, j=1 refers to face 2, n=2,j=0 refers to
-c     face 3.... 
-c     The current eight children are ordered as 8,1,2,3,4,5,6,7 
-      data    le_arr/8,2,4,6, 1,3,5,7, 
-     $               8,1,4,5, 2,3,6,7, 
+c     face 3....
+c     The current eight children are ordered as 8,1,2,3,4,5,6,7
+      data    le_arr/8,2,4,6, 1,3,5,7,
+     $               8,1,4,5, 2,3,6,7,
      $               8,1,2,3, 4,5,6,7/
 
 c.....jjface(n) returns the face opposite to face n
@@ -222,39 +222,39 @@ c.....jjface(n) returns the face opposite to face n
 
 cc.....edgeface(n,f) returns OTHER face which shares local edge n on face f
 c      integer edgeface(4,6)
-c      data edgeface /6,3,5,4, 6,3,5,4, 6,1,5,2, 
+c      data edgeface /6,3,5,4, 6,3,5,4, 6,1,5,2,
 c     $               6,1,5,2, 4,1,3,2, 4,1,3,2/
 
 c.....e_face2(n,f) returns the local edge number of edge n on the
 c     other face sharing local edge n on face f
-      data e_face2 /2,2,2,2, 4,4,4,4, 3,2,3,2, 
+      data e_face2 /2,2,2,2, 4,4,4,4, 3,2,3,2,
      $              1,4,1,4, 3,3,3,3, 1,1,1,1/
 
-c.....op(n) returns the local edge number of the edge which 
+c.....op(n) returns the local edge number of the edge which
 c     is opposite to local edge n on the same face
       data op /3,4,1,2/
 
 c.....localedgenumber(f,e) returns the local edge number for edge e
 c     on face f. A zero result value signifies illegal input
-      data localedgenumber /1,0,0,0,0,2, 2,0,2,0,0,0, 3,0,0,0,2,0, 
-     $                      4,0,0,2,0,0, 0,1,0,0,0,4, 0,2,4,0,0,0, 
-     $                      0,3,0,0,4,0, 0,4,0,4,0,0, 0,0,1,0,0,3, 
+      data localedgenumber /1,0,0,0,0,2, 2,0,2,0,0,0, 3,0,0,0,2,0,
+     $                      4,0,0,2,0,0, 0,1,0,0,0,4, 0,2,4,0,0,0,
+     $                      0,3,0,0,4,0, 0,4,0,4,0,0, 0,0,1,0,0,3,
      $                      0,0,3,0,3,0, 0,0,0,1,0,1, 0,0,0,3,1,0/
 
 c.....edgenumber(e,f) returns the edge index of local edge e on face f
-      data edgenumber / 1,2, 3,4,  5,6, 7,8,  9,2,10,6, 
+      data edgenumber / 1,2, 3,4,  5,6, 7,8,  9,2,10,6,
      $                 11,4,12,8, 12,3,10,7, 11,1, 9,5/
 
-c.....f_c(c,n) returns the face index of i'th face sharing vertex n 
+c.....f_c(c,n) returns the face index of i'th face sharing vertex n
       data f_c /2,4,6, 1,4,6, 2,3,6, 1,3,6,
      &          2,4,5, 1,4,5, 2,3,5, 1,3,5/
 
-c.....if two elements are neighbor by one edge, 
-c     e1v1(f1,f2) returns the smaller index of the two vertices on this 
+c.....if two elements are neighbor by one edge,
+c     e1v1(f1,f2) returns the smaller index of the two vertices on this
 c     edge on one element
-c     e1v2 returns the larger index of the two vertices of this edge on 
-c     on element. exfor a vertex on element 
-c     e2v1 returns the smaller index of the two vertices on this edge on 
+c     e1v2 returns the larger index of the two vertices of this edge on
+c     on element. exfor a vertex on element
+c     e2v1 returns the smaller index of the two vertices on this edge on
 c     another element
 c     e2v2 returns the larger index of the two vertiex on this edge on
 c     another element
@@ -267,10 +267,10 @@ c     another element
       data e2v2/0,0,5,7,3,7, 0,0,6,8,4,8, 5,6,0,0,2,6,
      &          7,8,0,0,4,8, 3,4,2,4,0,0, 7,8,6,8,0,0/
 
-c.....children(n1,n)returns the four elements among the eight children 
+c.....children(n1,n)returns the four elements among the eight children
 c     elements to be merged on face n of the parent element
 c     the IDs for the eight children are 1,2,3,4,5,6,7,8
-      data children/2,4,6,8, 1,3,5,7, 3,4,7,8, 
+      data children/2,4,6,8, 1,3,5,7, 3,4,7,8,
      &              1,2,5,6, 5,6,7,8, 1,2,3,4/
 
 c.....iijj(n1,n) returns the location of n's mortar on an element face
@@ -281,7 +281,7 @@ c.....v_end(n) returns the index of collocation points at two ends of each
 c     direction
       data v_end /1,lx1/
 
-c.....face_l1,face_l2,face_ld return for start,end,stride for a loop over faces 
+c.....face_l1,face_l2,face_ld return for start,end,stride for a loop over faces
 c     used on subroutine  mortar_vertex
       data face_l1 /2,3,1/, face_l2 /3,1,2/, face_ld /1,-2,1/
 
@@ -307,49 +307,49 @@ c---------------------------------------------------------------------
       integer ios
 
 
-      allocate ( 
+      allocate (
      &        ta1  (lx1,lx1,lx1,lelt), ta2   (lx1,lx1,lx1,lelt),
-     &        trhs (lx1,lx1,lx1,lelt), t     (lx1,lx1,lx1,lelt), 
-     &        tmult(lx1,lx1,lx1,lelt), dpcelm(lx1,lx1,lx1,lelt), 
+     &        trhs (lx1,lx1,lx1,lelt), t     (lx1,lx1,lx1,lelt),
+     &        tmult(lx1,lx1,lx1,lelt), dpcelm(lx1,lx1,lx1,lelt),
      &        pdiff(lx1,lx1,lx1,lelt), pdiffp(lx1,lx1,lx1,lelt),
      >        stat = ios)
 
       if (ios .eq. 0) allocate (
-     &        umor(lmor), tmmor(lmor), 
-     &        rmor(lmor), dpcmor (lmor), pmorx(lmor), ppmor(lmor), 
+     &        umor(lmor), tmmor(lmor),
+     &        rmor(lmor), dpcmor (lmor), pmorx(lmor), ppmor(lmor),
      &        mormult(lmor), tmort(lmor),
      >        stat = ios)
 
       if (ios .eq. 0) allocate (
-     &        idmo    (lx1,lx1,lnje,lnje,nsides,lelt), 
-     &        idel    (lx1,lx1,          nsides,lelt), 
-     &        sje     (2,2,              nsides,lelt), 
+     &        idmo    (lx1,lx1,lnje,lnje,nsides,lelt),
+     &        idel    (lx1,lx1,          nsides,lelt),
+     &        sje     (2,2,              nsides,lelt),
      &        sje_new (2,2,              nsides,lelt),
-     &        ijel    (2,                nsides,lelt), 
+     &        ijel    (2,                nsides,lelt),
      &        ijel_new(2,                nsides,lelt),
-     &        cbc     (                  nsides,lelt), 
+     &        cbc     (                  nsides,lelt),
      &        cbc_new (                  nsides,lelt),
-     &        vassign (8,lelt),       emo(2,8,8*lelt),   
+     &        vassign (8,lelt),       emo(2,8,8*lelt),
      &        nemo    (8*lelt),
      &        diagn   (2,12,lelt),
      >        stat = ios)
 
       if (ios .eq. 0) allocate (
-     &        tree   (lelt), mt_to_id    (lelt),                   
+     &        tree   (lelt), mt_to_id    (lelt),
      &        newc   (lelt), mt_to_id_old(lelt),
-     &        newi   (lelt), id_to_mt    (lelt), 
+     &        newi   (lelt), id_to_mt    (lelt),
      &        newe   (lelt), ref_front_id(lelt),
-     &        front  (lelt), action      (lelt), 
+     &        front  (lelt), action      (lelt),
      &        ich    (lelt), size_e      (lelt),
      &        treenew(lelt),
      >        stat = ios)
 
       if (ios .eq. 0) allocate (
      &        ifpcmor  (8* lelt),
-     &        eassign  (12,lelt),  if_1_edge(12,lelt), 
+     &        eassign  (12,lelt),  if_1_edge(12,lelt),
      &        ncon_edge(12,lelt),
      &        skip (lelt), ifcoa (lelt), ifcoa_id(lelt),
-     &        fassign(nsides,lelt), edgevis(4,nsides,lelt),    
+     &        fassign(nsides,lelt), edgevis(4,nsides,lelt),
      >        stat = ios)
 
 c.....coordinate of element vertices

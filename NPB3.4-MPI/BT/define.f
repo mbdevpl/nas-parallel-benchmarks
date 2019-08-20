@@ -14,8 +14,8 @@ c---------------------------------------------------------------------
       if (ncells .eq. 1) return
 
 c---------------------------------------------------------------------
-c     compute the actual sizes of the buffers; note that there is 
-c     always one cell face that doesn't need buffer space, because it 
+c     compute the actual sizes of the buffers; note that there is
+c     always one cell face that doesn't need buffer space, because it
 c     is at the boundary of the grid
 c---------------------------------------------------------------------
       west_size = 0
@@ -24,8 +24,8 @@ c---------------------------------------------------------------------
       do   c = 1, ncells
          face_size = cell_size(2,c) * cell_size(3,c) * dim * 2
          if (cell_coord(1,c).ne.1) west_size = west_size + face_size
-         if (cell_coord(1,c).ne.ncells) east_size = east_size + 
-     >        face_size 
+         if (cell_coord(1,c).ne.ncells) east_size = east_size +
+     >        face_size
       end do
 
       north_size = 0
@@ -33,18 +33,18 @@ c---------------------------------------------------------------------
       do   c = 1, ncells
          face_size = cell_size(1,c)*cell_size(3,c) * dim * 2
          if (cell_coord(2,c).ne.1) south_size = south_size + face_size
-         if (cell_coord(2,c).ne.ncells) north_size = north_size + 
-     >        face_size 
+         if (cell_coord(2,c).ne.ncells) north_size = north_size +
+     >        face_size
       end do
 
       top_size = 0
       bottom_size = 0
       do   c = 1, ncells
          face_size = cell_size(1,c) * cell_size(2,c) * dim * 2
-         if (cell_coord(3,c).ne.1) bottom_size = bottom_size + 
+         if (cell_coord(3,c).ne.1) bottom_size = bottom_size +
      >        face_size
          if (cell_coord(3,c).ne.ncells) top_size = top_size +
-     >        face_size     
+     >        face_size
       end do
 
       start_send_west   = 1

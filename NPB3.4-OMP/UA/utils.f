@@ -203,7 +203,7 @@ c$OMP END PARALLEL DO
 c-----------------------------------------------------------------
       subroutine nrzero (na,n)
 c------------------------------------------------------------------
-c     zero out array of integers 
+c     zero out array of integers
 c------------------------------------------------------------------
 
       implicit none
@@ -316,7 +316,7 @@ c$OMP END PARALLEL DO
       end do
 
       return
-      end 
+      end
 
 c------------------------------------------------------------------
       subroutine dssum

@@ -8,18 +8,18 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c block-diagonal matrix-vector multiplication                  
+c block-diagonal matrix-vector multiplication
 c---------------------------------------------------------------------
 
        use sp_data
        implicit none
 
        integer c, i, j, k
-       double precision t1, t2, t3, ac, ru1, uu, vv, ww, r1, r2, r3, 
+       double precision t1, t2, t3, ac, ru1, uu, vv, ww, r1, r2, r3,
      >                  r4, r5, ac2inv
 
 c---------------------------------------------------------------------
-c      loop over all cells owned by this node          
+c      loop over all cells owned by this node
 c---------------------------------------------------------------------
        do   c = 1, ncells
           do    k = start(3,c), cell_size(3,c)-end(3,c)-1
@@ -39,7 +39,7 @@ c---------------------------------------------------------------------
                    r4 = rhs(i,j,k,4,c)
                    r5 = rhs(i,j,k,5,c)
 
-                   t1 = c2 * ac2inv * ( qs(i,j,k,c)*r1 - uu*r2  - 
+                   t1 = c2 * ac2inv * ( qs(i,j,k,c)*r1 - uu*r2  -
      >                  vv*r3 - ww*r4 + r5 )
                    t2 = bt * ru1 * ( uu * r1 - r2 )
                    t3 = ( bt * ru1 * ac ) * t1

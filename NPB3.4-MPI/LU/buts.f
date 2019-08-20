@@ -30,7 +30,7 @@ c---------------------------------------------------------------------
       integer nx, ny, nz
       integer j, k
       double precision  omega
-      double precision  v( 5, -1:ldmx+2, -1:ldmy+2, *), 
+      double precision  v( 5, -1:ldmx+2, -1:ldmy+2, *),
      >        tv( 5, ldmx ),
      >        d( 5, 5, ldmx ),
      >        udx( 5, 5, ldmx ),
@@ -54,7 +54,7 @@ c---------------------------------------------------------------------
 
          do i = iend, ist, -1
             do m = 1, 5
-                  tv( m, i ) = 
+                  tv( m, i ) =
      >      omega * (  udz( m, 1, i ) * v( 1, i, j, k+1 )
      >               + udz( m, 2, i ) * v( 2, i, j, k+1 )
      >               + udz( m, 3, i ) * v( 3, i, j, k+1 )

@@ -8,13 +8,13 @@ c---------------------------------------------------------------------
 c---------------------------------------------------------------------
 
 c---------------------------------------------------------------------
-c this function copies the face values of a variable defined on a set 
-c of cells to the overlap locations of the adjacent sets of cells. 
-c Because a set of cells interfaces in each direction with exactly one 
-c other set, we only need to fill six different buffers. We could try to 
+c this function copies the face values of a variable defined on a set
+c of cells to the overlap locations of the adjacent sets of cells.
+c Because a set of cells interfaces in each direction with exactly one
+c other set, we only need to fill six different buffers. We could try to
 c overlap communication with computation, by computing
 c some internal values while communicating boundary values, but this
-c adds so much overhead that it's not clearly useful. 
+c adds so much overhead that it's not clearly useful.
 c---------------------------------------------------------------------
 
        use sp_data
@@ -22,12 +22,12 @@ c---------------------------------------------------------------------
 
        implicit none
 
-       integer i, j, k, c, m, requests(0:11), p0, p1, 
-     >         p2, p3, p4, p5, b_size(0:5), ss(0:5), 
+       integer i, j, k, c, m, requests(0:11), p0, p1,
+     >         p2, p3, p4, p5, b_size(0:5), ss(0:5),
      >         sr(0:5), error, statuses(MPI_STATUS_SIZE, 0:11)
 
 c---------------------------------------------------------------------
-c      exit immediately if there are no faces to be copied           
+c      exit immediately if there are no faces to be copied
 c---------------------------------------------------------------------
        if (no_nodes .eq. 1) then
           call compute_rhs
@@ -49,18 +49,18 @@ c---------------------------------------------------------------------
        sr(4) = start_recv_top
        sr(5) = start_recv_bottom
 
-       b_size(0) = east_size   
-       b_size(1) = west_size   
-       b_size(2) = north_size  
-       b_size(3) = south_size  
-       b_size(4) = top_size    
-       b_size(5) = bottom_size 
+       b_size(0) = east_size
+       b_size(1) = west_size
+       b_size(2) = north_size
+       b_size(3) = south_size
+       b_size(4) = top_size
+       b_size(5) = bottom_size
 
 c---------------------------------------------------------------------
-c because the difference stencil for the diagonalized scheme is 
-c orthogonal, we do not have to perform the staged copying of faces, 
-c but can send all face information simultaneously to the neighboring 
-c cells in all directions          
+c because the difference stencil for the diagonalized scheme is
+c orthogonal, we do not have to perform the staged copying of faces,
+c but can send all face information simultaneously to the neighboring
+c cells in all directions
 c---------------------------------------------------------------------
        if (timeron) call timer_start(t_bpack)
        p0 = 0
@@ -88,7 +88,7 @@ c---------------------------------------------------------------------
              endif
 
 c---------------------------------------------------------------------
-c            fill the buffer to be sent to western neighbors 
+c            fill the buffer to be sent to western neighbors
 c---------------------------------------------------------------------
              if (cell_coord(1,c) .ne. 1) then
                 do   k = 0, cell_size(3,c)-1
@@ -118,12 +118,12 @@ c---------------------------------------------------------------------
              endif
 
 c---------------------------------------------------------------------
-c            fill the buffer to be sent to southern neighbors 
+c            fill the buffer to be sent to southern neighbors
 c---------------------------------------------------------------------
              if (cell_coord(2,c).ne. 1) then
                 do   k = 0, cell_size(3,c)-1
                    do   j = 0, 1
-                      do   i = 0, cell_size(1,c)-1   
+                      do   i = 0, cell_size(1,c)-1
                          out_buffer(ss(3)+p3) = u(i,j,k,m,c)
                          p3 = p3 + 1
                       end do
@@ -171,42 +171,42 @@ c---------------------------------------------------------------------
        if (timeron) call timer_stop(t_bpack)
 
        if (timeron) call timer_start(t_exch)
-       call mpi_irecv(in_buffer(sr(0)), b_size(0), 
-     >                dp_type, successor(1), WEST,  
+       call mpi_irecv(in_buffer(sr(0)), b_size(0),
+     >                dp_type, successor(1), WEST,
      >                comm_rhs, requests(0), error)
-       call mpi_irecv(in_buffer(sr(1)), b_size(1), 
-     >                dp_type, predecessor(1), EAST,  
+       call mpi_irecv(in_buffer(sr(1)), b_size(1),
+     >                dp_type, predecessor(1), EAST,
      >                comm_rhs, requests(1), error)
-       call mpi_irecv(in_buffer(sr(2)), b_size(2), 
-     >                dp_type, successor(2), SOUTH, 
+       call mpi_irecv(in_buffer(sr(2)), b_size(2),
+     >                dp_type, successor(2), SOUTH,
      >                comm_rhs, requests(2), error)
-       call mpi_irecv(in_buffer(sr(3)), b_size(3), 
-     >                dp_type, predecessor(2), NORTH, 
+       call mpi_irecv(in_buffer(sr(3)), b_size(3),
+     >                dp_type, predecessor(2), NORTH,
      >                comm_rhs, requests(3), error)
-       call mpi_irecv(in_buffer(sr(4)), b_size(4), 
+       call mpi_irecv(in_buffer(sr(4)), b_size(4),
      >                dp_type, successor(3), BOTTOM,
      >                comm_rhs, requests(4), error)
-       call mpi_irecv(in_buffer(sr(5)), b_size(5), 
-     >                dp_type, predecessor(3), TOP,   
+       call mpi_irecv(in_buffer(sr(5)), b_size(5),
+     >                dp_type, predecessor(3), TOP,
      >                comm_rhs, requests(5), error)
 
-       call mpi_isend(out_buffer(ss(0)), b_size(0), 
-     >                dp_type, successor(1),   EAST, 
+       call mpi_isend(out_buffer(ss(0)), b_size(0),
+     >                dp_type, successor(1),   EAST,
      >                comm_rhs, requests(6), error)
-       call mpi_isend(out_buffer(ss(1)), b_size(1), 
-     >                dp_type, predecessor(1), WEST, 
+       call mpi_isend(out_buffer(ss(1)), b_size(1),
+     >                dp_type, predecessor(1), WEST,
      >                comm_rhs, requests(7), error)
-       call mpi_isend(out_buffer(ss(2)), b_size(2), 
-     >                dp_type,successor(2),   NORTH, 
+       call mpi_isend(out_buffer(ss(2)), b_size(2),
+     >                dp_type,successor(2),   NORTH,
      >                comm_rhs, requests(8), error)
-       call mpi_isend(out_buffer(ss(3)), b_size(3), 
-     >                dp_type,predecessor(2), SOUTH, 
+       call mpi_isend(out_buffer(ss(3)), b_size(3),
+     >                dp_type,predecessor(2), SOUTH,
      >                comm_rhs, requests(9), error)
-       call mpi_isend(out_buffer(ss(4)), b_size(4), 
-     >                dp_type,successor(3),   TOP, 
+       call mpi_isend(out_buffer(ss(4)), b_size(4),
+     >                dp_type,successor(3),   TOP,
      >                comm_rhs,   requests(10), error)
-       call mpi_isend(out_buffer(ss(5)), b_size(5), 
-     >                dp_type,predecessor(3), BOTTOM, 
+       call mpi_isend(out_buffer(ss(5)), b_size(5),
+     >                dp_type,predecessor(3), BOTTOM,
      >                comm_rhs,requests(11), error)
 
 
@@ -214,7 +214,7 @@ c---------------------------------------------------------------------
        if (timeron) call timer_stop(t_exch)
 
 c---------------------------------------------------------------------
-c unpack the data that has just been received;             
+c unpack the data that has just been received;
 c---------------------------------------------------------------------
        if (timeron) call timer_start(t_bpack)
        p0 = 0
@@ -248,7 +248,7 @@ c---------------------------------------------------------------------
                    end do
                 end do
              end if
- 
+
              if (cell_coord(2,c) .ne. 1) then
                 do  k = 0, cell_size(3,c)-1
                    do   j = -2, -1
@@ -260,7 +260,7 @@ c---------------------------------------------------------------------
                 end do
 
              endif
- 
+
              if (cell_coord(2,c) .ne. ncells) then
                 do  k = 0, cell_size(3,c)-1
                    do   j = cell_size(2,c), cell_size(2,c)+1
@@ -295,7 +295,7 @@ c---------------------------------------------------------------------
              endif
 
 c---------------------------------------------------------------------
-c         m loop            
+c         m loop
 c---------------------------------------------------------------------
           end do
 

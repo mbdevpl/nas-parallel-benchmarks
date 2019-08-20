@@ -67,7 +67,7 @@ c---------------------------------------------------------------------
      >                 tming(t_last+2), tmaxg(t_last+2)
       character        t_recs(t_last+2)*8
 
-      data t_recs/'total', 'rhs', 'blts', 'buts', '#jacld', '#jacu', 
+      data t_recs/'total', 'rhs', 'blts', 'buts', '#jacld', '#jacu',
      >            'exch', 'lcomm', 'ucomm', 'rcomm',
      >            ' totcomp', ' totcomm'/
 
@@ -126,7 +126,7 @@ c---------------------------------------------------------------------
       call erhs()
 
 c---------------------------------------------------------------------
-c   perform one SSOR iteration to touch all data and program pages 
+c   perform one SSOR iteration to touch all data and program pages
 c---------------------------------------------------------------------
       call ssor(1)
 
@@ -159,15 +159,15 @@ c---------------------------------------------------------------------
          mflops = 1.0d-6*dble(itmax)*(1984.77*dble( nx0 )
      >        *dble( ny0 )
      >        *dble( nz0 )
-     >        -10923.3*(dble( nx0+ny0+nz0 )/3.)**2 
+     >        -10923.3*(dble( nx0+ny0+nz0 )/3.)**2
      >        +27770.9* dble( nx0+ny0+nz0 )/3.
      >        -144010.)
      >        / maxtime
 
          call print_results('LU', class, nx0,
      >     ny0, nz0, itmax, no_nodes,
-     >     num, maxtime, mflops, '          floating point', verified, 
-     >     npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6, 
+     >     num, maxtime, mflops, '          floating point', verified,
+     >     npbversion, compiletime, cs1, cs2, cs3, cs4, cs5, cs6,
      >     '(none)')
 
       END IF
@@ -181,11 +181,11 @@ c---------------------------------------------------------------------
       t1(t_last+2) = t1(t_lcomm)+t1(t_ucomm)+t1(t_rcomm)+t1(t_exch)
       t1(t_last+1) = t1(t_total) - t1(t_last+2)
 
-      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM, 
+      call MPI_Reduce(t1, tsum,  t_last+2, dp_type, MPI_SUM,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN, 
+      call MPI_Reduce(t1, tming, t_last+2, dp_type, MPI_MIN,
      >                0, MPI_COMM_WORLD, ierr)
-      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX, 
+      call MPI_Reduce(t1, tmaxg, t_last+2, dp_type, MPI_MAX,
      >                0, MPI_COMM_WORLD, ierr)
 
       if (id .eq. 0) then
@@ -197,7 +197,7 @@ c---------------------------------------------------------------------
             endif
          end do
       endif
- 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum', 
+ 800  format(' nprocs =', i6, 11x, 'minimum', 5x, 'maximum',
      >       5x, 'average')
  810  format(' timer ', i2, '(', A8, ') :', 3(2x,f10.4))
 
