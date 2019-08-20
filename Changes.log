@@ -8,6 +8,89 @@
 ###########################################
 
 ------------------------------------------------------
+Changes in NPB3.4
+      ( NPB3.4-MPI, NPB3.4-OMP )
+------------------------------------------------------
+[13-May-18]
+
+1. General
+
+ - The serial version of NPBs (NPB-SER) is no longer included in
+   the distribution.  The same functionality can be achieved by
+   the OpenMP version compiled with OpenMP disabled.
+
+ - Version 3.4 uses Fortran modules and allocatable arrays to define 
+   and manage global data (to replace common blocks), and Fortran 2003 
+   IEEE arithmetic function to catch the NaN condition during verification. .
+
+   So, the version requires a compiler that supports these features.
+   Examples of a few compilers that are known to work:
+      Intel compiler v12+, GCC v5+, PGI v10+.
+
+ - The environment variable NPB_TIMER_FLAG is now used to enable 
+   additional timers.  This method supersedes the use of the file
+   "timer.flag" in the working directory.
+
+ - The MPIF77 or F77 flag in make.def is renamed to MPIFC or FC to match
+   with the fact that a Fortran 90 or newer compiler is required.
+
+2. MPI version
+
+ - NPB3.4-MPI added the class E problem size for IS, and the class F
+   problem size for BT, LU, SP, CG, EP, FT, and MG.
+
+ - Version 3.4 uses the dynamic memory allocation feature
+   in Fortran 90 so that separate compilations for different
+   process counts are no longer necessary.  The number of processes
+   is solely determined and checked at runtime.
+
+ - The LU benchmark improvement:
+      * Reduced memory usage for working arrays (a,b,c,d) in the solver.
+        This could improve performance in some cases.
+
+      * Relaxed the number of processes allowed.  For example, the square
+        number of processes (3x3=9) is now allowed.
+
+ - The vector codes for the BT and LU benchmarks have been removed
+   due to the fact that these implementations were not portable and
+   successful vectorization highly depends on the compiler used.
+
+3. OMP version
+
+ - Added the class E problem size for IS, and the class F problem 
+   size for BT, LU, SP, CG, EP, FT, and MG.
+
+ - Improved loop-level parallelism with the use of the OpenMP
+   COLLAPSE clause available since OpenMP 3.0.  This version 
+   requires an OpenMP compiler that supports this feature.
+
+ - Changes specific to LU:
+      * The thread synchronization in the pipelined version of LU was
+        changed to use ATOMIC read/write available from OpenMP 3.0.
+
+      * Re-introduced the hyperplane implementation of LU in the 
+        distribution, which is accessible via the VERSION=HP make
+        option during compilation.
+
+      * Included a third version of LU that uses the DOACROSS feature 
+        of OpenMP 4.0.  This version requires an OpenMP compiler that 
+        supports this feature.
+
+ - Changes specific to BT and SP:
+      * Data access in RHS has been improved for better performance.
+
+      * Included a version with blocking factor in the solver to
+        improve cache performance. This version can be selected via 
+        the VERSION=BLK make option during compilation and supersedes 
+        the "vector" version that was introduced in version 3.3.
+
+ - Changes specific to UA:
+      * Included a version that uses array reduction for atomic updates.
+        This version is selectable via the VERSION=rd make option 
+        during compilation.
+
+
+------------------------------------------------------
 Changes in NPB3.3.1
       (NPB3.3-SER, NPB3.3-OMP, NPB3.3-MPI )
 ------------------------------------------------------
